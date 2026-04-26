@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>陶藝工坊 管理後台</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--g:#1D9E75;--gl:#E1F5EE;--t:#1a1a1a;--m:#6b7280;--b:#e5e7eb;--bg:#f9fafb;--w:#fff;--r:#E24B4A;--rl:#FCEBEB;--al:#FAEEDA;--a:#854F0B}
+body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--t);font-size:15px;line-height:1.6}
+.login-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
+.login-box{background:var(--w);border:1px solid var(--b);border-radius:16px;padding:36px 32px;width:100%;max-width:360px;text-align:center;box-shadow:0 4px 24px rgba(0,0,0,.07)}
+.login-logo{font-size:22px;font-weight:700;margin-bottom:6px}.login-logo span{color:var(--g)}
+.login-sub{font-size:13px;color:var(--m);margin-bottom:28px}
+.err{font-size:12px;color:var(--r);margin-bottom:12px;padding:9px;background:var(--rl);border-radius:7px;display:none;text-align:left}
+.topbar{background:var(--w);border-bottom:1px solid var(--b);padding:0 24px;height:56px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+.logo{font-size:17px;font-weight:700}.logo span{color:var(--g)}
+.wrap{max-width:1200px;margin:0 auto;padding:24px 20px}
+.tabs{display:flex;gap:4px;margin-bottom:18px;border-bottom:1px solid var(--b)}
+.tb{padding:10px 16px;font-size:14px;font-weight:500;cursor:pointer;color:var(--m);border-bottom:2px solid transparent;margin-bottom:-1px;transition:all .15s;font-family:inherit;background:none;border-top:none;border-left:none;border-right:none}
+.tb.on{color:var(--g);border-bottom-color:var(--g)}
+.pane{display:none}.pane.on{display:block}
+.layout{display:grid;grid-template-columns:350px 1fr;gap:20px;align-items:start}
+.card{background:var(--w);border:1px solid var(--b);border-radius:12px;padding:20px}
+.ttl{font-size:16px;font-weight:700;margin-bottom:16px}
+.fg{display:flex;flex-direction:column;gap:5px;margin-bottom:13px}
+.lbl{font-size:11px;font-weight:700;color:var(--m);text-transform:uppercase;letter-spacing:.5px}
+input[type=text],input[type=number],input[type=email],input[type=password],select,textarea{padding:10px 12px;border:1px solid var(--b);border-radius:8px;font-size:14px;font-family:inherit;background:var(--w);color:var(--t);outline:none;transition:border-color .15s;width:100%}
+input:focus,select:focus,textarea:focus{border-color:var(--g)}
+textarea{resize:vertical;min-height:72px}
+.f2{display:grid;grid-template-columns:1fr 1fr;gap:11px}
+.drop{border:2px dashed var(--b);border-radius:9px;padding:24px;text-align:center;cursor:pointer;position:relative;overflow:hidden;transition:all .15s}
+.drop:hover,.drop.drag{border-color:var(--g);background:var(--gl)}
+.drop input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+.drop img{width:100%;height:120px;object-fit:cover;border-radius:7px;display:none;margin-top:10px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{padding:5px 12px;border-radius:6px;border:1px solid var(--b);font-size:12px;cursor:pointer;background:transparent;color:var(--m);transition:all .15s;font-family:inherit}
+.chip.on{background:var(--gl);color:#0f6e56;border-color:var(--g);font-weight:600}
+.btn{display:inline-flex;align-items:center;gap:5px;padding:9px 18px;border-radius:8px;font-size:14px;font-weight:600;font-family:inherit;cursor:pointer;transition:all .15s;border:none}
+.bg{background:var(--g);color:#fff}.bg:hover{background:#178a63}.bg:disabled{opacity:.4;cursor:not-allowed}
+.bo{background:transparent;border:1px solid var(--b);color:var(--m)}.bo:hover{background:var(--bg)}
+.br{background:transparent;border:1px solid var(--b);color:var(--r)}.br:hover{background:var(--rl);border-color:var(--r)}
+.btn-sm{padding:5px 11px;font-size:12px}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{text-align:left;padding:10px 12px;background:var(--bg);color:var(--m);font-size:11px;text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid var(--b)}
+td{padding:11px 12px;border-bottom:1px solid var(--b);vertical-align:middle}
+tr:last-child td{border-bottom:none}
+.bdg{display:inline-block;padding:2px 9px;border-radius:99px;font-size:11px;font-weight:600}
+.bg2{background:var(--gl);color:#0f6e56}.ba{background:var(--al);color:var(--a)}.br2{background:var(--rl);color:var(--r)}
+.timg{width:44px;height:44px;border-radius:8px;object-fit:cover}
+#toast{position:fixed;bottom:24px;right:24px;background:#1a1a1a;color:#fff;padding:11px 18px;border-radius:10px;font-size:13px;font-weight:500;z-index:999;opacity:0;transform:translateY(12px);transition:all .25s;pointer-events:none}
+#toast.show{opacity:1;transform:translateY(0)}
+@media(max-width:900px){.layout{grid-template-columns:1fr}}
+@media(max-width:640px){.topbar{padding:0 16px}.wrap{padding:16px}.f2{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<script>
+// ── 填入你的 Render 後端網址 ──────────────────────
+const API = 'https://你的後端名稱.onrender.com';
+// ────────────────────────────────────────────────
+</script>
+
+<!-- 登入畫面 -->
+<div class="login-wrap" id="login-screen">
+  <div class="login-box">
+    <div class="login-logo">陶藝<span>工坊</span></div>
+    <div class="login-sub">管理後台 · 請登入</div>
+    <div class="fg" style="text-align:left"><label class="lbl">Email</label><input type="email" id="l-email" placeholder="your@email.com"></div>
+    <div class="fg" style="text-align:left;margin-bottom:16px"><label class="lbl">密碼</label><input type="password" id="l-pwd" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()"></div>
+    <div class="err" id="l-err"></div>
+    <button class="btn bg" style="width:100%;justify-content:center" id="l-btn" onclick="doLogin()">登入</button>
+  </div>
+</div>
+
+<!-- 管理後台 -->
+<div id="admin-screen" style="display:none">
+  <div class="topbar">
+    <div class="logo">陶藝<span>工坊</span> <span style="font-size:12px;color:var(--m);font-weight:400">管理後台</span></div>
+    <div style="display:flex;align-items:center;gap:12px">
+      <span style="font-size:13px;color:var(--m)" id="user-email"></span>
+      <button class="btn bo" style="padding:5px 14px;font-size:13px" onclick="doLogout()">登出</button>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <div class="tabs">
+      <button class="tb on" onclick="tab('products')">商品管理</button>
+      <button class="tb" onclick="tab('orders')">訂單管理</button>
+    </div>
+
+    <!-- 商品 TAB -->
+    <div id="p-products" class="pane on">
+      <div class="layout">
+        <div class="card">
+          <div class="ttl" id="ftitle">新增商品</div>
+          <input type="hidden" id="eid">
+          <div class="fg">
+            <label class="lbl">商品照片</label>
+            <div class="drop" id="drop"
+              ondragover="event.preventDefault();this.classList.add('drag')"
+              ondragleave="this.classList.remove('drag')"
+              ondrop="doDrop(event)">
+              <input type="file" accept="image/*" id="fi" onchange="doFile(this.files[0])">
+              <div id="dhint">
+                <div style="font-size:26px;margin-bottom:6px">📷</div>
+                <div style="font-size:13px;font-weight:600;margin-bottom:2px">點擊或拖曳上傳</div>
+                <div style="font-size:12px;color:var(--m)">JPG · PNG · WebP（最大 8MB）</div>
+              </div>
+              <img id="fpreview">
+            </div>
+          </div>
+          <div class="fg"><label class="lbl">商品名稱 *</label><input type="text" id="fname" placeholder="例：青釉花器"></div>
+          <div class="f2" style="margin-bottom:13px">
+            <div class="fg" style="margin:0"><label class="lbl">分類 *</label>
+              <select id="fcat"><option>花器</option><option>線香座</option><option>陶器皿</option><option>其他</option></select>
+            </div>
+            <div class="fg" style="margin:0"><label class="lbl">庫存 *</label><input type="number" id="fstock" placeholder="1" min="0"></div>
+          </div>
+          <div class="fg"><label class="lbl">售價（NT$）*</label><input type="number" id="fprice" placeholder="1200" min="1"></div>
+          <div class="fg">
+            <label class="lbl">尺寸（顯示用）</label>
+            <div class="chips" id="chips">
+              <button type="button" class="chip" onclick="this.classList.toggle('on')">10cm</button>
+              <button type="button" class="chip" onclick="this.classList.toggle('on')">12cm</button>
+              <button type="button" class="chip" onclick="this.classList.toggle('on')">15cm</button>
+              <button type="button" class="chip" onclick="this.classList.toggle('on')">18cm</button>
+              <button type="button" class="chip" onclick="this.classList.toggle('on')">20cm</button>
+              <button type="button" class="chip" onclick="this.classList.toggle('on')">25cm</button>
+              <button type="button" class="chip" onclick="this.classList.toggle('on')">30cm</button>
+            </div>
+          </div>
+          <div class="fg"><label class="lbl">商品描述</label><textarea id="fdesc" placeholder="釉色、燒製方式、使用說明..."></textarea></div>
+          <div style="display:flex;gap:8px;margin-top:4px">
+            <button class="btn bg" id="sbtn" onclick="save()">✚ 儲存商品</button>
+            <button class="btn bo" onclick="reset()">清除</button>
+          </div>
+        </div>
+
+        <div>
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:13px">
+            <div style="font-size:16px;font-weight:700">商品列表 <span id="pcnt" style="color:var(--m);font-size:14px;font-weight:400"></span></div>
+          </div>
+          <div class="card" style="padding:0;overflow:hidden">
+            <table>
+              <thead><tr><th>圖片</th><th>名稱</th><th>分類</th><th>尺寸</th><th>售價</th><th>庫存</th><th>操作</th></tr></thead>
+              <tbody id="ptbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 訂單 TAB -->
+    <div id="p-orders" class="pane">
+      <div class="card" style="padding:0;overflow:hidden">
+        <table>
+          <thead><tr><th>#</th><th>顧客</th><th>聯絡方式</th><th>地址</th><th>商品</th><th>付款</th><th>金額</th><th>狀態</th><th>日期</th></tr></thead>
+          <tbody id="otbody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+<script>
+let TOKEN='';
+function toast(msg,ok=true){const t=document.getElementById('toast');t.textContent=msg;t.style.background=ok?'#1a1a1a':'#E24B4A';t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2600);}
+
+async function api(path,opts={}){
+  const res=await fetch(`${API}${path}`,{...opts,headers:{'Content-Type':'application/json','Authorization':`Bearer ${TOKEN}`,...(opts.headers||{})}});
+  const data=await res.json().catch(()=>({}));
+  if(!res.ok)throw new Error(data.detail||`HTTP ${res.status}`);
+  return data;
+}
+
+// ── Auth ──────────────────────────────────────────────────
+async function doLogin(){
+  const email=document.getElementById('l-email').value.trim();
+  const pwd=document.getElementById('l-pwd').value;
+  if(!email||!pwd)return;
+  const btn=document.getElementById('l-btn');btn.disabled=true;btn.textContent='登入中...';
+  const errEl=document.getElementById('l-err');errEl.style.display='none';
+  try{
+    const data=await api('/auth/login',{method:'POST',body:JSON.stringify({email,password:pwd})});
+    TOKEN=data.access_token;
+    document.getElementById('login-screen').style.display='none';
+    document.getElementById('admin-screen').style.display='block';
+    document.getElementById('user-email').textContent=data.email;
+    loadProducts();
+  }catch(e){errEl.textContent=e.message;errEl.style.display='block';}
+  finally{btn.disabled=false;btn.textContent='登入';}
+}
+function doLogout(){
+  TOKEN='';
+  document.getElementById('admin-screen').style.display='none';
+  document.getElementById('login-screen').style.display='flex';
+  document.getElementById('l-pwd').value='';
+}
+
+// ── Tab ───────────────────────────────────────────────────
+function tab(name){
+  document.querySelectorAll('.tb').forEach((t,i)=>t.classList.toggle('on',['products','orders'][i]===name));
+  document.querySelectorAll('.pane').forEach(p=>p.classList.remove('on'));
+  document.getElementById('p-'+name).classList.add('on');
+  if(name==='orders')loadOrders();else loadProducts();
+}
+
+// ── Image ─────────────────────────────────────────────────
+let imgFile=null,existingImgUrl=null;
+function doFile(f){
+  if(!f)return;imgFile=f;existingImgUrl=null;
+  const r=new FileReader();
+  r.onload=e=>{const img=document.getElementById('fpreview');img.src=e.target.result;img.style.display='block';document.getElementById('dhint').style.display='none';};
+  r.readAsDataURL(f);
+}
+function doDrop(e){e.preventDefault();document.getElementById('drop').classList.remove('drag');if(e.dataTransfer.files[0])doFile(e.dataTransfer.files[0]);}
+
+async function uploadImg(){
+  if(!imgFile)return existingImgUrl;
+  const fd=new FormData();fd.append('file',imgFile);
+  const res=await fetch(`${API}/upload/`,{method:'POST',headers:{'Authorization':`Bearer ${TOKEN}`},body:fd});
+  const data=await res.json();
+  if(!res.ok)throw new Error(data.detail||'圖片上傳失敗');
+  return data.url;
+}
+
+// ── Save product ──────────────────────────────────────────
+async function save(){
+  const name=document.getElementById('fname').value.trim();
+  const price=parseInt(document.getElementById('fprice').value);
+  const stock=parseInt(document.getElementById('fstock').value);
+  const sizes=[...document.querySelectorAll('#chips .chip.on')].map(c=>c.textContent).join('、');
+  if(!name||!price||isNaN(stock)){toast('請填寫必填欄位',false);return;}
+  const btn=document.getElementById('sbtn');btn.disabled=true;btn.textContent='儲存中...';
+  try{
+    const image_url=await uploadImg();
+    const body={name,price,stock,sizes,category:document.getElementById('fcat').value,description:document.getElementById('fdesc').value,image_url};
+    const eid=document.getElementById('eid').value;
+    if(eid){await api(`/products/${eid}`,{method:'PATCH',body:JSON.stringify(body)});toast('商品已更新！');}
+    else{await api('/products/',{method:'POST',body:JSON.stringify(body)});toast('商品已新增！');}
+    reset();loadProducts();
+  }catch(e){toast('錯誤：'+e.message,false);}
+  finally{btn.disabled=false;btn.textContent='✚ 儲存商品';}
+}
+
+function reset(){
+  ['fname','fprice','fstock','fdesc'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('eid').value='';document.getElementById('fcat').value='花器';
+  document.querySelectorAll('#chips .chip').forEach(c=>c.classList.remove('on'));
+  const prev=document.getElementById('fpreview');prev.style.display='none';
+  document.getElementById('dhint').style.display='block';
+  document.getElementById('fi').value='';
+  document.getElementById('ftitle').textContent='新增商品';
+  imgFile=null;existingImgUrl=null;
+}
+
+function editP(p){
+  document.getElementById('eid').value=p.id;
+  document.getElementById('fname').value=p.name;
+  document.getElementById('fcat').value=p.category;
+  document.getElementById('fprice').value=p.price;
+  document.getElementById('fstock').value=p.stock;
+  document.getElementById('fdesc').value=p.description||'';
+  const sArr=(p.sizes||'').split('、').map(s=>s.trim());
+  document.querySelectorAll('#chips .chip').forEach(c=>c.classList.toggle('on',sArr.includes(c.textContent)));
+  if(p.image_url){
+    const img=document.getElementById('fpreview');img.src=p.image_url;img.style.display='block';
+    document.getElementById('dhint').style.display='none';
+    existingImgUrl=p.image_url;imgFile=null;
+  }
+  document.getElementById('ftitle').textContent='編輯商品';
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+async function delP(id,name){
+  if(!confirm(`確定刪除「${name}」？`))return;
+  try{await api(`/products/${id}`,{method:'DELETE'});toast('已刪除');loadProducts();}
+  catch(e){toast('刪除失敗：'+e.message,false);}
+}
+
+// ── Load products ─────────────────────────────────────────
+async function loadProducts(){
+  try{
+    const data=await api('/products');
+    document.getElementById('pcnt').textContent=`(${data.length} 項)`;
+    const tbody=document.getElementById('ptbody');
+    if(!data.length){tbody.innerHTML='<tr><td colspan="7" style="text-align:center;color:var(--m);padding:30px">尚無商品，請新增第一件作品</td></tr>';return;}
+    tbody.innerHTML=data.map(p=>{
+      const img=p.image_url?`<img class="timg" src="${p.image_url}">`:`<div style="width:44px;height:44px;border-radius:8px;background:var(--bg);display:flex;align-items:center;justify-content:center;font-size:22px">🏺</div>`;
+      const sc=p.stock>5?'bg2':p.stock>0?'ba':'br2';
+      const sl=p.stock>5?'充足':p.stock>0?'低庫存':'售完';
+      return `<tr>
+        <td>${img}</td>
+        <td style="font-weight:600">${p.name}</td>
+        <td style="color:var(--m)">${p.category}</td>
+        <td style="color:var(--m);font-size:12px">${p.sizes||'—'}</td>
+        <td style="font-weight:600;white-space:nowrap">NT$${p.price.toLocaleString()}</td>
+        <td><span class="bdg ${sc}">${sl} ${p.stock}</span></td>
+        <td style="white-space:nowrap">
+          <button class="btn bo btn-sm" onclick='editP(${JSON.stringify(p)})'>編輯</button>
+          <button class="btn br btn-sm" style="margin-left:4px" onclick="delP(${p.id},'${p.name.replace(/'/g,"\\'")}')">刪除</button>
+        </td>
+      </tr>`;
+    }).join('');
+  }catch(e){toast('載入失敗：'+e.message,false);}
+}
+
+// ── Load orders ───────────────────────────────────────────
+const SL={pending:'待確認',paid:'已付款',shipped:'已出貨',completed:'完成',cancelled:'取消'};
+const SC={pending:'ba',paid:'bg2',shipped:'bg2',completed:'bg2',cancelled:'br2'};
+
+async function loadOrders(){
+  try{
+    const data=await api('/orders');
+    const tbody=document.getElementById('otbody');
+    if(!data.length){tbody.innerHTML='<tr><td colspan="9" style="text-align:center;color:var(--m);padding:30px">尚無訂單</td></tr>';return;}
+    tbody.innerHTML=data.map(o=>{
+      const itemStr=(o.items||[]).map(i=>`${i.product_name} ×${i.qty}`).join('、');
+      return `<tr>
+        <td style="font-weight:700">#${o.id}</td>
+        <td style="font-weight:600">${o.customer_name}</td>
+        <td><div style="font-size:12px">📞 ${o.customer_phone}</div><div style="font-size:12px;color:var(--m)">✉️ ${o.customer_email}</div></td>
+        <td style="font-size:12px;color:var(--m);max-width:130px">${o.address}</td>
+        <td style="font-size:12px;color:var(--m);max-width:150px">${itemStr}</td>
+        <td style="font-size:12px">${o.payment_method}</td>
+        <td style="font-weight:600;white-space:nowrap">NT$${o.total_amount.toLocaleString()}</td>
+        <td><span class="bdg ${SC[o.status]||'ba'}">${SL[o.status]||o.status}</span></td>
+        <td style="font-size:12px;color:var(--m);white-space:nowrap">${(o.created_at||'').slice(0,10)}</td>
+      </tr>`;
+    }).join('');
+  }catch(e){toast('載入失敗：'+e.message,false);}
+}
+</script>
+</body>
+</html>
