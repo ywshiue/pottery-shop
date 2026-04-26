@@ -3,74 +3,113 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>是陶。管理後台</title>
+<title>是陶。後台</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{
-  --g:#2C4A6E;
-  --gl:#E8EEF5;
-  --t:#1C2B3A;
-  --m:#6B7280;
-  --b:#D4CFC9;
-  --bg:#E0DCD5;
-  --w:#F5F2EE;
-  --r:#8B6F47;
-  --rl:#F5EDE0;
-  --al:#F0EBE0;
-  --a:#7A6040;
-}
+:root{--g:#2C4A6E;--gl:#E8EEF5;--t:#1C2B3A;--m:#6B7280;--b:#D4CFC9;--bg:#E0DCD5;--w:#F5F2EE;--r:#8B6F47;--rl:#F5EDE0;--al:#F0EBE0;--a:#7A6040}
 body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--t);font-size:15px;line-height:1.6}
+
 /* Login */
-.login-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;background:var(--bg)}
+.login-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
 .login-box{background:var(--w);border:1px solid var(--b);border-radius:16px;padding:36px 32px;width:100%;max-width:360px;text-align:center;box-shadow:0 4px 24px rgba(28,43,58,.08)}
 .login-logo{font-size:22px;font-weight:700;margin-bottom:6px;color:var(--t)}.login-logo span{color:var(--g)}
 .login-sub{font-size:13px;color:var(--m);margin-bottom:28px}
-.err{font-size:12px;color:var(--r);margin-bottom:12px;padding:9px;background:var(--rl);border-radius:7px;display:none;text-align:left;border:1px solid var(--b)}
-/* Admin */
-.topbar{background:var(--w);border-bottom:1px solid var(--b);padding:0 24px;height:56px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+.err{font-size:12px;color:var(--r);margin-bottom:12px;padding:9px;background:var(--rl);border-radius:7px;display:none;text-align:left}
+
+/* Topbar */
+.topbar{background:var(--w);border-bottom:1px solid var(--b);padding:0 20px;height:52px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
 .logo{font-size:17px;font-weight:700;color:var(--t)}.logo span{color:var(--g)}
-.wrap{max-width:1200px;margin:0 auto;padding:24px 20px}
+
+/* Desktop tabs */
 .tabs{display:flex;gap:4px;margin-bottom:18px;border-bottom:1px solid var(--b)}
 .tb{padding:10px 16px;font-size:14px;font-weight:500;cursor:pointer;color:var(--m);border-bottom:2px solid transparent;margin-bottom:-1px;transition:all .15s;font-family:inherit;background:none;border-top:none;border-left:none;border-right:none}
 .tb.on{color:var(--g);border-bottom-color:var(--g)}
+
+/* Mobile bottom nav */
+.m-nav{display:none;position:fixed;bottom:0;left:0;right:0;background:var(--w);border-top:1px solid var(--b);z-index:100}
+.m-nav-inner{display:flex}
+.m-nav-btn{flex:1;padding:12px 0 10px;border:none;background:transparent;font-family:inherit;font-size:11px;color:var(--m);cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;transition:color .15s}
+.m-nav-btn.on{color:var(--g)}
+.m-nav-icon{font-size:18px;line-height:1}
+
 .pane{display:none}.pane.on{display:block}
+.wrap{max-width:1200px;margin:0 auto;padding:20px}
 .layout{display:grid;grid-template-columns:360px 1fr;gap:20px;align-items:start}
-.card{background:var(--w);border:1px solid var(--b);border-radius:12px;padding:20px}
-.ttl{font-size:16px;font-weight:700;margin-bottom:16px;color:var(--t)}
-.fg{display:flex;flex-direction:column;gap:5px;margin-bottom:13px}
+.card{background:var(--w);border:1px solid var(--b);border-radius:12px;padding:18px}
+.ttl{font-size:16px;font-weight:700;margin-bottom:14px;color:var(--t)}
+.fg{display:flex;flex-direction:column;gap:5px;margin-bottom:12px}
 .lbl{font-size:11px;font-weight:700;color:var(--m);text-transform:uppercase;letter-spacing:.5px}
-input[type=text],input[type=number],input[type=email],input[type=password],select,textarea{padding:10px 12px;border:1px solid var(--b);border-radius:8px;font-size:14px;font-family:inherit;background:var(--w);color:var(--t);outline:none;transition:border-color .15s;width:100%}
+input[type=text],input[type=number],input[type=email],input[type=password],select,textarea{padding:9px 12px;border:1px solid var(--b);border-radius:8px;font-size:14px;font-family:inherit;background:var(--w);color:var(--t);outline:none;transition:border-color .15s;width:100%}
 input:focus,select:focus,textarea:focus{border-color:var(--g)}
-textarea{resize:vertical;min-height:72px}
-.f2{display:grid;grid-template-columns:1fr 1fr;gap:11px}
-.f3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
-.size-row{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--m)}
-.size-row input{width:70px;text-align:center;padding:8px 6px}
+textarea{resize:vertical;min-height:68px}
+.f2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.size-row{display:flex;align-items:center;gap:6px}
+.size-row input{width:72px;text-align:center;padding:8px 6px}
 .size-sep{color:var(--b);font-size:16px}
-.drop{border:2px dashed var(--b);border-radius:9px;padding:24px;text-align:center;cursor:pointer;position:relative;overflow:hidden;transition:all .15s}
-.drop:hover,.drop.drag{border-color:var(--g);background:var(--gl)}
-.drop input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
-.drop img{width:100%;height:120px;object-fit:cover;border-radius:7px;display:none;margin-top:10px}
+
+/* Multi image upload */
+.img-upload-area{border:2px dashed var(--b);border-radius:10px;padding:16px;transition:all .15s;position:relative}
+.img-upload-area:hover{border-color:var(--g);background:var(--gl)}
+.img-upload-area input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+.img-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:10px}
+.img-item{position:relative;aspect-ratio:1;border-radius:8px;overflow:hidden;background:var(--bg)}
+.img-item img{width:100%;height:100%;object-fit:cover}
+.img-item-del{position:absolute;top:4px;right:4px;width:20px;height:20px;background:rgba(28,43,58,.7);color:#fff;border:none;border-radius:50%;font-size:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1}
+.img-item-main{position:absolute;bottom:4px;left:4px;font-size:10px;background:var(--g);color:#fff;padding:1px 6px;border-radius:4px}
+.img-add-hint{text-align:center;padding:12px 0;color:var(--m);font-size:13px}
+
 .btn{display:inline-flex;align-items:center;gap:5px;padding:9px 18px;border-radius:8px;font-size:14px;font-weight:600;font-family:inherit;cursor:pointer;transition:all .15s;border:none}
 .bg{background:var(--g);color:#fff}.bg:hover{background:#1e3450}.bg:disabled{opacity:.4;cursor:not-allowed}
 .bo{background:transparent;border:1px solid var(--b);color:var(--m)}.bo:hover{background:var(--bg)}
 .br{background:transparent;border:1px solid var(--b);color:var(--r)}.br:hover{background:var(--rl);border-color:var(--r)}
 .btn-sm{padding:5px 11px;font-size:12px}
+
 table{width:100%;border-collapse:collapse;font-size:13px}
 th{text-align:left;padding:10px 12px;background:var(--bg);color:var(--m);font-size:11px;text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid var(--b)}
-td{padding:11px 12px;border-bottom:1px solid var(--b);vertical-align:middle;color:var(--t)}
+td{padding:10px 12px;border-bottom:1px solid var(--b);vertical-align:middle;color:var(--t)}
 tr:last-child td{border-bottom:none}
 .bdg{display:inline-block;padding:2px 9px;border-radius:99px;font-size:11px;font-weight:600}
-.bg2{background:var(--gl);color:var(--g)}
-.ba{background:var(--al);color:var(--a)}
-.br2{background:var(--rl);color:var(--r)}
-.timg{width:44px;height:44px;border-radius:8px;object-fit:cover}
-#toast{position:fixed;bottom:24px;right:24px;background:var(--t);color:#fff;padding:11px 18px;border-radius:10px;font-size:13px;font-weight:500;z-index:999;opacity:0;transform:translateY(12px);transition:all .25s;pointer-events:none}
+.bg2{background:var(--gl);color:var(--g)}.ba{background:var(--al);color:var(--a)}.br2{background:var(--rl);color:var(--r)}
+.timg{width:40px;height:40px;border-radius:7px;object-fit:cover}
+
+/* Order card (mobile) */
+.o-card{background:var(--w);border:1px solid var(--b);border-radius:12px;padding:16px;margin-bottom:12px}
+.o-card-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.o-id{font-weight:700;font-size:14px}
+.o-customer{font-size:13px;font-weight:600;margin-bottom:2px}
+.o-meta{font-size:12px;color:var(--m);margin-bottom:6px}
+.o-items{font-size:12px;color:var(--m);margin-bottom:10px}
+.o-actions{display:flex;gap:8px;flex-wrap:wrap}
+.status-select{padding:5px 8px;border:1px solid var(--b);border-radius:7px;font-size:12px;font-family:inherit;background:var(--w);color:var(--t);cursor:pointer}
+
+/* Note modal */
+.note-ov{position:fixed;inset:0;background:rgba(28,43,58,.55);z-index:300;display:none;align-items:flex-end;justify-content:center}
+.note-ov.open{display:flex}
+.note-mo{background:var(--w);border-radius:18px 18px 0 0;padding:24px;width:100%;max-width:500px}
+.note-title{font-size:16px;font-weight:700;margin-bottom:14px;color:var(--t)}
+.note-ftr{display:flex;gap:8px;margin-top:12px;justify-content:flex-end}
+
+#toast{position:fixed;bottom:80px;right:16px;background:var(--t);color:#fff;padding:10px 16px;border-radius:10px;font-size:13px;font-weight:500;z-index:999;opacity:0;transform:translateY(12px);transition:all .25s;pointer-events:none;max-width:calc(100vw - 32px)}
 #toast.show{opacity:1;transform:translateY(0)}
+
 @media(max-width:900px){.layout{grid-template-columns:1fr}}
-@media(max-width:640px){.topbar{padding:0 16px}.wrap{padding:16px}.f2{grid-template-columns:1fr}.f3{grid-template-columns:1fr 1fr}}
+@media(max-width:640px){
+  .wrap{padding:14px 14px 80px}
+  .topbar{padding:0 14px}
+  .tabs{display:none}
+  .m-nav{display:block}
+  .f2{grid-template-columns:1fr}
+  .size-row input{width:60px}
+  table{display:none}
+  .table-wrap{display:none}
+}
+@media(min-width:641px){
+  .m-nav{display:none}
+  .o-card-list{display:none}
+  #toast{bottom:24px}
+}
 </style>
 </head>
 <body>
@@ -79,11 +118,11 @@ tr:last-child td{border-bottom:none}
 const API = 'https://pottery-shop.onrender.com';
 </script>
 
-<!-- 登入畫面 -->
+<!-- 登入 -->
 <div class="login-wrap" id="login-screen">
   <div class="login-box">
     <div class="login-logo">是陶<span>。</span></div>
-    <div class="login-sub">管理後台 · 請登入</div>
+    <div class="login-sub">管理後台</div>
     <div class="fg" style="text-align:left"><label class="lbl">Email</label><input type="email" id="l-email" placeholder="your@email.com"></div>
     <div class="fg" style="text-align:left;margin-bottom:16px"><label class="lbl">密碼</label><input type="password" id="l-pwd" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()"></div>
     <div class="err" id="l-err"></div>
@@ -91,17 +130,18 @@ const API = 'https://pottery-shop.onrender.com';
   </div>
 </div>
 
-<!-- 管理後台 -->
+<!-- 後台 -->
 <div id="admin-screen" style="display:none">
   <div class="topbar">
     <div class="logo">是陶<span>。</span> <span style="font-size:12px;color:var(--m);font-weight:400">管理後台</span></div>
-    <div style="display:flex;align-items:center;gap:12px">
-      <span style="font-size:13px;color:var(--m)" id="user-email"></span>
-      <button class="btn bo" style="padding:5px 14px;font-size:13px" onclick="doLogout()">登出</button>
+    <div style="display:flex;align-items:center;gap:10px">
+      <span style="font-size:12px;color:var(--m)" id="user-email"></span>
+      <button class="btn bo" style="padding:5px 12px;font-size:12px" onclick="doLogout()">登出</button>
     </div>
   </div>
 
   <div class="wrap">
+    <!-- Desktop tabs -->
     <div class="tabs">
       <button class="tb on" onclick="tab('products')">商品管理</button>
       <button class="tb" onclick="tab('orders')">訂單管理</button>
@@ -110,33 +150,30 @@ const API = 'https://pottery-shop.onrender.com';
     <!-- 商品 TAB -->
     <div id="p-products" class="pane on">
       <div class="layout">
+        <!-- 表單 -->
         <div class="card">
           <div class="ttl" id="ftitle">新增商品</div>
           <input type="hidden" id="eid">
+
+          <!-- 多圖上傳 -->
           <div class="fg">
-            <label class="lbl">商品照片</label>
-            <div class="drop" id="drop"
-              ondragover="event.preventDefault();this.classList.add('drag')"
-              ondragleave="this.classList.remove('drag')"
-              ondrop="doDrop(event)">
-              <input type="file" accept="image/*" id="fi" onchange="doFile(this.files[0])">
-              <div id="dhint">
-                <div style="font-size:13px;font-weight:600;margin-bottom:3px;color:var(--t)">點擊或拖曳上傳</div>
-                <div style="font-size:12px;color:var(--m)">JPG · PNG · WebP（最大 8MB）</div>
-              </div>
-              <img id="fpreview">
+            <label class="lbl">商品照片（最多 6 張）</label>
+            <div id="img-grid" class="img-grid"></div>
+            <div class="img-upload-area" id="img-upload-area">
+              <input type="file" accept="image/*" multiple id="fi" onchange="addFiles(this.files)">
+              <div class="img-add-hint">點擊新增照片</div>
             </div>
+            <div style="font-size:11px;color:var(--m);margin-top:4px">第一張為主圖，點 × 可刪除</div>
           </div>
+
           <div class="fg"><label class="lbl">商品名稱 *</label><input type="text" id="fname" placeholder="例：青釉花器"></div>
-          <div class="f2" style="margin-bottom:13px">
+          <div class="f2" style="margin-bottom:12px">
             <div class="fg" style="margin:0"><label class="lbl">分類 *</label>
               <select id="fcat"><option>花器</option><option>線香座</option><option>陶器皿</option><option>其他</option></select>
             </div>
             <div class="fg" style="margin:0"><label class="lbl">庫存 *</label><input type="number" id="fstock" placeholder="1" min="0"></div>
           </div>
           <div class="fg"><label class="lbl">售價（NT$）*</label><input type="number" id="fprice" placeholder="1200" min="1"></div>
-
-          <!-- 尺寸：長 × 寬 × 高 -->
           <div class="fg">
             <label class="lbl">尺寸（cm）</label>
             <div class="size-row">
@@ -148,7 +185,6 @@ const API = 'https://pottery-shop.onrender.com';
               <span style="font-size:12px;color:var(--m);white-space:nowrap">cm</span>
             </div>
           </div>
-
           <div class="fg"><label class="lbl">商品描述</label><textarea id="fdesc" placeholder="釉色、燒製方式、使用說明..."></textarea></div>
           <div style="display:flex;gap:8px;margin-top:4px">
             <button class="btn bg" id="sbtn" onclick="save()">儲存商品</button>
@@ -156,28 +192,59 @@ const API = 'https://pottery-shop.onrender.com';
           </div>
         </div>
 
+        <!-- 商品列表（桌機）-->
         <div>
-          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:13px">
-            <div style="font-size:16px;font-weight:700;color:var(--t)">商品列表 <span id="pcnt" style="color:var(--m);font-size:14px;font-weight:400"></span></div>
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+            <div style="font-size:16px;font-weight:700;color:var(--t)">商品列表 <span id="pcnt" style="color:var(--m);font-size:13px;font-weight:400"></span></div>
           </div>
-          <div class="card" style="padding:0;overflow:hidden">
+          <div class="card table-wrap" style="padding:0;overflow:hidden">
             <table>
               <thead><tr><th>圖片</th><th>名稱</th><th>分類</th><th>尺寸</th><th>售價</th><th>庫存</th><th>操作</th></tr></thead>
               <tbody id="ptbody"></tbody>
             </table>
           </div>
+          <!-- 商品卡片（手機）-->
+          <div id="p-card-list" class="o-card-list"></div>
         </div>
       </div>
     </div>
 
     <!-- 訂單 TAB -->
     <div id="p-orders" class="pane">
-      <div class="card" style="padding:0;overflow:hidden">
+      <!-- 桌機表格 -->
+      <div class="card table-wrap" style="padding:0;overflow:hidden">
         <table>
-          <thead><tr><th>#</th><th>顧客</th><th>聯絡方式</th><th>地址</th><th>商品</th><th>付款</th><th>金額</th><th>狀態</th><th>日期</th></tr></thead>
+          <thead><tr><th>#</th><th>顧客</th><th>聯絡</th><th>商品</th><th>金額</th><th>付款</th><th>狀態</th><th>日期</th><th>操作</th></tr></thead>
           <tbody id="otbody"></tbody>
         </table>
       </div>
+      <!-- 手機卡片 -->
+      <div id="o-card-list" class="o-card-list"></div>
+    </div>
+  </div>
+
+  <!-- 手機底部導覽 -->
+  <div class="m-nav">
+    <div class="m-nav-inner">
+      <button class="m-nav-btn on" id="nav-products" onclick="tab('products')">
+        <span class="m-nav-icon">◻</span>商品
+      </button>
+      <button class="m-nav-btn" id="nav-orders" onclick="tab('orders')">
+        <span class="m-nav-icon">≡</span>訂單
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- 備註 Modal -->
+<div class="note-ov" id="note-ov">
+  <div class="note-mo">
+    <div class="note-title">內部備註</div>
+    <input type="hidden" id="note-order-id">
+    <textarea id="note-text" placeholder="記錄處理進度、聯絡紀錄..." style="width:100%;min-height:100px;padding:10px 12px;border:1px solid var(--b);border-radius:8px;font-size:14px;font-family:inherit;background:var(--w);color:var(--t);outline:none;resize:vertical"></textarea>
+    <div class="note-ftr">
+      <button class="btn bo" onclick="closeNote()">取消</button>
+      <button class="btn bg" onclick="saveNote()">儲存備註</button>
     </div>
   </div>
 </div>
@@ -211,41 +278,79 @@ async function doLogin(){
   }catch(e){errEl.textContent=e.message;errEl.style.display='block';}
   finally{btn.disabled=false;btn.textContent='登入';}
 }
-function doLogout(){
-  TOKEN='';
-  document.getElementById('admin-screen').style.display='none';
-  document.getElementById('login-screen').style.display='flex';
-  document.getElementById('l-pwd').value='';
-}
+function doLogout(){TOKEN='';document.getElementById('admin-screen').style.display='none';document.getElementById('login-screen').style.display='flex';document.getElementById('l-pwd').value='';}
 
 // ── Tab ───────────────────────────────────────────────────
 function tab(name){
   document.querySelectorAll('.tb').forEach((t,i)=>t.classList.toggle('on',['products','orders'][i]===name));
+  document.querySelectorAll('.m-nav-btn').forEach((t,i)=>t.classList.toggle('on',['products','orders'][i]===name));
   document.querySelectorAll('.pane').forEach(p=>p.classList.remove('on'));
   document.getElementById('p-'+name).classList.add('on');
   if(name==='orders')loadOrders();else loadProducts();
 }
 
-// ── Image ─────────────────────────────────────────────────
-let imgFile=null,existingImgUrl=null;
-function doFile(f){
-  if(!f)return;imgFile=f;existingImgUrl=null;
-  const r=new FileReader();
-  r.onload=e=>{const img=document.getElementById('fpreview');img.src=e.target.result;img.style.display='block';document.getElementById('dhint').style.display='none';};
-  r.readAsDataURL(f);
-}
-function doDrop(e){e.preventDefault();document.getElementById('drop').classList.remove('drag');if(e.dataTransfer.files[0])doFile(e.dataTransfer.files[0]);}
+// ── Multi-image upload ────────────────────────────────────
+let imgFiles=[];    // new files to upload
+let imgUrls=[];     // existing urls (when editing)
+let pendingUrls=[]; // combined: existing + newly uploaded
 
-async function uploadImg(){
-  if(!imgFile)return existingImgUrl;
-  const fd=new FormData();fd.append('file',imgFile);
-  const res=await fetch(`${API}/upload/`,{method:'POST',headers:{'Authorization':`Bearer ${TOKEN}`},body:fd});
-  const data=await res.json();
-  if(!res.ok)throw new Error(data.detail||'圖片上傳失敗');
-  return data.url;
+function addFiles(files){
+  const remaining=6-pendingUrls.length-imgFiles.length;
+  const toAdd=Math.min(files.length,remaining);
+  if(toAdd<=0){toast('最多 6 張照片',false);return;}
+  for(let i=0;i<toAdd;i++) imgFiles.push(files[i]);
+  renderImgGrid();
 }
 
-// ── 尺寸轉換 ──────────────────────────────────────────────
+function removeImg(idx){
+  // idx refers to pendingUrls + imgFiles combined
+  const existingCount=pendingUrls.length;
+  if(idx<existingCount){pendingUrls.splice(idx,1);}
+  else{imgFiles.splice(idx-existingCount,1);}
+  renderImgGrid();
+}
+
+function renderImgGrid(){
+  const grid=document.getElementById('img-grid');
+  const area=document.getElementById('img-upload-area');
+  const allCount=pendingUrls.length+imgFiles.length;
+
+  // existing urls
+  const existingHTML=pendingUrls.map((url,i)=>`
+    <div class="img-item">
+      <img src="${url}">
+      ${i===0?'<div class="img-item-main">主圖</div>':''}
+      <button class="img-item-del" onclick="removeImg(${i})">×</button>
+    </div>`).join('');
+
+  // new files (show preview)
+  const newHTML=imgFiles.map((f,i)=>{
+    const idx=pendingUrls.length+i;
+    const url=URL.createObjectURL(f);
+    return `<div class="img-item">
+      <img src="${url}">
+      ${idx===0?'<div class="img-item-main">主圖</div>':''}
+      <button class="img-item-del" onclick="removeImg(${idx})">×</button>
+    </div>`;
+  }).join('');
+
+  grid.innerHTML=existingHTML+newHTML;
+  area.style.display=allCount>=6?'none':'block';
+}
+
+async function uploadAllNewImgs(){
+  const uploaded=[];
+  for(const f of imgFiles){
+    const fd=new FormData();fd.append('file',f);
+    const res=await fetch(`${API}/upload/`,{method:'POST',headers:{'Authorization':`Bearer ${TOKEN}`},body:fd});
+    const data=await res.json();
+    if(!res.ok)throw new Error(data.detail||'圖片上傳失敗');
+    uploaded.push(data.url);
+  }
+  return uploaded;
+}
+
+// ── Sizes ─────────────────────────────────────────────────
 function getSizes(){
   const l=document.getElementById('flen').value;
   const w=document.getElementById('fwid').value;
@@ -254,13 +359,8 @@ function getSizes(){
   return parts.length?parts.join(' × ')+' cm':'';
 }
 function setSizes(str){
-  // 解析 "長10 × 寬8 × 高15 cm" 格式
   const m=str.match(/長([\d.]+).*寬([\d.]+).*高([\d.]+)/);
-  if(m){
-    document.getElementById('flen').value=m[1];
-    document.getElementById('fwid').value=m[2];
-    document.getElementById('fhgt').value=m[3];
-  }
+  if(m){document.getElementById('flen').value=m[1];document.getElementById('fwid').value=m[2];document.getElementById('fhgt').value=m[3];}
 }
 
 // ── Save product ──────────────────────────────────────────
@@ -268,12 +368,19 @@ async function save(){
   const name=document.getElementById('fname').value.trim();
   const price=parseInt(document.getElementById('fprice').value);
   const stock=parseInt(document.getElementById('fstock').value);
-  const sizes=getSizes();
   if(!name||!price||isNaN(stock)){toast('請填寫必填欄位',false);return;}
   const btn=document.getElementById('sbtn');btn.disabled=true;btn.textContent='儲存中...';
   try{
-    const image_url=await uploadImg();
-    const body={name,price,stock,sizes,category:document.getElementById('fcat').value,description:document.getElementById('fdesc').value,image_url};
+    const newUrls=await uploadAllNewImgs();
+    const allUrls=[...pendingUrls,...newUrls];
+    const body={
+      name,price,stock,
+      sizes:getSizes(),
+      category:document.getElementById('fcat').value,
+      description:document.getElementById('fdesc').value,
+      image_url:allUrls[0]||null,
+      image_urls:allUrls,
+    };
     const eid=document.getElementById('eid').value;
     if(eid){await api(`/products/${eid}`,{method:'PATCH',body:JSON.stringify(body)});toast('商品已更新！');}
     else{await api('/products/',{method:'POST',body:JSON.stringify(body)});toast('商品已新增！');}
@@ -285,11 +392,9 @@ async function save(){
 function reset(){
   ['fname','fprice','fstock','fdesc','flen','fwid','fhgt'].forEach(id=>document.getElementById(id).value='');
   document.getElementById('eid').value='';document.getElementById('fcat').value='花器';
-  const prev=document.getElementById('fpreview');prev.style.display='none';
-  document.getElementById('dhint').style.display='block';
+  imgFiles=[];pendingUrls=[];renderImgGrid();
   document.getElementById('fi').value='';
   document.getElementById('ftitle').textContent='新增商品';
-  imgFile=null;existingImgUrl=null;
 }
 
 function editP(p){
@@ -300,19 +405,17 @@ function editP(p){
   document.getElementById('fstock').value=p.stock;
   document.getElementById('fdesc').value=p.description||'';
   setSizes(p.sizes||'');
-  if(p.image_url){
-    const img=document.getElementById('fpreview');img.src=p.image_url;img.style.display='block';
-    document.getElementById('dhint').style.display='none';
-    existingImgUrl=p.image_url;imgFile=null;
-  }
+  imgFiles=[];
+  pendingUrls=p.image_urls&&p.image_urls.length?[...p.image_urls]:(p.image_url?[p.image_url]:[]);
+  renderImgGrid();
   document.getElementById('ftitle').textContent='編輯商品';
   window.scrollTo({top:0,behavior:'smooth'});
 }
 
-async function delP(id,name){
-  if(!confirm(`確定刪除「${name}」？`))return;
-  try{await api(`/products/${id}`,{method:'DELETE'});toast('已刪除');loadProducts();}
-  catch(e){toast('刪除失敗：'+e.message,false);}
+async function archiveP(id,name){
+  if(!confirm(`封存「${name}」？（庫存設為 0，訂單記錄保留）`))return;
+  try{await api(`/products/${id}`,{method:'DELETE'});toast('已封存');loadProducts();}
+  catch(e){toast('操作失敗',false);}
 }
 
 // ── Load products ─────────────────────────────────────────
@@ -320,14 +423,21 @@ async function loadProducts(){
   try{
     const data=await api('/products');
     document.getElementById('pcnt').textContent=`(${data.length} 項)`;
+
+    // Desktop table
     const tbody=document.getElementById('ptbody');
-    if(!data.length){tbody.innerHTML='<tr><td colspan="7" style="text-align:center;color:var(--m);padding:30px">尚無商品</td></tr>';return;}
+    if(!data.length){
+      tbody.innerHTML='<tr><td colspan="7" style="text-align:center;color:var(--m);padding:30px">尚無商品</td></tr>';
+      document.getElementById('p-card-list').innerHTML='<div style="text-align:center;color:var(--m);padding:30px;font-size:13px">尚無商品</div>';
+      return;
+    }
     tbody.innerHTML=data.map(p=>{
-      const img=p.image_url?`<img class="timg" src="${p.image_url}">`:`<div style="width:44px;height:44px;border-radius:8px;background:var(--bg);display:flex;align-items:center;justify-content:center;font-size:18px;color:var(--b)">◻</div>`;
+      const imgs=p.image_urls&&p.image_urls.length?p.image_urls:(p.image_url?[p.image_url]:[]);
+      const img=imgs.length?`<img class="timg" src="${imgs[0]}">`:`<div style="width:40px;height:40px;border-radius:7px;background:var(--bg)"></div>`;
       const sc=p.stock>5?'bg2':p.stock>0?'ba':'br2';
       const sl=p.stock>5?'充足':p.stock>0?'低庫存':'售完';
       return `<tr>
-        <td>${img}</td>
+        <td>${img}${imgs.length>1?`<span style="font-size:10px;color:var(--m);margin-left:4px">+${imgs.length-1}</span>`:''}</td>
         <td style="font-weight:600">${p.name}</td>
         <td style="color:var(--m)">${p.category}</td>
         <td style="color:var(--m);font-size:12px">${p.sizes||'—'}</td>
@@ -335,38 +445,130 @@ async function loadProducts(){
         <td><span class="bdg ${sc}">${sl} ${p.stock}</span></td>
         <td style="white-space:nowrap">
           <button class="btn bo btn-sm" onclick='editP(${JSON.stringify(p)})'>編輯</button>
-          <button class="btn br btn-sm" style="margin-left:4px" onclick="delP(${p.id},'${p.name.replace(/'/g,"\\'")}')">刪除</button>
+          <button class="btn br btn-sm" style="margin-left:4px" onclick="archiveP(${p.id},'${p.name.replace(/'/g,"\\'")}')">封存</button>
         </td>
       </tr>`;
+    }).join('');
+
+    // Mobile cards
+    document.getElementById('p-card-list').innerHTML=data.map(p=>{
+      const imgs=p.image_urls&&p.image_urls.length?p.image_urls:(p.image_url?[p.image_url]:[]);
+      const sc=p.stock>5?'bg2':p.stock>0?'ba':'br2';
+      const sl=p.stock>5?'充足':p.stock>0?'低庫存':'售完';
+      return `<div class="o-card">
+        <div class="o-card-hdr">
+          <div>
+            <div class="o-customer">${p.name}</div>
+            <div class="o-meta">${p.category}${p.sizes?' · '+p.sizes:''}</div>
+          </div>
+          <div style="text-align:right">
+            <div style="font-weight:700;color:var(--g)">NT$${p.price.toLocaleString()}</div>
+            <span class="bdg ${sc}">${sl} ${p.stock}</span>
+          </div>
+        </div>
+        ${imgs.length?`<img src="${imgs[0]}" style="width:100%;height:140px;object-fit:cover;border-radius:8px;margin-bottom:10px">`:''}
+        <div class="o-actions">
+          <button class="btn bo btn-sm" onclick='editP(${JSON.stringify(p)})'>編輯</button>
+          <button class="btn br btn-sm" onclick="archiveP(${p.id},'${p.name.replace(/'/g,"\\'")}')">封存</button>
+        </div>
+      </div>`;
     }).join('');
   }catch(e){toast('載入失敗：'+e.message,false);}
 }
 
-// ── Load orders ───────────────────────────────────────────
-const SL={pending:'待確認',paid:'已付款',shipped:'已出貨',completed:'完成',cancelled:'取消'};
-const SC={pending:'ba',paid:'bg2',shipped:'bg2',completed:'bg2',cancelled:'br2'};
+// ── Orders ────────────────────────────────────────────────
+const SL={pending:'待確認',confirmed:'已確認',shipped:'已出貨',completed:'完成',cancelled:'取消'};
+const SC={pending:'ba',confirmed:'bg2',shipped:'bg2',completed:'bg2',cancelled:'br2'};
 
 async function loadOrders(){
   try{
     const data=await api('/orders');
     const tbody=document.getElementById('otbody');
-    if(!data.length){tbody.innerHTML='<tr><td colspan="9" style="text-align:center;color:var(--m);padding:30px">尚無訂單</td></tr>';return;}
+
+    if(!data.length){
+      tbody.innerHTML='<tr><td colspan="9" style="text-align:center;color:var(--m);padding:30px">尚無訂單</td></tr>';
+      document.getElementById('o-card-list').innerHTML='<div style="text-align:center;color:var(--m);padding:30px;font-size:13px">尚無訂單</div>';
+      return;
+    }
+
+    // Desktop table
     tbody.innerHTML=data.map(o=>{
       const itemStr=(o.items||[]).map(i=>`${i.product_name} ×${i.qty}`).join('、');
       return `<tr>
         <td style="font-weight:700">#${o.id}</td>
-        <td style="font-weight:600">${o.customer_name}</td>
+        <td>
+          <div style="font-weight:600">${o.customer_name}</div>
+          ${o.internal_note?`<div style="font-size:11px;color:var(--g);margin-top:2px">📝 ${o.internal_note.slice(0,20)}${o.internal_note.length>20?'...':''}</div>`:''}
+        </td>
         <td><div style="font-size:12px">${o.customer_phone}</div><div style="font-size:12px;color:var(--m)">${o.customer_email}</div></td>
-        <td style="font-size:12px;color:var(--m);max-width:130px">${o.address}</td>
-        <td style="font-size:12px;color:var(--m);max-width:150px">${itemStr}</td>
-        <td style="font-size:12px">${o.payment_method}</td>
+        <td style="font-size:12px;color:var(--m);max-width:140px">${itemStr}</td>
         <td style="font-weight:600;white-space:nowrap">NT$${o.total_amount.toLocaleString()}</td>
-        <td><span class="bdg ${SC[o.status]||'ba'}">${SL[o.status]||o.status}</span></td>
+        <td style="font-size:12px">${o.payment_method}</td>
+        <td>
+          <select class="status-select" onchange="updateStatus(${o.id},this.value,this)">
+            ${Object.entries(SL).map(([v,l])=>`<option value="${v}"${v===o.status?' selected':''}>${l}</option>`).join('')}
+          </select>
+        </td>
         <td style="font-size:12px;color:var(--m);white-space:nowrap">${(o.created_at||'').slice(0,10)}</td>
+        <td><button class="btn bo btn-sm" onclick="openNote(${o.id},'${(o.internal_note||'').replace(/'/g,"\\'")}')">備註</button></td>
       </tr>`;
+    }).join('');
+
+    // Mobile cards
+    document.getElementById('o-card-list').innerHTML=data.map(o=>{
+      const itemStr=(o.items||[]).map(i=>`${i.product_name} ×${i.qty}`).join('、');
+      return `<div class="o-card">
+        <div class="o-card-hdr">
+          <div class="o-id">#${o.id}</div>
+          <span class="bdg ${SC[o.status]||'ba'}">${SL[o.status]||o.status}</span>
+        </div>
+        <div class="o-customer">${o.customer_name}</div>
+        <div class="o-meta">${o.customer_phone} · ${o.customer_email}</div>
+        <div class="o-meta">${o.address}</div>
+        <div class="o-items">${itemStr}</div>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+          <div style="font-weight:700;color:var(--g)">NT$${o.total_amount.toLocaleString()}</div>
+          <div style="font-size:12px;color:var(--m)">${(o.created_at||'').slice(0,10)}</div>
+        </div>
+        ${o.internal_note?`<div style="font-size:12px;color:var(--g);background:var(--gl);padding:7px 10px;border-radius:7px;margin-bottom:10px">📝 ${o.internal_note}</div>`:''}
+        <div class="o-actions">
+          <select class="status-select" onchange="updateStatus(${o.id},this.value,this)">
+            ${Object.entries(SL).map(([v,l])=>`<option value="${v}"${v===o.status?' selected':''}>${l}</option>`).join('')}
+          </select>
+          <button class="btn bo btn-sm" onclick="openNote(${o.id},'${(o.internal_note||'').replace(/'/g,"\\'")}')">📝 備註</button>
+        </div>
+      </div>`;
     }).join('');
   }catch(e){toast('載入失敗：'+e.message,false);}
 }
+
+async function updateStatus(id,status,el){
+  try{
+    await api(`/orders/${id}`,{method:'PATCH',body:JSON.stringify({status})});
+    toast('狀態已更新');
+  }catch(e){toast('更新失敗',false);}
+}
+
+// ── Note modal ────────────────────────────────────────────
+function openNote(id,note){
+  document.getElementById('note-order-id').value=id;
+  document.getElementById('note-text').value=note||'';
+  document.getElementById('note-ov').classList.add('open');
+}
+function closeNote(){document.getElementById('note-ov').classList.remove('open');}
+async function saveNote(){
+  const id=document.getElementById('note-order-id').value;
+  const note=document.getElementById('note-text').value;
+  try{
+    // get current status first
+    const orders=await api('/orders');
+    const o=orders.find(x=>x.id==id);
+    await api(`/orders/${id}`,{method:'PATCH',body:JSON.stringify({status:o?.status||'pending',internal_note:note})});
+    toast('備註已儲存');closeNote();loadOrders();
+  }catch(e){toast('儲存失敗',false);}
+}
+
+loadProducts();
 </script>
 </body>
 </html>
