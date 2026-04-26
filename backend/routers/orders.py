@@ -93,3 +93,11 @@ async def update_order(order_id: int, body: StatusUpdate, authorization: str = H
 
     await sb_fetch(f"/orders?id=eq.{order_id}", method="PATCH", body=payload)
     return {"message": "訂單已更新"}
+
+@router.delete("/{order_id}")
+async def delete_order(order_id: int, authorization: str = Header(...)):
+    token = authorization.replace("Bearer ", "")
+    await verify_admin_token(token)
+    await sb_fetch(f"/order_items?order_id=eq.{order_id}", method="DELETE")
+    await sb_fetch(f"/orders?id=eq.{order_id}", method="DELETE")
+    return {"message": "訂單已刪除"}
