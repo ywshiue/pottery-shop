@@ -21,15 +21,20 @@ class OrderIn(BaseModel):
     note: Optional[str] = ""
     items: List[OrderItem]
 
-# ── 公開：任何人都可以下單 ─────────────────────────────────
+class StatusUpdate(BaseModel):
+    status: str
+    internal_note: Optional[str] = None
+
+VALID_STATUS = {"pending", "confirmed", "shipped", "completed", "cancelled"}
+
+# ── 公開：任何人可以下單 ───────────────────────────────────
 @router.post("/")
 async def create_order(order: OrderIn):
     if not order.items:
         raise HTTPException(status_code=400, detail="購物車是空的")
 
-    total = sum(i.qty * i.unit_price for i in order.items) + 100  # +運費
+    total = sum(i.qty * i.unit_price for i in order.items) + 160  # 運費 160
 
-    # 建立訂單
     order_data = await sb_fetch("/orders", method="POST", body={
         "customer_name":  order.customer_name,
         "customer_email": order.customer_email,
@@ -41,7 +46,6 @@ async def create_order(order: OrderIn):
     })
     order_id = order_data[0]["id"]
 
-    # 寫入訂單明細
     items_payload = [
         {
             "order_id":     order_id,
@@ -64,30 +68,28 @@ async def create_order(order: OrderIn):
 
     return {"order_id": order_id, "total": total}
 
-# ── 管理員才能看訂單 ───────────────────────────────────────
+# ── 管理員才能看/更新訂單 ──────────────────────────────────
 @router.get("/")
 async def list_orders(authorization: str = Header(...)):
     token = authorization.replace("Bearer ", "")
     await verify_admin_token(token)
-
     orders = await sb_fetch("/orders?order=created_at.desc")
     items  = await sb_fetch("/order_items?order=order_id.asc")
-
-    # 把訂單明細附加到每筆訂單
     for o in orders:
         o["items"] = [i for i in items if i["order_id"] == o["id"]]
-
     return orders
 
-@router.patch("/{order_id}/status")
-async def update_status(order_id: int, body: dict, authorization: str = Header(...)):
+@router.patch("/{order_id}")
+async def update_order(order_id: int, body: StatusUpdate, authorization: str = Header(...)):
     token = authorization.replace("Bearer ", "")
     await verify_admin_token(token)
 
-    valid = {"pending", "paid", "shipped", "completed", "cancelled"}
-    status = body.get("status")
-    if status not in valid:
-        raise HTTPException(status_code=400, detail=f"無效狀態，必須是：{valid}")
+    if body.status not in VALID_STATUS:
+        raise HTTPException(status_code=400, detail=f"無效狀態，必須是：{VALID_STATUS}")
 
-    await sb_fetch(f"/orders?id=eq.{order_id}", method="PATCH", body={"status": status})
-    return {"message": "狀態已更新"}
+    payload = {"status": body.status}
+    if body.internal_note is not None:
+        payload["internal_note"] = body.internal_note
+
+    await sb_fetch(f"/orders?id=eq.{order_id}", method="PATCH", body=payload)
+    return {"message": "訂單已更新"}
