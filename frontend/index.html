@@ -3,54 +3,67 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>陶藝工坊</title>
+<title>是陶。</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{--g:#1D9E75;--gl:#E1F5EE;--t:#1a1a1a;--m:#6b7280;--b:#e5e7eb;--bg:#f9fafb;--w:#fff;--r:#E24B4A}
+:root{
+  --g:#2C4A6E;
+  --gl:#E8EEF5;
+  --t:#1C2B3A;
+  --m:#6B7280;
+  --b:#D4CFC9;
+  --bg:#E0DCD5;
+  --w:#F5F2EE;
+  --r:#8B6F47;
+  --rl:#F5EDE0;
+}
 body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--t);font-size:15px;line-height:1.6}
-.topbar{background:var(--w);border-bottom:1px solid var(--b);padding:0 24px;height:56px;display:flex;align-items:center;position:sticky;top:0;z-index:100;box-shadow:0 1px 4px rgba(0,0,0,.05)}
-.logo{font-size:18px;font-weight:700}.logo span{color:var(--g)}
-.wrap{max-width:1200px;margin:0 auto;padding:24px 20px}
-.fbar{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px}
-.fc{padding:6px 16px;border-radius:99px;border:1px solid var(--b);font-size:13px;cursor:pointer;background:transparent;color:var(--m);transition:all .15s;font-family:inherit}
+.topbar{background:var(--w);border-bottom:1px solid var(--b);padding:0 28px;height:60px;display:flex;align-items:center;position:sticky;top:0;z-index:100;box-shadow:0 1px 6px rgba(28,43,58,.06)}
+.logo{font-size:20px;font-weight:700;letter-spacing:.5px;color:var(--t)}
+.logo span{color:var(--g)}
+.wrap{max-width:1200px;margin:0 auto;padding:28px 20px}
+.fbar{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:22px}
+.fc{padding:6px 18px;border-radius:99px;border:1px solid var(--b);font-size:13px;cursor:pointer;background:transparent;color:var(--m);transition:all .15s;font-family:inherit}
 .fc.on{background:var(--g);color:#fff;border-color:var(--g)}
 .layout{display:grid;grid-template-columns:1fr 300px;gap:20px;align-items:start}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:14px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(162px,1fr));gap:14px}
 .pc{background:var(--w);border:1px solid var(--b);border-radius:12px;overflow:hidden;transition:border-color .15s,box-shadow .15s}
-.pc:hover{border-color:#9ca3af;box-shadow:0 2px 10px rgba(0,0,0,.08)}
+.pc:hover{border-color:var(--g);box-shadow:0 3px 12px rgba(44,74,110,.1)}
 .pimg{width:100%;aspect-ratio:1;background:var(--bg);display:flex;align-items:center;justify-content:center;font-size:48px;position:relative;overflow:hidden}
 .pimg img{width:100%;height:100%;object-fit:cover}
-.smask{position:absolute;inset:0;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;color:#fff;font-size:13px;font-weight:600}
-.pbody{padding:11px 13px}
-.pname{font-size:13px;font-weight:700;margin-bottom:3px}
+.smask{position:absolute;inset:0;background:rgba(28,43,58,.5);display:flex;align-items:center;justify-content:center;color:#fff;font-size:13px;font-weight:600;letter-spacing:.5px}
+.pbody{padding:12px 14px}
+.pname{font-size:13px;font-weight:700;margin-bottom:3px;color:var(--t)}
 .psize{font-size:11px;color:var(--m);margin-bottom:5px}
 .pprice{font-size:15px;font-weight:700;color:var(--g);margin-bottom:6px}
-.pdesc{font-size:11px;color:var(--m);margin-bottom:9px;line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-.abtn{width:100%;padding:8px;background:var(--g);color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;transition:background .15s}
-.abtn:hover{background:#178a63}.abtn:disabled{background:var(--b);color:var(--m);cursor:not-allowed}
-.cbox{background:var(--w);border:1px solid var(--b);border-radius:12px;padding:18px;position:sticky;top:68px}
-.chdr{font-size:15px;font-weight:700;display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.pdesc{font-size:11px;color:var(--m);margin-bottom:10px;line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.abtn{width:100%;padding:8px;background:var(--g);color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;transition:background .15s;letter-spacing:.3px}
+.abtn:hover{background:#1e3450}.abtn:disabled{background:var(--b);color:var(--m);cursor:not-allowed}
+/* Cart */
+.cbox{background:var(--w);border:1px solid var(--b);border-radius:12px;padding:18px;position:sticky;top:72px}
+.chdr{font-size:15px;font-weight:700;display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;color:var(--t)}
 .ccnt{background:var(--g);color:#fff;border-radius:99px;font-size:11px;font-weight:700;padding:2px 9px}
 .cempty{text-align:center;padding:28px 0;color:var(--m);font-size:13px}
 .ci{display:flex;gap:10px;padding:10px 0;border-bottom:1px solid var(--b);align-items:flex-start}
 .cimg{width:42px;height:42px;border-radius:8px;background:var(--bg);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;overflow:hidden}
 .cimg img{width:100%;height:100%;object-fit:cover;border-radius:8px}
-.cn{font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cn{font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--t)}
 .csz{font-size:11px;color:var(--m);margin-top:1px}
 .cp{font-size:13px;font-weight:700;color:var(--g);flex-shrink:0;padding-top:2px}
 .qr{display:flex;align-items:center;gap:5px;margin-top:5px}
-.qb{width:22px;height:22px;border-radius:5px;border:1px solid var(--b);background:transparent;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;font-family:inherit}
+.qb{width:22px;height:22px;border-radius:5px;border:1px solid var(--b);background:transparent;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;font-family:inherit;color:var(--t)}
 .totbl{margin-top:12px;padding-top:12px;border-top:1px solid var(--b)}
 .tr{display:flex;justify-content:space-between;font-size:13px;color:var(--m);margin-bottom:5px}
 .tr.grand{font-weight:700;font-size:15px;color:var(--t);margin-top:8px}
-.cbtn{width:100%;margin-top:12px;padding:11px;background:var(--g);color:#fff;border:none;border-radius:9px;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit;transition:background .15s}
-.cbtn:hover{background:#178a63}
-.ov{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;display:none;align-items:center;justify-content:center;padding:20px}
+.cbtn{width:100%;margin-top:12px;padding:11px;background:var(--g);color:#fff;border:none;border-radius:9px;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit;transition:background .15s;letter-spacing:.3px}
+.cbtn:hover{background:#1e3450}
+/* Modal */
+.ov{position:fixed;inset:0;background:rgba(28,43,58,.55);z-index:200;display:none;align-items:center;justify-content:center;padding:20px}
 .ov.open{display:flex}
 .mo{background:var(--w);border-radius:14px;padding:26px;width:100%;max-width:430px;max-height:90vh;overflow-y:auto}
-.mtitle{font-size:17px;font-weight:700;margin-bottom:4px}
+.mtitle{font-size:17px;font-weight:700;margin-bottom:4px;color:var(--t)}
 .msub{font-size:13px;color:var(--m);margin-bottom:20px}
 .fg{display:flex;flex-direction:column;gap:5px;margin-bottom:13px}
 .lbl{font-size:11px;font-weight:700;color:var(--m);text-transform:uppercase;letter-spacing:.5px}
@@ -60,15 +73,14 @@ textarea{resize:vertical;min-height:72px}
 .f2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:13px}
 .po{display:flex;align-items:center;gap:11px;padding:11px;border:1.5px solid var(--b);border-radius:9px;cursor:pointer;margin-bottom:7px;transition:all .15s}
 .po:hover{background:var(--bg)}.po.sel{border-color:var(--g);background:var(--gl)}
-.pi{font-size:21px;width:32px;text-align:center}
-.pl{font-size:14px;font-weight:600}.ps{font-size:11px;color:var(--m);margin-top:1px}
-.ordsum{background:var(--bg);padding:12px;border-radius:9px;font-size:13px;margin-top:14px}
+.pl{font-size:14px;font-weight:600;color:var(--t)}.ps{font-size:11px;color:var(--m);margin-top:1px}
+.ordsum{background:var(--bg);padding:12px;border-radius:9px;font-size:13px;margin-top:14px;border:1px solid var(--b)}
 .mftr{display:flex;gap:8px;margin-top:14px;justify-content:flex-end}
 .btn{display:inline-flex;align-items:center;padding:9px 20px;border-radius:8px;font-size:14px;font-weight:600;font-family:inherit;cursor:pointer;transition:all .15s;border:none}
-.bg{background:var(--g);color:#fff}.bg:hover{background:#178a63}.bg:disabled{opacity:.4;cursor:not-allowed}
+.bg{background:var(--g);color:#fff}.bg:hover{background:#1e3450}.bg:disabled{opacity:.4;cursor:not-allowed}
 .bo{background:transparent;border:1px solid var(--b);color:var(--m)}.bo:hover{background:var(--bg)}
 .sbox{text-align:center;padding:28px 0}
-#toast{position:fixed;bottom:24px;right:24px;background:#1a1a1a;color:#fff;padding:11px 18px;border-radius:10px;font-size:13px;font-weight:500;z-index:999;opacity:0;transform:translateY(12px);transition:all .25s;pointer-events:none}
+#toast{position:fixed;bottom:24px;right:24px;background:var(--t);color:#fff;padding:11px 18px;border-radius:10px;font-size:13px;font-weight:500;z-index:999;opacity:0;transform:translateY(12px);transition:all .25s;pointer-events:none}
 #toast.show{opacity:1;transform:translateY(0)}
 .loading{text-align:center;padding:40px;color:var(--m);font-size:14px}
 @media(max-width:680px){.layout{grid-template-columns:1fr}.cbox{position:static}.grid{grid-template-columns:repeat(2,1fr)}.f2{grid-template-columns:1fr}.topbar{padding:0 16px}.wrap{padding:16px}}
@@ -77,13 +89,11 @@ textarea{resize:vertical;min-height:72px}
 <body>
 
 <script>
-// ── 填入你的 Render 後端網址 ──────────────────────
 const API = 'https://pottery-shop.onrender.com';
-// ────────────────────────────────────────────────
 </script>
 
 <div class="topbar">
-  <div class="logo">陶藝<span>工坊</span></div>
+  <div class="logo">是陶<span>。</span></div>
 </div>
 
 <div class="wrap">
@@ -101,7 +111,7 @@ const API = 'https://pottery-shop.onrender.com';
       <div id="cbody"><div class="cempty">尚未加入任何商品</div></div>
       <div class="totbl" id="totbl" style="display:none">
         <div class="tr"><span>小計</span><span id="sub"></span></div>
-        <div class="tr"><span>運費</span><span>NT$100</span></div>
+        <div class="tr"><span>運費</span><span>NT$160</span></div>
         <div class="tr grand"><span>合計</span><span id="grand"></span></div>
         <button class="cbtn" onclick="openModal()">前往結帳</button>
       </div>
@@ -125,20 +135,14 @@ const API = 'https://pottery-shop.onrender.com';
 
       <div class="lbl" style="margin:4px 0 9px">付款方式</div>
       <div class="po sel" onclick="setPay('銀行轉帳',this)">
-        <div class="pi">🏦</div>
-        <div><div class="pl">銀行轉帳</div><div class="ps">下單後提供匯款帳號，3 天內完成</div></div>
+        <div><div class="pl">銀行轉帳</div><div class="ps">下單後提供匯款帳號，3 天內完成付款</div></div>
         <input type="radio" name="pay" checked style="margin-left:auto">
-      </div>
-      <div class="po" onclick="setPay('貨到付款',this)">
-        <div class="pi">💵</div>
-        <div><div class="pl">貨到付款</div><div class="ps">收到商品時付款</div></div>
-        <input type="radio" name="pay" style="margin-left:auto">
       </div>
       <!-- Line Pay 之後加在這裡 -->
 
       <div class="ordsum">
         <div style="display:flex;justify-content:space-between;color:var(--m)"><span>訂單金額</span><span id="mtotal"></span></div>
-        <div style="font-size:11px;color:var(--m);margin-top:6px">送出後，工坊會盡快與您聯繫 🏺</div>
+        <div style="font-size:11px;color:var(--m);margin-top:6px">送出後，工坊會盡快與您聯繫</div>
       </div>
       <div class="mftr">
         <button class="btn bo" onclick="closeModal()">返回</button>
@@ -146,18 +150,17 @@ const API = 'https://pottery-shop.onrender.com';
       </div>
     </div>
     <div class="sbox" id="sv" style="display:none">
-      <div style="font-size:54px;margin-bottom:14px">🏺</div>
-      <div style="font-size:18px;font-weight:700;margin-bottom:8px">訂單已送出！</div>
+      <div style="font-size:17px;font-weight:700;margin-bottom:10px;color:var(--t)">訂單已送出</div>
       <div style="font-size:13px;color:var(--m);margin-bottom:6px">訂單編號：<strong id="onum"></strong></div>
-      <div style="font-size:13px;color:var(--m);margin-bottom:24px;line-height:1.8">感謝您的支持 🙏<br>我們將盡快以電話或 Email 確認您的訂單</div>
-      <button class="btn bg" onclick="closeModal();resetCart()">繼續購物</button>
+      <div style="font-size:13px;color:var(--m);margin-bottom:24px;line-height:1.8">感謝您的支持<br>我們將盡快以電話或 Email 確認您的訂單</div>
+      <button class="btn bg" onclick="closeModal();resetCart()">繼續選購</button>
     </div>
   </div>
 </div>
 
 <div id="toast"></div>
 <script>
-function toast(msg,ok=true){const t=document.getElementById('toast');t.textContent=msg;t.style.background=ok?'#1a1a1a':'#E24B4A';t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2600);}
+function toast(msg,ok=true){const t=document.getElementById('toast');t.textContent=msg;t.style.background=ok?'#1C2B3A':'#8B6F47';t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2600);}
 
 let products=[],cart=[],cat='',pay='銀行轉帳';
 
@@ -176,11 +179,11 @@ function render(){
   if(!products.length){g.innerHTML='<div class="loading">此分類暫無商品</div>';return;}
   g.innerHTML=products.map(p=>{
     const so=p.stock===0;
-    const img=p.image_url?`<img src="${p.image_url}">`:`<span style="font-size:48px">🏺</span>`;
-    const sizeInfo=(p.sizes||'').trim()?`<div class="psize">📐 ${p.sizes}</div>`:'';
+    const img=p.image_url?`<img src="${p.image_url}">`:`<span style="font-size:48px;opacity:.3">◻</span>`;
+    const sizeInfo=(p.sizes||'').trim()?`<div class="psize">${p.sizes}</div>`:'';
     const descInfo=(p.description||'').trim()?`<div class="pdesc">${p.description}</div>`:'';
     return `<div class="pc">
-      <div class="pimg">${img}${so?'<div class="smask">已售完</div>':''}</div>
+      <div class="pimg">${img}${so?'<div class="smask">售完</div>':''}</div>
       <div class="pbody">
         <div class="pname">${p.name}</div>
         ${sizeInfo}
@@ -207,7 +210,7 @@ function renderCart(){
   const body=document.getElementById('cbody'),tb=document.getElementById('totbl');
   if(!cart.length){body.innerHTML='<div class="cempty">尚未加入任何商品</div>';tb.style.display='none';return;}
   body.innerHTML=cart.map(c=>{
-    const img=c.img?`<img src="${c.img}">`:`<span style="font-size:18px">🏺</span>`;
+    const img=c.img?`<img src="${c.img}">`:`<span style="font-size:18px;opacity:.3">◻</span>`;
     return `<div class="ci">
       <div class="cimg">${img}</div>
       <div style="flex:1;min-width:0">
@@ -224,11 +227,11 @@ function renderCart(){
   }).join('');
   tb.style.display='block';
   document.getElementById('sub').textContent='NT$'+tot.toLocaleString();
-  document.getElementById('grand').textContent='NT$'+(tot+100).toLocaleString();
+  document.getElementById('grand').textContent='NT$'+(tot+160).toLocaleString();
 }
 
 function openModal(){
-  const tot=cart.reduce((s,c)=>s+c.price*c.qty,0)+100;
+  const tot=cart.reduce((s,c)=>s+c.price*c.qty,0)+160;
   document.getElementById('mtotal').textContent='NT$'+tot.toLocaleString();
   document.getElementById('ov').classList.add('open');
   document.getElementById('cv').style.display='block';

@@ -3,71 +3,86 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>陶藝工坊 管理後台</title>
+<title>是陶。管理後台</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{--g:#1D9E75;--gl:#E1F5EE;--t:#1a1a1a;--m:#6b7280;--b:#e5e7eb;--bg:#f9fafb;--w:#fff;--r:#E24B4A;--rl:#FCEBEB;--al:#FAEEDA;--a:#854F0B}
+:root{
+  --g:#2C4A6E;
+  --gl:#E8EEF5;
+  --t:#1C2B3A;
+  --m:#6B7280;
+  --b:#D4CFC9;
+  --bg:#E0DCD5;
+  --w:#F5F2EE;
+  --r:#8B6F47;
+  --rl:#F5EDE0;
+  --al:#F0EBE0;
+  --a:#7A6040;
+}
 body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--t);font-size:15px;line-height:1.6}
-.login-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
-.login-box{background:var(--w);border:1px solid var(--b);border-radius:16px;padding:36px 32px;width:100%;max-width:360px;text-align:center;box-shadow:0 4px 24px rgba(0,0,0,.07)}
-.login-logo{font-size:22px;font-weight:700;margin-bottom:6px}.login-logo span{color:var(--g)}
+/* Login */
+.login-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;background:var(--bg)}
+.login-box{background:var(--w);border:1px solid var(--b);border-radius:16px;padding:36px 32px;width:100%;max-width:360px;text-align:center;box-shadow:0 4px 24px rgba(28,43,58,.08)}
+.login-logo{font-size:22px;font-weight:700;margin-bottom:6px;color:var(--t)}.login-logo span{color:var(--g)}
 .login-sub{font-size:13px;color:var(--m);margin-bottom:28px}
-.err{font-size:12px;color:var(--r);margin-bottom:12px;padding:9px;background:var(--rl);border-radius:7px;display:none;text-align:left}
+.err{font-size:12px;color:var(--r);margin-bottom:12px;padding:9px;background:var(--rl);border-radius:7px;display:none;text-align:left;border:1px solid var(--b)}
+/* Admin */
 .topbar{background:var(--w);border-bottom:1px solid var(--b);padding:0 24px;height:56px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
-.logo{font-size:17px;font-weight:700}.logo span{color:var(--g)}
+.logo{font-size:17px;font-weight:700;color:var(--t)}.logo span{color:var(--g)}
 .wrap{max-width:1200px;margin:0 auto;padding:24px 20px}
 .tabs{display:flex;gap:4px;margin-bottom:18px;border-bottom:1px solid var(--b)}
 .tb{padding:10px 16px;font-size:14px;font-weight:500;cursor:pointer;color:var(--m);border-bottom:2px solid transparent;margin-bottom:-1px;transition:all .15s;font-family:inherit;background:none;border-top:none;border-left:none;border-right:none}
 .tb.on{color:var(--g);border-bottom-color:var(--g)}
 .pane{display:none}.pane.on{display:block}
-.layout{display:grid;grid-template-columns:350px 1fr;gap:20px;align-items:start}
+.layout{display:grid;grid-template-columns:360px 1fr;gap:20px;align-items:start}
 .card{background:var(--w);border:1px solid var(--b);border-radius:12px;padding:20px}
-.ttl{font-size:16px;font-weight:700;margin-bottom:16px}
+.ttl{font-size:16px;font-weight:700;margin-bottom:16px;color:var(--t)}
 .fg{display:flex;flex-direction:column;gap:5px;margin-bottom:13px}
 .lbl{font-size:11px;font-weight:700;color:var(--m);text-transform:uppercase;letter-spacing:.5px}
 input[type=text],input[type=number],input[type=email],input[type=password],select,textarea{padding:10px 12px;border:1px solid var(--b);border-radius:8px;font-size:14px;font-family:inherit;background:var(--w);color:var(--t);outline:none;transition:border-color .15s;width:100%}
 input:focus,select:focus,textarea:focus{border-color:var(--g)}
 textarea{resize:vertical;min-height:72px}
 .f2{display:grid;grid-template-columns:1fr 1fr;gap:11px}
+.f3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+.size-row{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--m)}
+.size-row input{width:70px;text-align:center;padding:8px 6px}
+.size-sep{color:var(--b);font-size:16px}
 .drop{border:2px dashed var(--b);border-radius:9px;padding:24px;text-align:center;cursor:pointer;position:relative;overflow:hidden;transition:all .15s}
 .drop:hover,.drop.drag{border-color:var(--g);background:var(--gl)}
 .drop input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
 .drop img{width:100%;height:120px;object-fit:cover;border-radius:7px;display:none;margin-top:10px}
-.chips{display:flex;flex-wrap:wrap;gap:6px}
-.chip{padding:5px 12px;border-radius:6px;border:1px solid var(--b);font-size:12px;cursor:pointer;background:transparent;color:var(--m);transition:all .15s;font-family:inherit}
-.chip.on{background:var(--gl);color:#0f6e56;border-color:var(--g);font-weight:600}
 .btn{display:inline-flex;align-items:center;gap:5px;padding:9px 18px;border-radius:8px;font-size:14px;font-weight:600;font-family:inherit;cursor:pointer;transition:all .15s;border:none}
-.bg{background:var(--g);color:#fff}.bg:hover{background:#178a63}.bg:disabled{opacity:.4;cursor:not-allowed}
+.bg{background:var(--g);color:#fff}.bg:hover{background:#1e3450}.bg:disabled{opacity:.4;cursor:not-allowed}
 .bo{background:transparent;border:1px solid var(--b);color:var(--m)}.bo:hover{background:var(--bg)}
 .br{background:transparent;border:1px solid var(--b);color:var(--r)}.br:hover{background:var(--rl);border-color:var(--r)}
 .btn-sm{padding:5px 11px;font-size:12px}
 table{width:100%;border-collapse:collapse;font-size:13px}
 th{text-align:left;padding:10px 12px;background:var(--bg);color:var(--m);font-size:11px;text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid var(--b)}
-td{padding:11px 12px;border-bottom:1px solid var(--b);vertical-align:middle}
+td{padding:11px 12px;border-bottom:1px solid var(--b);vertical-align:middle;color:var(--t)}
 tr:last-child td{border-bottom:none}
 .bdg{display:inline-block;padding:2px 9px;border-radius:99px;font-size:11px;font-weight:600}
-.bg2{background:var(--gl);color:#0f6e56}.ba{background:var(--al);color:var(--a)}.br2{background:var(--rl);color:var(--r)}
+.bg2{background:var(--gl);color:var(--g)}
+.ba{background:var(--al);color:var(--a)}
+.br2{background:var(--rl);color:var(--r)}
 .timg{width:44px;height:44px;border-radius:8px;object-fit:cover}
-#toast{position:fixed;bottom:24px;right:24px;background:#1a1a1a;color:#fff;padding:11px 18px;border-radius:10px;font-size:13px;font-weight:500;z-index:999;opacity:0;transform:translateY(12px);transition:all .25s;pointer-events:none}
+#toast{position:fixed;bottom:24px;right:24px;background:var(--t);color:#fff;padding:11px 18px;border-radius:10px;font-size:13px;font-weight:500;z-index:999;opacity:0;transform:translateY(12px);transition:all .25s;pointer-events:none}
 #toast.show{opacity:1;transform:translateY(0)}
 @media(max-width:900px){.layout{grid-template-columns:1fr}}
-@media(max-width:640px){.topbar{padding:0 16px}.wrap{padding:16px}.f2{grid-template-columns:1fr}}
+@media(max-width:640px){.topbar{padding:0 16px}.wrap{padding:16px}.f2{grid-template-columns:1fr}.f3{grid-template-columns:1fr 1fr}}
 </style>
 </head>
 <body>
 
 <script>
-// ── 填入你的 Render 後端網址 ──────────────────────
 const API = 'https://pottery-shop.onrender.com';
-// ────────────────────────────────────────────────
 </script>
 
 <!-- 登入畫面 -->
 <div class="login-wrap" id="login-screen">
   <div class="login-box">
-    <div class="login-logo">陶藝<span>工坊</span></div>
+    <div class="login-logo">是陶<span>。</span></div>
     <div class="login-sub">管理後台 · 請登入</div>
     <div class="fg" style="text-align:left"><label class="lbl">Email</label><input type="email" id="l-email" placeholder="your@email.com"></div>
     <div class="fg" style="text-align:left;margin-bottom:16px"><label class="lbl">密碼</label><input type="password" id="l-pwd" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()"></div>
@@ -79,7 +94,7 @@ const API = 'https://pottery-shop.onrender.com';
 <!-- 管理後台 -->
 <div id="admin-screen" style="display:none">
   <div class="topbar">
-    <div class="logo">陶藝<span>工坊</span> <span style="font-size:12px;color:var(--m);font-weight:400">管理後台</span></div>
+    <div class="logo">是陶<span>。</span> <span style="font-size:12px;color:var(--m);font-weight:400">管理後台</span></div>
     <div style="display:flex;align-items:center;gap:12px">
       <span style="font-size:13px;color:var(--m)" id="user-email"></span>
       <button class="btn bo" style="padding:5px 14px;font-size:13px" onclick="doLogout()">登出</button>
@@ -106,8 +121,7 @@ const API = 'https://pottery-shop.onrender.com';
               ondrop="doDrop(event)">
               <input type="file" accept="image/*" id="fi" onchange="doFile(this.files[0])">
               <div id="dhint">
-                <div style="font-size:26px;margin-bottom:6px">📷</div>
-                <div style="font-size:13px;font-weight:600;margin-bottom:2px">點擊或拖曳上傳</div>
+                <div style="font-size:13px;font-weight:600;margin-bottom:3px;color:var(--t)">點擊或拖曳上傳</div>
                 <div style="font-size:12px;color:var(--m)">JPG · PNG · WebP（最大 8MB）</div>
               </div>
               <img id="fpreview">
@@ -121,28 +135,30 @@ const API = 'https://pottery-shop.onrender.com';
             <div class="fg" style="margin:0"><label class="lbl">庫存 *</label><input type="number" id="fstock" placeholder="1" min="0"></div>
           </div>
           <div class="fg"><label class="lbl">售價（NT$）*</label><input type="number" id="fprice" placeholder="1200" min="1"></div>
+
+          <!-- 尺寸：長 × 寬 × 高 -->
           <div class="fg">
-            <label class="lbl">尺寸（顯示用）</label>
-            <div class="chips" id="chips">
-              <button type="button" class="chip" onclick="this.classList.toggle('on')">10cm</button>
-              <button type="button" class="chip" onclick="this.classList.toggle('on')">12cm</button>
-              <button type="button" class="chip" onclick="this.classList.toggle('on')">15cm</button>
-              <button type="button" class="chip" onclick="this.classList.toggle('on')">18cm</button>
-              <button type="button" class="chip" onclick="this.classList.toggle('on')">20cm</button>
-              <button type="button" class="chip" onclick="this.classList.toggle('on')">25cm</button>
-              <button type="button" class="chip" onclick="this.classList.toggle('on')">30cm</button>
+            <label class="lbl">尺寸（cm）</label>
+            <div class="size-row">
+              <input type="number" id="flen" placeholder="長" min="0" step="0.1">
+              <span class="size-sep">×</span>
+              <input type="number" id="fwid" placeholder="寬" min="0" step="0.1">
+              <span class="size-sep">×</span>
+              <input type="number" id="fhgt" placeholder="高" min="0" step="0.1">
+              <span style="font-size:12px;color:var(--m);white-space:nowrap">cm</span>
             </div>
           </div>
+
           <div class="fg"><label class="lbl">商品描述</label><textarea id="fdesc" placeholder="釉色、燒製方式、使用說明..."></textarea></div>
           <div style="display:flex;gap:8px;margin-top:4px">
-            <button class="btn bg" id="sbtn" onclick="save()">✚ 儲存商品</button>
+            <button class="btn bg" id="sbtn" onclick="save()">儲存商品</button>
             <button class="btn bo" onclick="reset()">清除</button>
           </div>
         </div>
 
         <div>
           <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:13px">
-            <div style="font-size:16px;font-weight:700">商品列表 <span id="pcnt" style="color:var(--m);font-size:14px;font-weight:400"></span></div>
+            <div style="font-size:16px;font-weight:700;color:var(--t)">商品列表 <span id="pcnt" style="color:var(--m);font-size:14px;font-weight:400"></span></div>
           </div>
           <div class="card" style="padding:0;overflow:hidden">
             <table>
@@ -169,7 +185,7 @@ const API = 'https://pottery-shop.onrender.com';
 <div id="toast"></div>
 <script>
 let TOKEN='';
-function toast(msg,ok=true){const t=document.getElementById('toast');t.textContent=msg;t.style.background=ok?'#1a1a1a':'#E24B4A';t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2600);}
+function toast(msg,ok=true){const t=document.getElementById('toast');t.textContent=msg;t.style.background=ok?'#1C2B3A':'#8B6F47';t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2600);}
 
 async function api(path,opts={}){
   const res=await fetch(`${API}${path}`,{...opts,headers:{'Content-Type':'application/json','Authorization':`Bearer ${TOKEN}`,...(opts.headers||{})}});
@@ -229,12 +245,30 @@ async function uploadImg(){
   return data.url;
 }
 
+// ── 尺寸轉換 ──────────────────────────────────────────────
+function getSizes(){
+  const l=document.getElementById('flen').value;
+  const w=document.getElementById('fwid').value;
+  const h=document.getElementById('fhgt').value;
+  const parts=[l&&`長${l}`,w&&`寬${w}`,h&&`高${h}`].filter(Boolean);
+  return parts.length?parts.join(' × ')+' cm':'';
+}
+function setSizes(str){
+  // 解析 "長10 × 寬8 × 高15 cm" 格式
+  const m=str.match(/長([\d.]+).*寬([\d.]+).*高([\d.]+)/);
+  if(m){
+    document.getElementById('flen').value=m[1];
+    document.getElementById('fwid').value=m[2];
+    document.getElementById('fhgt').value=m[3];
+  }
+}
+
 // ── Save product ──────────────────────────────────────────
 async function save(){
   const name=document.getElementById('fname').value.trim();
   const price=parseInt(document.getElementById('fprice').value);
   const stock=parseInt(document.getElementById('fstock').value);
-  const sizes=[...document.querySelectorAll('#chips .chip.on')].map(c=>c.textContent).join('、');
+  const sizes=getSizes();
   if(!name||!price||isNaN(stock)){toast('請填寫必填欄位',false);return;}
   const btn=document.getElementById('sbtn');btn.disabled=true;btn.textContent='儲存中...';
   try{
@@ -245,13 +279,12 @@ async function save(){
     else{await api('/products/',{method:'POST',body:JSON.stringify(body)});toast('商品已新增！');}
     reset();loadProducts();
   }catch(e){toast('錯誤：'+e.message,false);}
-  finally{btn.disabled=false;btn.textContent='✚ 儲存商品';}
+  finally{btn.disabled=false;btn.textContent='儲存商品';}
 }
 
 function reset(){
-  ['fname','fprice','fstock','fdesc'].forEach(id=>document.getElementById(id).value='');
+  ['fname','fprice','fstock','fdesc','flen','fwid','fhgt'].forEach(id=>document.getElementById(id).value='');
   document.getElementById('eid').value='';document.getElementById('fcat').value='花器';
-  document.querySelectorAll('#chips .chip').forEach(c=>c.classList.remove('on'));
   const prev=document.getElementById('fpreview');prev.style.display='none';
   document.getElementById('dhint').style.display='block';
   document.getElementById('fi').value='';
@@ -266,8 +299,7 @@ function editP(p){
   document.getElementById('fprice').value=p.price;
   document.getElementById('fstock').value=p.stock;
   document.getElementById('fdesc').value=p.description||'';
-  const sArr=(p.sizes||'').split('、').map(s=>s.trim());
-  document.querySelectorAll('#chips .chip').forEach(c=>c.classList.toggle('on',sArr.includes(c.textContent)));
+  setSizes(p.sizes||'');
   if(p.image_url){
     const img=document.getElementById('fpreview');img.src=p.image_url;img.style.display='block';
     document.getElementById('dhint').style.display='none';
@@ -289,9 +321,9 @@ async function loadProducts(){
     const data=await api('/products');
     document.getElementById('pcnt').textContent=`(${data.length} 項)`;
     const tbody=document.getElementById('ptbody');
-    if(!data.length){tbody.innerHTML='<tr><td colspan="7" style="text-align:center;color:var(--m);padding:30px">尚無商品，請新增第一件作品</td></tr>';return;}
+    if(!data.length){tbody.innerHTML='<tr><td colspan="7" style="text-align:center;color:var(--m);padding:30px">尚無商品</td></tr>';return;}
     tbody.innerHTML=data.map(p=>{
-      const img=p.image_url?`<img class="timg" src="${p.image_url}">`:`<div style="width:44px;height:44px;border-radius:8px;background:var(--bg);display:flex;align-items:center;justify-content:center;font-size:22px">🏺</div>`;
+      const img=p.image_url?`<img class="timg" src="${p.image_url}">`:`<div style="width:44px;height:44px;border-radius:8px;background:var(--bg);display:flex;align-items:center;justify-content:center;font-size:18px;color:var(--b)">◻</div>`;
       const sc=p.stock>5?'bg2':p.stock>0?'ba':'br2';
       const sl=p.stock>5?'充足':p.stock>0?'低庫存':'售完';
       return `<tr>
@@ -324,7 +356,7 @@ async function loadOrders(){
       return `<tr>
         <td style="font-weight:700">#${o.id}</td>
         <td style="font-weight:600">${o.customer_name}</td>
-        <td><div style="font-size:12px">📞 ${o.customer_phone}</div><div style="font-size:12px;color:var(--m)">✉️ ${o.customer_email}</div></td>
+        <td><div style="font-size:12px">${o.customer_phone}</div><div style="font-size:12px;color:var(--m)">${o.customer_email}</div></td>
         <td style="font-size:12px;color:var(--m);max-width:130px">${o.address}</td>
         <td style="font-size:12px;color:var(--m);max-width:150px">${itemStr}</td>
         <td style="font-size:12px">${o.payment_method}</td>
