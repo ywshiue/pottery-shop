@@ -110,6 +110,108 @@ async def send_order_email(order_id: int, order: OrderIn, total: int):
     except Exception:
         pass  # 寄信失敗不影響下單
 
+
+async def send_customer_email(order_id: int, order: OrderIn, total: int):
+    """寄確認信給消費者，包含銀行匯款資訊"""
+    api_key = os.getenv("RESEND_API_KEY")
+    if not api_key:
+        return
+
+    # ── 填入你的銀行資訊 ──────────────────────────────
+    BANK_NAME    = os.getenv("BANK_NAME",    "<!-- 銀行名稱 -->")
+    BANK_CODE    = os.getenv("BANK_CODE",    "<!-- 銀行代碼 -->")
+    BANK_ACCOUNT = os.getenv("BANK_ACCOUNT", "<!-- 帳號 -->")
+    BANK_HOLDER  = os.getenv("BANK_HOLDER",  "<!-- 戶名 -->")
+    # ─────────────────────────────────────────────────
+
+    items_html = "".join([
+        f"<tr><td style='padding:6px 12px;border-bottom:1px solid #E0DCD5'>{i.product_name}"
+        f"{'（'+i.size+'）' if i.size else ''}</td>"
+        f"<td style='padding:6px 12px;border-bottom:1px solid #E0DCD5;text-align:right'>NT${i.unit_price * i.qty:,}</td></tr>"
+        for i in order.items
+    ])
+
+    html = f"""
+    <div style="font-family:'Helvetica Neue',Arial,sans-serif;max-width:560px;margin:0 auto;background:#F5F2EE;padding:32px 24px;border-radius:12px">
+      <h2 style="color:#2C4A6E;font-size:20px;margin:0 0 4px">是陶。訂單確認</h2>
+      <p style="color:#6B7280;font-size:13px;margin:0 0 24px">感謝您的支持，訂單編號 <strong style="color:#1C2B3A">#{order_id}</strong></p>
+
+      <div style="background:#fff;border-radius:10px;padding:18px 20px;margin-bottom:16px">
+        <div style="font-size:12px;color:#6B7280;text-transform:uppercase;letter-spacing:.8px;margin-bottom:10px">訂購商品</div>
+        <table style="width:100%;border-collapse:collapse;font-size:13px">
+          <tbody>{items_html}</tbody>
+        </table>
+        <div style="display:flex;justify-content:space-between;padding:8px 12px 0;font-size:13px;color:#6B7280">
+          <span>運費</span><span>NT$160</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;padding:8px 12px 0;font-size:15px;font-weight:700;color:#2C4A6E;border-top:1px solid #E0DCD5;margin-top:8px">
+          <span>合計</span><span>NT${total:,}</span>
+        </div>
+      </div>
+
+      <div style="background:#E8EEF5;border:1px solid #B8D0E8;border-radius:10px;padding:18px 20px;margin-bottom:16px">
+        <div style="font-size:12px;color:#2C4A6E;text-transform:uppercase;letter-spacing:.8px;margin-bottom:12px;font-weight:600">匯款資訊</div>
+        <table style="width:100%;font-size:13px;border-collapse:collapse">
+          <tr><td style="padding:5px 0;color:#6B7280">銀行名稱</td><td style="padding:5px 0;font-weight:500;text-align:right">{BANK_NAME}</td></tr>
+          <tr><td style="padding:5px 0;color:#6B7280">銀行代碼</td><td style="padding:5px 0;font-weight:500;text-align:right">{BANK_CODE}</td></tr>
+          <tr><td style="padding:5px 0;color:#6B7280">戶名</td><td style="padding:5px 0;font-weight:500;text-align:right">{BANK_HOLDER}</td></tr>
+          <tr style="border-top:1px solid #B8D0E8">
+            <td style="padding:10px 0 5px;color:#6B7280">帳號</td>
+            <td style="padding:10px 0 5px;font-weight:700;color:#2C4A6E;font-size:16px;text-align:right;letter-spacing:1px">{BANK_ACCOUNT}</td>
+          </tr>
+          <tr style="border-top:1px solid #B8D0E8">
+            <td style="padding:10px 0 5px;color:#6B7280">匯款金額</td>
+            <td style="padding:10px 0 5px;font-weight:700;color:#2C4A6E;font-size:16px;text-align:right">NT${total:,}</td>
+          </tr>
+        </table>
+      </div>
+
+      <div style="background:#FEF3F2;border:1px solid #FECACA;border-radius:10px;padding:14px 16px;margin-bottom:20px">
+        <p style="margin:0;font-size:13px;color:#B45309;line-height:1.8">
+          ⚠️ 請於 <strong>3 天內完成匯款</strong><br>
+          逾期將自動取消訂單，恕不另行通知<br>
+          匯款後請保留收據以利對帳
+        </p>
+      </div>
+
+      <p style="font-size:12px;color:#9CA3AF;text-align:center;line-height:1.8;margin:0">
+        收件地址：{order.address}<br>
+        如有疑問請透過 Instagram @ywshiue 聯繫<br>
+        是陶。It's Pottery
+      </p>
+    </div>
+    """
+
+    try:
+        async with httpx.AsyncClient() as client:
+            await client.post(
+                "https://api.resend.com/emails",
+                headers={
+                    "Authorization": f"Bearer {api_key}",
+                    "Content-Type": "application/json",
+                },
+                json={
+                    "from": "是陶。<onboarding@resend.dev>",
+                    "to": [order.customer_email],
+                    "subject": f"是陶。訂單確認 #{order_id}｜請於 3 天內完成匯款",
+                    "html": html,
+                },
+                timeout=10,
+            )
+    except Exception:
+        pass
+
+# ── 公開：回傳銀行匯款資訊 ──────────────────────────────────
+@router.get("/bank-info")
+async def get_bank_info():
+    """回傳銀行匯款資訊（從環境變數取得，不寫死在前端）"""
+    return {
+        "bank_name":    os.getenv("BANK_NAME",    ""),
+        "bank_code":    os.getenv("BANK_CODE",    ""),
+        "bank_account": os.getenv("BANK_ACCOUNT", ""),
+        "bank_holder":  os.getenv("BANK_HOLDER",  ""),
+    }
+
 # ── 公開：任何人可以下單 ───────────────────────────────────
 @router.post("/")
 async def create_order(order: OrderIn):
@@ -151,6 +253,7 @@ async def create_order(order: OrderIn):
 
     # 寄通知信（非同步，不影響下單回應速度）
     await send_order_email(order_id, order, total)
+    await send_customer_email(order_id, order, total)
 
     return {"order_id": order_id, "total": total}
 
@@ -176,6 +279,111 @@ async def update_order(order_id: int, body: StatusUpdate, authorization: str = H
         payload["internal_note"] = body.internal_note
     await sb_fetch(f"/orders?id=eq.{order_id}", method="PATCH", body=payload)
     return {"message": "訂單已更新"}
+
+
+class PaymentConfirm(BaseModel):
+    last5_digits: str
+
+@router.post("/{order_id}/payment")
+async def confirm_payment(order_id: int, body: PaymentConfirm):
+    """消費者填入後五碼，系統自動寄通知信給店家"""
+    if len(body.last5_digits) != 5 or not body.last5_digits.isdigit():
+        raise HTTPException(status_code=400, detail="請填入正確的帳號後五碼")
+
+    # 更新訂單狀態為 paid + 記錄後五碼
+    await sb_fetch(f"/orders?id=eq.{order_id}", method="PATCH", body={
+        "status": "paid",
+        "internal_note": f"消費者匯款帳號後五碼：{body.last5_digits}"
+    })
+
+    # 撈訂單資訊
+    orders = await sb_fetch(f"/orders?id=eq.{order_id}")
+    if not orders:
+        raise HTTPException(status_code=404, detail="找不到訂單")
+    order = orders[0]
+
+    # 撈訂單明細
+    items = await sb_fetch(f"/order_items?order_id=eq.{order_id}")
+
+    # 寄通知信給店家
+    await send_payment_notify(order_id, order, items, body.last5_digits)
+
+    return {"message": "已收到匯款確認"}
+
+
+async def send_payment_notify(order_id: int, order: dict, items: list, last5: str):
+    """消費者完成匯款後，寄通知信給店家"""
+    api_key = os.getenv("RESEND_API_KEY")
+    admin_email = os.getenv("ADMIN_EMAIL")
+    if not api_key or not admin_email:
+        return
+
+    items_html = "".join([
+        f"<tr><td style='padding:6px 12px;border-bottom:1px solid #E0DCD5'>{i['product_name']}"
+        f"{'（'+i['size']+'）' if i.get('size') else ''} ×{i['qty']}</td>"
+        f"<td style='padding:6px 12px;border-bottom:1px solid #E0DCD5;text-align:right'>NT${i['unit_price']*i['qty']:,}</td></tr>"
+        for i in items
+    ])
+
+    html = f"""
+    <div style="font-family:'Helvetica Neue',Arial,sans-serif;max-width:560px;margin:0 auto;background:#F5F2EE;padding:32px 24px;border-radius:12px">
+      <h2 style="color:#2C4A6E;font-size:20px;margin:0 0 4px">💰 是陶。收到匯款通知</h2>
+      <p style="color:#6B7280;font-size:13px;margin:0 0 20px">訂單 <strong style="color:#1C2B3A">#{order_id}</strong> 消費者已完成匯款</p>
+
+      <div style="background:#E8EEF5;border:1px solid #B8D0E8;border-radius:10px;padding:16px 20px;margin-bottom:16px">
+        <div style="font-size:12px;color:#2C4A6E;font-weight:600;letter-spacing:.8px;margin-bottom:10px">匯款資訊</div>
+        <div style="display:flex;justify-content:space-between;font-size:14px">
+          <span style="color:#6B7280">帳號後五碼</span>
+          <span style="font-weight:700;color:#2C4A6E;font-size:18px;letter-spacing:3px">{last5}</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;font-size:14px;margin-top:8px">
+          <span style="color:#6B7280">應收金額</span>
+          <span style="font-weight:700;color:#2C4A6E">NT${order['total_amount']:,}</span>
+        </div>
+      </div>
+
+      <div style="background:#fff;border-radius:10px;padding:16px 20px;margin-bottom:16px">
+        <div style="font-size:12px;color:#6B7280;letter-spacing:.8px;margin-bottom:10px">顧客資料</div>
+        <p style="margin:0 0 4px;font-size:14px"><strong>{order['customer_name']}</strong></p>
+        <p style="margin:0 0 4px;font-size:13px;color:#4B5563">📞 {order['customer_phone']}</p>
+        <p style="margin:0 0 4px;font-size:13px;color:#4B5563">✉️ {order['customer_email']}</p>
+        <p style="margin:0;font-size:13px;color:#4B5563">📍 {order['address']}</p>
+      </div>
+
+      <div style="background:#fff;border-radius:10px;padding:16px 20px;margin-bottom:20px">
+        <div style="font-size:12px;color:#6B7280;letter-spacing:.8px;margin-bottom:10px">訂購商品</div>
+        <table style="width:100%;border-collapse:collapse;font-size:13px">
+          <tbody>{items_html}</tbody>
+        </table>
+        <div style="display:flex;justify-content:space-between;padding:8px 12px 0;font-size:15px;font-weight:700;color:#2C4A6E;border-top:1px solid #E0DCD5;margin-top:8px">
+          <span>合計</span><span>NT${order['total_amount']:,}</span>
+        </div>
+      </div>
+
+      <a href="https://pottery-shop-alpha.vercel.app/admin.html"
+         style="display:block;text-align:center;background:#2C4A6E;color:#fff;padding:12px;border-radius:8px;text-decoration:none;font-size:14px;font-weight:600;letter-spacing:.5px">
+        前往後台確認並出貨
+      </a>
+      <p style="text-align:center;font-size:11px;color:#9CA3AF;margin-top:16px">是陶。· It's Pottery</p>
+    </div>
+    """
+
+    try:
+        async with httpx.AsyncClient() as client:
+            await client.post(
+                "https://api.resend.com/emails",
+                headers={"Authorization": f"Bearer {api_key}", "Content-Type": "application/json"},
+                json={
+                    "from": "是陶。<onboarding@resend.dev>",
+                    "to": [admin_email],
+                    "subject": f"💰 是陶。收到匯款 #{order_id}｜後五碼 {last5}",
+                    "html": html,
+                },
+                timeout=10,
+            )
+    except Exception:
+        pass
+
 
 @router.delete("/{order_id}")
 async def delete_order(order_id: int, authorization: str = Header(...)):
