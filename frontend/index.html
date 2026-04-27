@@ -22,7 +22,7 @@ body{font-family:var(--sans);background:var(--bg);color:var(--t);font-size:15px;
 .topbar{background:var(--w);border-bottom:1px solid var(--b);padding:0 32px;height:64px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 1px 8px rgba(28,43,58,.05)}
 .logo-wrap{display:flex;align-items:center;gap:10px;text-decoration:none}
 .logo-svg{width:36px;height:36px;flex-shrink:0}
-.logo-text{display:flex;flex-direction:column;gap:1px}
+.logo-text{display:flex;flex-direction:column;gap:4px}
 .logo-zh{font-family:var(--serif);font-size:18px;font-weight:600;color:var(--t);letter-spacing:.5px;line-height:1}
 .logo-zh span{color:var(--g)}
 .logo-en{font-size:9px;letter-spacing:2px;color:var(--m);font-weight:400;text-transform:uppercase;line-height:1}
@@ -45,19 +45,19 @@ body{font-family:var(--sans);background:var(--bg);color:var(--t);font-size:15px;
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:20px}
 .pc{background:var(--w);border:1px solid var(--b);border-radius:14px;overflow:hidden;transition:all .25s;cursor:pointer}
 .pc:hover{transform:translateY(-3px);box-shadow:0 8px 28px rgba(28,43,58,.1);border-color:transparent}
-.pimg{width:100%;aspect-ratio:4/5;background:var(--bg);position:relative;overflow:hidden}
+.pimg{width:100%;aspect-ratio:1/1;background:var(--bg);position:relative;overflow:hidden}
 .pimg img{width:100%;height:100%;object-fit:cover;transition:transform .4s}
 .pc:hover .pimg img{transform:scale(1.05)}
 .pimg-count{position:absolute;bottom:10px;right:10px;background:rgba(28,43,58,.55);color:#fff;font-size:10px;letter-spacing:.3px;padding:3px 8px;border-radius:99px;backdrop-filter:blur(4px)}
 .smask{position:absolute;inset:0;background:rgba(28,43,58,.45);display:flex;align-items:center;justify-content:center}
 .smask-text{color:#fff;font-size:12px;letter-spacing:1.5px;font-weight:500}
-.pbody{padding:14px 16px}
-.pcat{font-size:10px;letter-spacing:1.5px;color:var(--m);text-transform:uppercase;margin-bottom:5px}
-.pname{font-family:var(--serif);font-size:15px;font-weight:500;margin-bottom:4px;color:var(--t);transition:color .15s}
+.pbody{padding:10px 13px}
+.pcat{font-size:10px;letter-spacing:1.5px;color:var(--m);text-transform:uppercase;margin-bottom:3px}
+.pname{font-family:var(--serif);font-size:14px;font-weight:500;margin-bottom:2px;color:var(--t);transition:color .15s}
 .pc:hover .pname{color:var(--g)}
-.psize{font-size:11px;color:var(--m);margin-bottom:8px;letter-spacing:.3px}
-.pprice{font-size:16px;font-weight:600;color:var(--g)}
-.pview{font-size:11px;color:var(--m);margin-top:6px;letter-spacing:.5px;display:flex;align-items:center;gap:4px;opacity:0;transition:opacity .2s}
+.psize{font-size:11px;color:var(--m);margin-bottom:5px;letter-spacing:.3px}
+.pprice{font-size:15px;font-weight:600;color:var(--g)}
+.pview{font-size:11px;color:var(--m);margin-top:4px;letter-spacing:.5px;display:flex;align-items:center;gap:4px;opacity:0;transition:opacity .2s}
 .pc:hover .pview{opacity:1}
 
 /* ── Cart (Desktop) ─────────────────────────────────── */
@@ -219,6 +219,7 @@ const API = 'https://pottery-shop.onrender.com';
   <div class="nav-right">
     <a href="#footer-info" class="nav-link">運費說明</a>
     <a href="#footer-info" class="nav-link">付款方式</a>
+    <a href="https://www.instagram.com/ywshiue/" target="_blank" class="nav-link" style="display:flex;align-items:center;gap:5px"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r=".8" fill="currentColor" stroke="none"/></svg>Instagram</a>
   </div>
 </div>
 
@@ -274,7 +275,7 @@ const API = 'https://pottery-shop.onrender.com';
       </ul>
     </div>
   </div>
-  <div class="footer-bottom">© 是陶。 All rights reserved</div>
+  <div class="footer-bottom" style="display:flex;align-items:center;justify-content:center;gap:20px">© 是陶。 All rights reserved <a href="https://www.instagram.com/ywshiue/" target="_blank" style="color:rgba(255,255,255,.5);text-decoration:none;display:flex;align-items:center;gap:5px;transition:color .15s" onmouseover="this.style.color='rgba(255,255,255,.9)'" onmouseout="this.style.color='rgba(255,255,255,.5)'"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r=".8" fill="currentColor" stroke="none"/></svg> @ywshiue</a></div>
 </footer>
 
 <!-- ── Mobile cart button ─────────────────────────────── -->
@@ -519,11 +520,18 @@ function add(pid){
   const p=products.find(x=>x.id===pid);
   if(!p||p.stock===0)return;
   const ex=cart.find(c=>c.pid===pid);
-  if(ex)ex.qty++;else{const imgs=getImgs(p);cart.push({pid,qty:1,name:p.name,price:p.price,img:imgs[0]||null,sizes:p.sizes});}
+  if(ex){
+    if(ex.qty>=p.stock){toast('已達庫存上限',false);return;}
+    ex.qty++;
+  }else{const imgs=getImgs(p);cart.push({pid,qty:1,name:p.name,price:p.price,img:imgs[0]||null,sizes:p.sizes});}
   renderCart();toast(`已加入「${p.name}」`);
 }
 function chgQty(pid,d){
   const i=cart.findIndex(c=>c.pid===pid);if(i<0)return;
+  if(d>0){
+    const p=products.find(x=>x.id===pid);
+    if(p&&cart[i].qty>=p.stock){toast('已達庫存上限',false);return;}
+  }
   cart[i].qty+=d;if(cart[i].qty<=0)cart.splice(i,1);renderCart();
 }
 function cartHTML(){
@@ -537,7 +545,7 @@ function cartHTML(){
         <div class="qr">
           <button class="qb" onclick="chgQty(${c.pid},-1)">−</button>
           <span style="font-size:13px;min-width:18px;text-align:center">${c.qty}</span>
-          <button class="qb" onclick="chgQty(${c.pid},1)">+</button>
+          <button class="qb" onclick="chgQty(${c.pid},1)" \${(()=>{const p=products.find(x=>x.id===c.pid);return p&&c.qty>=p.stock?'disabled style="opacity:.3;cursor:not-allowed"':''})()}>+</button>
         </div>
       </div>
       <div class="cp">NT$${(c.price*c.qty).toLocaleString()}</div>
