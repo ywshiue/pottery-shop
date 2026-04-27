@@ -399,14 +399,84 @@ const API = 'https://pottery-shop.onrender.com';
       </div>
     </div>
 
-    <div class="sbox" id="sv" style="display:none">
-      <div class="s-icon">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M5 12l5 5L19 7" stroke="#2C4A6E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    <div id="sv" style="display:none">
+
+      <!-- 步驟一：顯示匯款資訊 -->
+      <div id="sv-bank" style="text-align:center">
+        <div class="s-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M5 12l5 5L19 7" stroke="#2C4A6E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div style="font-family:var(--serif);font-size:20px;font-weight:500;margin-bottom:4px;color:var(--t)">訂單已建立</div>
+        <div style="font-size:13px;color:var(--m);margin-bottom:18px;letter-spacing:.3px">訂單編號：<strong id="onum"></strong></div>
+
+        <!-- 銀行匯款資訊 -->
+        <div style="background:var(--gl);border:1px solid #B8D0E8;border-radius:12px;padding:18px 20px;text-align:left;margin-bottom:14px">
+          <div style="font-family:var(--serif);font-size:11px;font-weight:500;color:var(--g);letter-spacing:2px;margin-bottom:12px;text-transform:uppercase">請匯款至以下帳戶</div>
+          <div style="display:flex;flex-direction:column;gap:9px;font-size:13px">
+            <div style="display:flex;justify-content:space-between">
+              <span style="color:var(--m)">銀行名稱</span>
+              <span style="font-weight:500;color:var(--t)" id="bk-name">—</span>
+            </div>
+            <div style="display:flex;justify-content:space-between">
+              <span style="color:var(--m)">銀行代碼</span>
+              <span style="font-weight:500;color:var(--t)" id="bk-code">—</span>
+            </div>
+            <div style="display:flex;justify-content:space-between">
+              <span style="color:var(--m)">戶名</span>
+              <span style="font-weight:500;color:var(--t)" id="bk-holder">—</span>
+            </div>
+            <div style="border-top:1px solid #B8D0E8;padding-top:10px;margin-top:2px;display:flex;justify-content:space-between;align-items:center">
+              <span style="color:var(--m)">帳號</span>
+              <span style="font-weight:700;color:var(--g);font-size:16px;letter-spacing:2px" id="bk-account">—</span>
+            </div>
+            <div style="border-top:1px solid #B8D0E8;padding-top:10px;margin-top:2px;display:flex;justify-content:space-between;align-items:center">
+              <span style="color:var(--m)">應匯金額</span>
+              <span style="font-weight:700;color:var(--g);font-size:16px" id="sv-amount"></span>
+            </div>
+          </div>
+        </div>
+
+        <div style="background:var(--rl);border-radius:9px;padding:12px 14px;text-align:left;margin-bottom:18px">
+          <div style="font-size:12px;color:var(--r);line-height:1.8">
+            ⚠️ 請於 <strong>3 天內完成匯款</strong><br>
+            逾期將自動取消訂單，恕不另行通知
+          </div>
+        </div>
+
+        <button class="btn bg" style="width:100%;justify-content:center;margin-bottom:10px" onclick="showPayConfirm()">我已完成匯款</button>
+        <div style="font-size:12px;color:var(--m);letter-spacing:.3px;line-height:1.7;margin-top:6px">完成匯款後，請點擊上方按鈕<br>填入匯款帳號後五碼，我們收到確認後才會出貨</div>
       </div>
-      <div style="font-family:var(--serif);font-size:20px;font-weight:500;margin-bottom:8px;color:var(--t)">訂單已送出</div>
-      <div style="font-size:13px;color:var(--m);margin-bottom:6px;letter-spacing:.3px">訂單編號：<strong id="onum"></strong></div>
-      <div style="font-size:13px;color:var(--m);margin-bottom:28px;line-height:1.8;letter-spacing:.3px">感謝您的支持<br>我們將盡快以電話或 Email 確認您的訂單</div>
-      <button class="btn bg" onclick="closeModal();resetCart()">繼續選購</button>
+
+      <!-- 步驟二：填入後五碼 -->
+      <div id="sv-confirm" style="display:none;text-align:center">
+        <div style="font-family:var(--serif);font-size:18px;font-weight:500;margin-bottom:6px;color:var(--t)">填入匯款資訊</div>
+        <div style="font-size:13px;color:var(--m);margin-bottom:20px;letter-spacing:.3px;line-height:1.8">請填入您的<strong style="color:var(--t)">匯款帳號後五碼</strong><br>我們收到後五碼確認後才會開始出貨</div>
+
+        <div style="text-align:left;margin-bottom:16px">
+          <div style="font-size:10px;font-weight:700;color:var(--m);text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px">匯款帳號後五碼 *</div>
+          <input type="text" id="sv-last5" maxlength="5" placeholder="例：12345"
+            style="width:100%;padding:12px;border:1px solid var(--b);border-radius:8px;font-size:18px;letter-spacing:6px;text-align:center;font-family:var(--sans);background:var(--w);color:var(--t);outline:none"
+            oninput="this.value=this.value.replace(/[^0-9]/g,'');document.getElementById('sv-submit-btn').disabled=this.value.length!==5">
+        </div>
+
+        <button class="btn bg" style="width:100%;justify-content:center;margin-bottom:10px" id="sv-submit-btn" onclick="submitPayment()" disabled>確認已匯款</button>
+        <button class="btn bo" style="width:100%;justify-content:center;font-size:12px" onclick="document.getElementById('sv-confirm').style.display='none';document.getElementById('sv-bank').style.display='block'">返回匯款資訊</button>
+      </div>
+
+      <!-- 步驟三：完成 -->
+      <div id="sv-done" style="display:none;text-align:center;padding:12px 0">
+        <div class="s-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M5 12l5 5L19 7" stroke="#2C4A6E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div style="font-family:var(--serif);font-size:20px;font-weight:500;margin-bottom:8px;color:var(--t)">感謝您的支持</div>
+        <div style="font-size:13px;color:var(--m);margin-bottom:6px;letter-spacing:.3px">訂單編號：<strong id="onum2"></strong></div>
+        <div style="font-size:13px;color:var(--m);margin-bottom:24px;line-height:1.8;letter-spacing:.3px">
+          收到款項後將盡快為您出貨<br>
+          如有疑問請透過 Instagram @ywshiue 聯繫
+        </div>
+        <button class="btn bg" onclick="closeModal();resetCart()">繼續選購</button>
+      </div>
+
     </div>
   </div>
 </div>
@@ -635,13 +705,55 @@ async function placeOrder(){
     });
     const data=await res.json();
     if(!res.ok)throw new Error(data.detail||'下單失敗');
+    currentOrderId=data.order_id;
     document.getElementById('onum').textContent='#'+data.order_id;
+    document.getElementById('sv-amount').textContent='NT$'+data.total.toLocaleString();
+    // reset steps
+    document.getElementById('sv-bank').style.display='block';
+    document.getElementById('sv-confirm').style.display='none';
+    document.getElementById('sv-done').style.display='none';
     document.getElementById('cv').style.display='none';
     document.getElementById('sv').style.display='block';
+    // load bank info from API
+    fetch(`${API}/orders/bank-info`).then(r=>r.json()).then(b=>{
+      document.getElementById('bk-name').textContent=b.bank_name||'—';
+      document.getElementById('bk-code').textContent=b.bank_code||'—';
+      document.getElementById('bk-holder').textContent=b.bank_holder||'—';
+      document.getElementById('bk-account').textContent=b.bank_account||'—';
+    }).catch(()=>{});
   }catch(e){toast(e.message,false);}
   finally{btn.disabled=false;btn.textContent='確認下單';}
 }
 function resetCart(){cart=[];renderCart();load();}
+
+let currentOrderId=null;
+
+function showPayConfirm(){
+  document.getElementById('sv-bank').style.display='none';
+  document.getElementById('sv-confirm').style.display='block';
+}
+
+async function submitPayment(){
+  const last5=document.getElementById('sv-last5').value.trim();
+  if(last5.length!==5){
+    document.getElementById('sv-last5').style.borderColor='var(--r)';
+    return;
+  }
+  const btn=document.getElementById('sv-submit-btn');
+  btn.disabled=true;btn.textContent='送出中...';
+  try{
+    await fetch(`${API}/orders/${currentOrderId}/payment`,{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({last5_digits:last5})
+    });
+    document.getElementById('onum2').textContent='#'+currentOrderId;
+    document.getElementById('sv-confirm').style.display='none';
+    document.getElementById('sv-done').style.display='block';
+  }catch(e){
+    btn.disabled=false;btn.textContent='確認已匯款';
+  }
+}
 load();
 </script>
 </body>
