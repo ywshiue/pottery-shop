@@ -12,7 +12,11 @@ app = FastAPI(title="陶藝工坊 API")
 # CORS — 允許前端網站呼叫
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=[
+        os.getenv("FRONTEND_URL", "*"),
+        "http://localhost:3000",
+        "http://127.0.0.1:5500",
+    ],
     allow_methods=["*"],
     allow_headers=["*"],
 )
@@ -30,3 +34,14 @@ app.include_router(upload.router,   prefix="/upload",   tags=["upload"])
 @app.get("/")
 def root():
     return {"status": "ok", "message": "陶藝工坊 API 運作中"}
+
+@app.get("/bank-info")
+def bank_info():
+    """回傳銀行匯款資訊（從環境變數取得）"""
+    import os
+    return {
+        "bank_name":    os.getenv("BANK_NAME",    ""),
+        "bank_code":    os.getenv("BANK_CODE",    ""),
+        "bank_account": os.getenv("BANK_ACCOUNT", ""),
+        "bank_holder":  os.getenv("BANK_HOLDER",  ""),
+    }
