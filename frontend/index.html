@@ -545,7 +545,7 @@ function cartHTML(){
         <div class="qr">
           <button class="qb" onclick="chgQty(${c.pid},-1)">−</button>
           <span style="font-size:13px;min-width:18px;text-align:center">${c.qty}</span>
-          <button class="qb" onclick="chgQty(${c.pid},1)" \${(()=>{const p=products.find(x=>x.id===c.pid);return p&&c.qty>=p.stock?'disabled style="opacity:.3;cursor:not-allowed"':''})()}>+</button>
+          <button class="qb" onclick="chgQty(${c.pid},1)">+</button>
         </div>
       </div>
       <div class="cp">NT$${(c.price*c.qty).toLocaleString()}</div>
@@ -565,6 +565,16 @@ function renderCart(){
     ['sub-d','sub-m'].forEach(id=>document.getElementById(id).textContent='NT$'+tot.toLocaleString());
     ['grand-d','grand-m'].forEach(id=>document.getElementById(id).textContent='NT$'+(tot+160).toLocaleString());
   }
+  // disable + buttons at stock limit
+  cart.forEach(c=>{
+    const p=products.find(x=>x.id===c.pid);
+    document.querySelectorAll(`#qb-plus-${c.pid}`).forEach(btn=>{
+      const atLimit=p&&c.qty>=p.stock;
+      btn.disabled=atLimit;
+      btn.style.opacity=atLimit?'0.3':'1';
+      btn.style.cursor=atLimit?'not-allowed':'pointer';
+    });
+  });
 }
 function openMCart(){document.getElementById('m-cart-overlay').classList.add('open');document.getElementById('m-cart').classList.add('open');document.body.style.overflow='hidden';}
 function closeMCart(){document.getElementById('m-cart-overlay').classList.remove('open');document.getElementById('m-cart').classList.remove('open');document.body.style.overflow='';}
