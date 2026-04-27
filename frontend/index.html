@@ -804,10 +804,11 @@ async function loadBankInfo(){
 loadBankInfo();
 
 function fillBankInfo(){
-  document.getElementById('bk-name').textContent    = bankInfo.bank_name    || '—';
-  document.getElementById('bk-code').textContent    = bankInfo.bank_code    || '—';
-  document.getElementById('bk-holder').textContent  = bankInfo.bank_holder  || '—';
-  document.getElementById('bk-account').textContent = bankInfo.bank_account || '—';
+  const set=(id,val)=>{const el=document.getElementById(id);if(el)el.textContent=val||'—';};
+  set('bk-name',    bankInfo.bank_name);
+  set('bk-code',    bankInfo.bank_code);
+  set('bk-holder',  bankInfo.bank_holder);
+  set('bk-account', bankInfo.bank_account);
 }
 </script>
 </body>
