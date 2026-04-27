@@ -5,22 +5,22 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>是陶。後台</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Noto+Sans+TC:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700&family=Barlow:wght@300;400;500&family=Noto+Sans+TC:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{--g:#2C4A6E;--gl:#E8EEF5;--t:#1C2B3A;--m:#6B7280;--b:#D4CFC9;--bg:#E0DCD5;--w:#F5F2EE;--r:#8B6F47;--rl:#F5EDE0;--al:#F0EBE0;--a:#7A6040}
-body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--t);font-size:14px;line-height:1.7;font-weight:300}
+body{font-family:'Barlow','Noto Sans TC',sans-serif;background:var(--bg);color:var(--t);font-size:14px;line-height:1.6;font-weight:400;letter-spacing:.2px}
 
 /* ── Login ─────────────────────────────────────────────── */
 .login-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
 .login-box{background:var(--w);border:1px solid var(--b);border-radius:16px;padding:36px 32px;width:100%;max-width:360px;text-align:center;box-shadow:0 4px 24px rgba(28,43,58,.08)}
-.login-logo{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:300;font-style:italic;margin-bottom:6px;color:var(--t);letter-spacing:1px}.login-logo span{color:var(--g)}
+.login-logo{font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:600;letter-spacing:4px;text-transform:uppercase;margin-bottom:6px;color:var(--t)}.login-logo span{color:var(--g)}
 .login-sub{font-size:13px;color:var(--m);margin-bottom:28px}
 .err{font-size:12px;color:var(--r);margin-bottom:12px;padding:9px;background:var(--rl);border-radius:7px;display:none;text-align:left}
 
 /* ── Topbar ─────────────────────────────────────────────── */
 .topbar{background:var(--w);border-bottom:1px solid var(--b);padding:0 18px;height:52px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
-.logo{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:300;font-style:italic;color:var(--t);letter-spacing:.8px}.logo span{color:var(--g)}
+.logo{font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:var(--t)}.logo span{color:var(--g)}
 
 /* ── Top tab nav (replaces bottom nav) ──────────────────── */
 .top-tabs{display:flex;background:var(--w);border-bottom:1px solid var(--b);position:sticky;top:52px;z-index:99}
