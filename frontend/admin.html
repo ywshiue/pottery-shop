@@ -35,11 +35,10 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--t);f
 /* ── Order filter bar ───────────────────────────────────── */
 .o-filter-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;margin-bottom:14px;padding-bottom:2px}
 .o-filter-bar{display:flex;gap:6px;min-width:max-content;padding:2px 2px}
-.o-ftab{display:flex;align-items:center;gap:5px;padding:8px 14px;border-radius:8px;border:1px solid var(--b);font-size:13px;font-weight:500;cursor:pointer;background:var(--w);color:var(--m);transition:all .15s;font-family:inherit;white-space:nowrap}
+.o-ftab{display:flex;align-items:center;gap:5px;padding:6px 14px;border-radius:99px;border:1px solid var(--b);font-size:12px;font-weight:500;cursor:pointer;background:var(--w);color:var(--m);transition:all .15s;font-family:inherit;white-space:nowrap}
 .o-ftab:hover{border-color:var(--g);color:var(--g)}
-.o-ftab.on{background:var(--g);color:#fff;border-color:var(--g);box-shadow:0 2px 8px rgba(44,74,110,.2)}
-.o-ftab .fi{font-size:14px;line-height:1}
-.o-ftab .cnt{background:rgba(0,0,0,.08);border-radius:99px;padding:1px 8px;font-size:11px;font-weight:700;min-width:22px;text-align:center}
+.o-ftab.on{background:var(--g);color:#fff;border-color:var(--g)}
+.o-ftab .cnt{background:rgba(0,0,0,.08);border-radius:99px;padding:1px 8px;font-size:11px;font-weight:700;min-width:20px;text-align:center}
 .o-ftab.on .cnt{background:rgba(255,255,255,.3)}
 
 /* ── Order card ─────────────────────────────────────────── */
@@ -183,24 +182,12 @@ const API = 'https://pottery-shop.onrender.com';
       <!-- Filter bar: scrollable single row -->
       <div class="o-filter-wrap">
         <div class="o-filter-bar">
-          <button class="o-ftab on" onclick="filterOrders(this,'all')">
-            <span class="fi">☰</span>全部<span class="cnt" id="cnt-all">0</span>
-          </button>
-          <button class="o-ftab" onclick="filterOrders(this,'pending')">
-            <span class="fi">★</span>待確認<span class="cnt" id="cnt-pending">0</span>
-          </button>
-          <button class="o-ftab" onclick="filterOrders(this,'confirmed')">
-            <span class="fi">✔</span>已確認<span class="cnt" id="cnt-confirmed">0</span>
-          </button>
-          <button class="o-ftab" onclick="filterOrders(this,'shipped')">
-            <span class="fi">▶</span>已出貨<span class="cnt" id="cnt-shipped">0</span>
-          </button>
-          <button class="o-ftab" onclick="filterOrders(this,'completed')">
-            <span class="fi">◆</span>完成<span class="cnt" id="cnt-completed">0</span>
-          </button>
-          <button class="o-ftab" onclick="filterOrders(this,'cancelled')">
-            <span class="fi">✕</span>取消<span class="cnt" id="cnt-cancelled">0</span>
-          </button>
+          <button class="o-ftab on" onclick="filterOrders(this,'all')">全部<span class="cnt" id="cnt-all">0</span></button>
+          <button class="o-ftab" onclick="filterOrders(this,'pending')">待確認<span class="cnt" id="cnt-pending">0</span></button>
+          <button class="o-ftab" onclick="filterOrders(this,'confirmed')">已確認<span class="cnt" id="cnt-confirmed">0</span></button>
+          <button class="o-ftab" onclick="filterOrders(this,'shipped')">已出貨<span class="cnt" id="cnt-shipped">0</span></button>
+          <button class="o-ftab" onclick="filterOrders(this,'completed')">完成<span class="cnt" id="cnt-completed">0</span></button>
+          <button class="o-ftab" onclick="filterOrders(this,'cancelled')">取消<span class="cnt" id="cnt-cancelled">0</span></button>
         </div>
       </div>
       <div id="o-card-list"></div>
