@@ -112,71 +112,27 @@ async def send_order_email(order_id: int, order: OrderIn, total: int):
 
 
 async def send_customer_email(order_id: int, order: OrderIn, total: int):
-    """寄確認信給消費者，包含銀行匯款資訊"""
+    """下單後寄給消費者：告知已收到訂單，確認匯款後出貨"""
     api_key = os.getenv("RESEND_API_KEY")
     if not api_key:
         return
 
-    # ── 填入你的銀行資訊 ──────────────────────────────
-    BANK_NAME    = os.getenv("BANK_NAME",    "<!-- 銀行名稱 -->")
-    BANK_CODE    = os.getenv("BANK_CODE",    "<!-- 銀行代碼 -->")
-    BANK_ACCOUNT = os.getenv("BANK_ACCOUNT", "<!-- 帳號 -->")
-    BANK_HOLDER  = os.getenv("BANK_HOLDER",  "<!-- 戶名 -->")
-    # ─────────────────────────────────────────────────
-
-    items_html = "".join([
-        f"<tr><td style='padding:6px 12px;border-bottom:1px solid #E0DCD5'>{i.product_name}"
-        f"{'（'+i.size+'）' if i.size else ''}</td>"
-        f"<td style='padding:6px 12px;border-bottom:1px solid #E0DCD5;text-align:right'>NT${i.unit_price * i.qty:,}</td></tr>"
-        for i in order.items
-    ])
-
     html = f"""
     <div style="font-family:'Helvetica Neue',Arial,sans-serif;max-width:560px;margin:0 auto;background:#F5F2EE;padding:32px 24px;border-radius:12px">
-      <h2 style="color:#2C4A6E;font-size:20px;margin:0 0 4px">是陶。訂單確認</h2>
-      <p style="color:#6B7280;font-size:13px;margin:0 0 24px">感謝您的支持，訂單編號 <strong style="color:#1C2B3A">#{order_id}</strong></p>
+      <h2 style="color:#2C4A6E;font-size:20px;margin:0 0 4px">是陶。訂單已收到</h2>
+      <p style="color:#6B7280;font-size:13px;margin:0 0 24px">訂單編號 <strong style="color:#1C2B3A">#{order_id}</strong></p>
 
-      <div style="background:#fff;border-radius:10px;padding:18px 20px;margin-bottom:16px">
-        <div style="font-size:12px;color:#6B7280;text-transform:uppercase;letter-spacing:.8px;margin-bottom:10px">訂購商品</div>
-        <table style="width:100%;border-collapse:collapse;font-size:13px">
-          <tbody>{items_html}</tbody>
-        </table>
-        <div style="display:flex;justify-content:space-between;padding:8px 12px 0;font-size:13px;color:#6B7280">
-          <span>運費</span><span>NT$160</span>
-        </div>
-        <div style="display:flex;justify-content:space-between;padding:8px 12px 0;font-size:15px;font-weight:700;color:#2C4A6E;border-top:1px solid #E0DCD5;margin-top:8px">
-          <span>合計</span><span>NT${total:,}</span>
-        </div>
-      </div>
-
-      <div style="background:#E8EEF5;border:1px solid #B8D0E8;border-radius:10px;padding:18px 20px;margin-bottom:16px">
-        <div style="font-size:12px;color:#2C4A6E;text-transform:uppercase;letter-spacing:.8px;margin-bottom:12px;font-weight:600">匯款資訊</div>
-        <table style="width:100%;font-size:13px;border-collapse:collapse">
-          <tr><td style="padding:5px 0;color:#6B7280">銀行名稱</td><td style="padding:5px 0;font-weight:500;text-align:right">{BANK_NAME}</td></tr>
-          <tr><td style="padding:5px 0;color:#6B7280">銀行代碼</td><td style="padding:5px 0;font-weight:500;text-align:right">{BANK_CODE}</td></tr>
-          <tr><td style="padding:5px 0;color:#6B7280">戶名</td><td style="padding:5px 0;font-weight:500;text-align:right">{BANK_HOLDER}</td></tr>
-          <tr style="border-top:1px solid #B8D0E8">
-            <td style="padding:10px 0 5px;color:#6B7280">帳號</td>
-            <td style="padding:10px 0 5px;font-weight:700;color:#2C4A6E;font-size:16px;text-align:right;letter-spacing:1px">{BANK_ACCOUNT}</td>
-          </tr>
-          <tr style="border-top:1px solid #B8D0E8">
-            <td style="padding:10px 0 5px;color:#6B7280">匯款金額</td>
-            <td style="padding:10px 0 5px;font-weight:700;color:#2C4A6E;font-size:16px;text-align:right">NT${total:,}</td>
-          </tr>
-        </table>
-      </div>
-
-      <div style="background:#FEF3F2;border:1px solid #FECACA;border-radius:10px;padding:14px 16px;margin-bottom:20px">
-        <p style="margin:0;font-size:13px;color:#B45309;line-height:1.8">
-          ⚠️ 請於 <strong>3 天內完成匯款</strong><br>
-          逾期將自動取消訂單，恕不另行通知<br>
-          匯款後請保留收據以利對帳
+      <div style="background:#fff;border-radius:10px;padding:18px 20px;margin-bottom:20px">
+        <p style="margin:0;font-size:14px;color:#1C2B3A;line-height:1.9">
+          親愛的 {order.customer_name}，<br><br>
+          我們已收到您的訂單，感謝您對是陶。的支持。<br>
+          確認收到匯款後，將盡快為您安排出貨。<br><br>
+          如有任何疑問，歡迎透過 Instagram @ywshiue 與我們聯繫。
         </p>
       </div>
 
-      <p style="font-size:12px;color:#9CA3AF;text-align:center;line-height:1.8;margin:0">
-        收件地址：{order.address}<br>
-        如有疑問請透過 Instagram @ywshiue 聯繫<br>
+      <p style="font-size:11px;color:#9CA3AF;text-align:center;line-height:1.8;margin:0;border-top:1px solid #E0DCD5;padding-top:16px">
+        此信件為系統自動發送，請勿直接回覆<br>
         是陶。It's Pottery
       </p>
     </div>
@@ -193,7 +149,7 @@ async def send_customer_email(order_id: int, order: OrderIn, total: int):
                 json={
                     "from": "是陶。<onboarding@resend.dev>",
                     "to": [order.customer_email],
-                    "subject": f"是陶。訂單確認 #{order_id}｜請於 3 天內完成匯款",
+                    "subject": f"是陶。已收到您的訂單 #{order_id}",
                     "html": html,
                 },
                 timeout=10,
@@ -251,8 +207,7 @@ async def create_order(order: OrderIn):
             new_stock = max(0, prod[0]["stock"] - i.qty)
             await sb_fetch(f"/products?id=eq.{i.product_id}", method="PATCH", body={"stock": new_stock})
 
-    # 寄通知信（非同步，不影響下單回應速度）
-    await send_order_email(order_id, order, total)
+    # 只寄確認信給消費者（告知匯款資訊）
     await send_customer_email(order_id, order, total)
 
     return {"order_id": order_id, "total": total}
