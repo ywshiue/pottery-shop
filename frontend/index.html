@@ -13,29 +13,29 @@
   --t:#1C2B3A;--m:#6B7280;
   --b:#D4CFC9;--bg:#E0DCD5;--w:#F5F2EE;
   --r:#8B6F47;--rl:#F5EDE0;
-  --serif:'Barlow Condensed',sans-serif;
-  --sans:'Barlow','Noto Sans TC',sans-serif;
+  --serif:'Shippori Mincho','Noto Serif TC',serif;
+  --sans:'Noto Sans TC',sans-serif;
 }
-body{font-family:var(--sans);background:var(--bg);color:var(--t);font-size:14px;line-height:1.6;font-weight:400;letter-spacing:.3px}
+body{font-family:var(--sans);background:var(--bg);color:var(--t);font-size:14px;line-height:1.8;font-weight:300;letter-spacing:.4px}
 
 /* ── Topbar ─────────────────────────────────────────── */
 .topbar{background:var(--w);border-bottom:1px solid var(--b);padding:0 32px;height:64px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 1px 8px rgba(28,43,58,.05)}
 .logo-wrap{display:flex;align-items:center;gap:10px;text-decoration:none}
 .logo-svg{width:36px;height:36px;flex-shrink:0}
 .logo-text{display:flex;flex-direction:column;gap:4px}
-.logo-zh{font-family:var(--serif);font-size:16px;font-weight:600;color:var(--t);letter-spacing:4px;line-height:1;text-transform:uppercase}
+.logo-zh{font-family:var(--serif);font-size:18px;font-weight:500;color:var(--t);letter-spacing:3px;line-height:1}
 .logo-zh span{color:var(--g)}
-.logo-en{font-family:var(--serif);font-size:8px;letter-spacing:3px;color:var(--m);font-weight:400;text-transform:uppercase;line-height:1}
+.logo-en{font-family:var(--sans);font-size:8px;letter-spacing:2.5px;color:var(--m);font-weight:300;text-transform:uppercase;line-height:1}
 .nav-right{display:flex;align-items:center;gap:20px}
-.nav-link{font-family:var(--serif);font-size:11px;color:var(--m);text-decoration:none;letter-spacing:2.5px;text-transform:uppercase;transition:color .15s;font-weight:500}
+.nav-link{font-family:var(--sans);font-size:12px;color:var(--m);text-decoration:none;letter-spacing:1px;transition:color .15s;font-weight:300}
 .nav-link:hover{color:var(--t)}
 
 /* ── Filter ─────────────────────────────────────────── */
 .wrap{max-width:1280px;margin:0 auto;padding:32px 24px 80px}
 .section-header{margin-bottom:28px}
-.section-title{font-family:var(--serif);font-size:13px;font-weight:600;color:var(--t);margin-bottom:12px;letter-spacing:4px;text-transform:uppercase}
+.section-title{font-family:var(--serif);font-size:20px;font-weight:400;color:var(--t);margin-bottom:12px;letter-spacing:2px}
 .fbar{display:flex;flex-wrap:wrap;gap:8px}
-.fc{padding:6px 18px;border-radius:99px;border:1px solid var(--b);font-size:10px;letter-spacing:2.5px;text-transform:uppercase;cursor:pointer;background:transparent;color:var(--m);transition:all .2s;font-family:var(--serif);font-weight:500}
+.fc{padding:6px 18px;border-radius:99px;border:1px solid var(--b);font-size:12px;letter-spacing:.5px;cursor:pointer;background:transparent;color:var(--m);transition:all .2s;font-family:var(--sans);font-weight:300}
 .fc.on{background:var(--g);color:#fff;border-color:var(--g);letter-spacing:.8px}
 
 /* ── Layout ─────────────────────────────────────────── */
@@ -52,17 +52,17 @@ body{font-family:var(--sans);background:var(--bg);color:var(--t);font-size:14px;
 .smask{position:absolute;inset:0;background:rgba(28,43,58,.45);display:flex;align-items:center;justify-content:center}
 .smask-text{color:#fff;font-size:12px;letter-spacing:1.5px;font-weight:500}
 .pbody{padding:10px 13px}
-.pcat{font-family:var(--serif);font-size:9px;letter-spacing:3px;color:var(--m);text-transform:uppercase;margin-bottom:3px;font-weight:500}
-.pname{font-family:var(--serif);font-size:15px;font-weight:500;margin-bottom:2px;color:var(--t);transition:color .15s;letter-spacing:1.5px;text-transform:uppercase}
+.pcat{font-family:var(--sans);font-size:10px;letter-spacing:1.5px;color:var(--m);text-transform:uppercase;margin-bottom:3px;font-weight:300}
+.pname{font-family:var(--serif);font-size:14px;font-weight:400;margin-bottom:2px;color:var(--t);transition:color .15s;letter-spacing:.8px}
 .pc:hover .pname{color:var(--g)}
 .psize{font-size:11px;color:var(--m);margin-bottom:5px;letter-spacing:.3px}
 .pprice{font-size:15px;font-weight:600;color:var(--g)}
-.pview{font-family:var(--serif);font-size:9px;color:var(--m);margin-top:4px;letter-spacing:2.5px;text-transform:uppercase;display:flex;align-items:center;gap:4px;opacity:0;transition:opacity .2s;font-weight:500}
+.pview{font-family:var(--sans);font-size:10px;color:var(--m);margin-top:4px;letter-spacing:.8px;display:flex;align-items:center;gap:4px;opacity:0;transition:opacity .2s;font-weight:300}
 .pc:hover .pview{opacity:1}
 
 /* ── Cart (Desktop) ─────────────────────────────────── */
 .cbox{background:var(--w);border:1px solid var(--b);border-radius:14px;padding:22px;position:sticky;top:80px}
-.chdr{font-family:var(--serif);font-size:12px;font-weight:600;display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;color:var(--t);letter-spacing:4px;text-transform:uppercase}
+.chdr{font-family:var(--serif);font-size:15px;font-weight:400;display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;color:var(--t);letter-spacing:1.5px}
 .ccnt{background:var(--g);color:#fff;border-radius:99px;font-size:10px;font-weight:700;padding:2px 9px;letter-spacing:.3px}
 .cempty{text-align:center;padding:32px 0;color:var(--m);font-size:13px;letter-spacing:.3px}
 .ci{display:flex;gap:12px;padding:12px 0;border-bottom:1px solid var(--b);align-items:flex-start}
@@ -77,7 +77,7 @@ body{font-family:var(--sans);background:var(--bg);color:var(--t);font-size:14px;
 .totbl{margin-top:14px;padding-top:14px;border-top:1px solid var(--b)}
 .tr{display:flex;justify-content:space-between;font-size:13px;color:var(--m);margin-bottom:6px;letter-spacing:.3px}
 .tr.grand{font-weight:600;font-size:15px;color:var(--t);margin-top:10px}
-.cbtn{width:100%;margin-top:14px;padding:13px;background:var(--g);color:#fff;border:none;border-radius:10px;font-size:11px;font-weight:600;cursor:pointer;font-family:var(--serif);letter-spacing:3px;text-transform:uppercase;transition:background .15s}
+.cbtn{width:100%;margin-top:14px;padding:13px;background:var(--g);color:#fff;border:none;border-radius:10px;font-size:13px;font-weight:400;cursor:pointer;font-family:var(--serif);letter-spacing:2px;transition:background .15s}
 .cbtn:hover{background:#1e3450}
 
 /* ── Mobile cart btn ────────────────────────────────── */
@@ -106,7 +106,7 @@ body{font-family:var(--sans);background:var(--bg);color:var(--t);font-size:14px;
 .d-thumb{width:64px;height:64px;border-radius:8px;object-fit:cover;cursor:pointer;border:2px solid transparent;flex-shrink:0;opacity:.6;transition:all .15s}
 .d-thumb.on{border-color:var(--g);opacity:1}
 
-.d-name{font-family:var(--serif);font-size:22px;font-weight:600;color:var(--t);margin-bottom:6px;line-height:1.2;letter-spacing:2px;text-transform:uppercase}
+.d-name{font-family:var(--serif);font-size:22px;font-weight:400;color:var(--t);margin-bottom:6px;line-height:1.3;letter-spacing:1.5px}
 .d-price{font-size:20px;font-weight:600;color:var(--g);margin-bottom:6px}
 .d-size{font-size:12px;color:var(--m);letter-spacing:.5px;margin-bottom:14px}
 .d-divider{border:none;border-top:1px solid var(--b);margin:16px 0}
@@ -136,7 +136,7 @@ body{font-family:var(--sans);background:var(--bg);color:var(--t);font-size:14px;
 .ov.open{display:flex}
 .mo{background:var(--w);border-radius:20px 20px 0 0;padding:28px;width:100%;max-width:520px;max-height:92vh;overflow-y:auto}
 .mo-handle{width:36px;height:4px;background:var(--b);border-radius:2px;margin:0 auto 20px}
-.mtitle{font-family:var(--serif);font-size:14px;font-weight:600;margin-bottom:4px;color:var(--t);letter-spacing:4px;text-transform:uppercase}
+.mtitle{font-family:var(--serif);font-size:18px;font-weight:400;margin-bottom:4px;color:var(--t);letter-spacing:1.5px}
 .msub{font-size:13px;color:var(--m);margin-bottom:22px;letter-spacing:.3px}
 .fg{display:flex;flex-direction:column;gap:5px;margin-bottom:14px}
 .lbl{font-size:10px;font-weight:700;color:var(--m);text-transform:uppercase;letter-spacing:.8px}
@@ -160,7 +160,7 @@ textarea{resize:vertical;min-height:76px}
 /* ── Footer ─────────────────────────────────────────── */
 footer{background:var(--t);color:rgba(255,255,255,.7);padding:48px 32px 32px;margin-top:60px}
 .footer-inner{max-width:1280px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr 1fr;gap:40px}
-.footer-logo{font-family:var(--serif);font-size:13px;font-weight:600;color:#fff;margin-bottom:8px;letter-spacing:4px;text-transform:uppercase}
+.footer-logo{font-family:var(--serif);font-size:17px;font-weight:400;color:#fff;margin-bottom:8px;letter-spacing:2px}
 .footer-logo span{color:rgba(44,130,200,.8)}
 .footer-tagline{font-size:12px;letter-spacing:.5px;line-height:1.7}
 .footer-section-title{font-size:10px;letter-spacing:1.8px;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:14px;font-weight:600}
