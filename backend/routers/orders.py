@@ -157,17 +157,6 @@ async def send_customer_email(order_id: int, order: OrderIn, total: int):
     except Exception:
         pass
 
-# ── 公開：回傳銀行匯款資訊 ──────────────────────────────────
-@router.get("/bank-info")
-async def get_bank_info():
-    """回傳銀行匯款資訊（從環境變數取得，不寫死在前端）"""
-    return {
-        "bank_name":    os.getenv("BANK_NAME",    ""),
-        "bank_code":    os.getenv("BANK_CODE",    ""),
-        "bank_account": os.getenv("BANK_ACCOUNT", ""),
-        "bank_holder":  os.getenv("BANK_HOLDER",  ""),
-    }
-
 # ── 公開：任何人可以下單 ───────────────────────────────────
 @router.post("/")
 async def create_order(order: OrderIn):
