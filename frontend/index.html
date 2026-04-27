@@ -5,121 +5,195 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>是陶。</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;600;700&family=Noto+Serif+TC:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{--g:#2C4A6E;--gl:#E8EEF5;--t:#1C2B3A;--m:#6B7280;--b:#D4CFC9;--bg:#E0DCD5;--w:#F5F2EE;--r:#8B6F47;--rl:#F5EDE0}
-body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--t);font-size:15px;line-height:1.6}
-.topbar{background:var(--w);border-bottom:1px solid var(--b);padding:0 24px;height:56px;display:flex;align-items:center;position:sticky;top:0;z-index:100;box-shadow:0 1px 6px rgba(28,43,58,.06)}
-.logo{font-size:20px;font-weight:700;color:var(--t)}.logo span{color:var(--g)}
-.wrap{max-width:1200px;margin:0 auto;padding:24px 20px 100px}
-.fbar{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px}
-.fc{padding:6px 16px;border-radius:99px;border:1px solid var(--b);font-size:13px;cursor:pointer;background:transparent;color:var(--m);transition:all .15s;font-family:inherit}
-.fc.on{background:var(--g);color:#fff;border-color:var(--g)}
+:root{
+  --g:#2C4A6E;--gl:#E8EEF5;
+  --t:#1C2B3A;--m:#6B7280;
+  --b:#D4CFC9;--bg:#E0DCD5;--w:#F5F2EE;
+  --r:#8B6F47;--rl:#F5EDE0;
+  --serif:'Noto Serif TC',serif;
+  --sans:'Noto Sans TC',sans-serif;
+}
+body{font-family:var(--sans);background:var(--bg);color:var(--t);font-size:15px;line-height:1.7}
 
-/* Desktop layout */
-.layout{display:grid;grid-template-columns:1fr 300px;gap:20px;align-items:start}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(162px,1fr));gap:14px}
+/* ── Topbar ─────────────────────────────────────────── */
+.topbar{background:var(--w);border-bottom:1px solid var(--b);padding:0 32px;height:64px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 1px 8px rgba(28,43,58,.05)}
+.logo-wrap{display:flex;align-items:center;gap:10px;text-decoration:none}
+.logo-svg{width:36px;height:36px;flex-shrink:0}
+.logo-text{display:flex;flex-direction:column;gap:1px}
+.logo-zh{font-family:var(--serif);font-size:18px;font-weight:600;color:var(--t);letter-spacing:.5px;line-height:1}
+.logo-zh span{color:var(--g)}
+.logo-en{font-size:9px;letter-spacing:2px;color:var(--m);font-weight:400;text-transform:uppercase;line-height:1}
+.nav-right{display:flex;align-items:center;gap:20px}
+.nav-link{font-size:13px;color:var(--m);text-decoration:none;letter-spacing:.3px;transition:color .15s}
+.nav-link:hover{color:var(--t)}
 
-/* Product card */
-.pc{background:var(--w);border:1px solid var(--b);border-radius:12px;overflow:hidden;transition:border-color .15s,box-shadow .15s;cursor:pointer}
-.pc:hover{border-color:var(--g);box-shadow:0 3px 12px rgba(44,74,110,.1)}
-.pimg{width:100%;aspect-ratio:1;background:var(--bg);position:relative;overflow:hidden}
-.pimg img{width:100%;height:100%;object-fit:cover;transition:transform .3s}
-.pc:hover .pimg img{transform:scale(1.04)}
-.pimg-count{position:absolute;bottom:7px;right:7px;background:rgba(28,43,58,.6);color:#fff;font-size:10px;padding:2px 7px;border-radius:99px}
-.smask{position:absolute;inset:0;background:rgba(28,43,58,.5);display:flex;align-items:center;justify-content:center;color:#fff;font-size:13px;font-weight:600;letter-spacing:.5px}
-.pbody{padding:12px 14px}
-.pname{font-size:13px;font-weight:700;margin-bottom:3px;color:var(--t)}
-.psize{font-size:11px;color:var(--m);margin-bottom:4px}
-.pprice{font-size:15px;font-weight:700;color:var(--g);margin-bottom:6px}
-.pdesc{font-size:11px;color:var(--m);margin-bottom:9px;line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-.abtn{width:100%;padding:8px;background:var(--g);color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;transition:background .15s}
-.abtn:hover{background:#1e3450}.abtn:disabled{background:var(--b);color:var(--m);cursor:not-allowed}
+/* ── Filter ─────────────────────────────────────────── */
+.wrap{max-width:1280px;margin:0 auto;padding:32px 24px 80px}
+.section-header{margin-bottom:28px}
+.section-title{font-family:var(--serif);font-size:22px;font-weight:500;color:var(--t);margin-bottom:12px}
+.fbar{display:flex;flex-wrap:wrap;gap:8px}
+.fc{padding:6px 18px;border-radius:99px;border:1px solid var(--b);font-size:12px;letter-spacing:.5px;cursor:pointer;background:transparent;color:var(--m);transition:all .2s;font-family:var(--sans)}
+.fc.on{background:var(--g);color:#fff;border-color:var(--g);letter-spacing:.8px}
 
-/* Lightbox */
-.lb{position:fixed;inset:0;background:rgba(10,15,20,.92);z-index:500;display:none;flex-direction:column;align-items:center;justify-content:center}
-.lb.open{display:flex}
-.lb-img{max-width:92vw;max-height:75vh;object-fit:contain;border-radius:8px;user-select:none}
-.lb-thumbs{display:flex;gap:8px;margin-top:16px;overflow-x:auto;padding:4px 16px;max-width:92vw}
-.lb-thumb{width:52px;height:52px;border-radius:6px;object-fit:cover;cursor:pointer;opacity:.55;border:2px solid transparent;flex-shrink:0;transition:all .15s}
-.lb-thumb.on{opacity:1;border-color:#fff}
-.lb-close{position:absolute;top:18px;right:20px;background:transparent;border:none;color:#fff;font-size:22px;cursor:pointer;line-height:1;opacity:.7}
-.lb-close:hover{opacity:1}
-.lb-nav{position:absolute;top:50%;transform:translateY(-50%);background:rgba(255,255,255,.15);border:none;color:#fff;width:40px;height:40px;border-radius:50%;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .15s}
-.lb-nav:hover{background:rgba(255,255,255,.3)}
-.lb-prev{left:16px}.lb-right{right:16px}
-.lb-info{color:rgba(255,255,255,.7);font-size:13px;margin-top:10px}
+/* ── Layout ─────────────────────────────────────────── */
+.layout{display:grid;grid-template-columns:1fr 320px;gap:24px;align-items:start}
 
-/* Desktop Cart */
-.cbox{background:var(--w);border:1px solid var(--b);border-radius:12px;padding:18px;position:sticky;top:68px}
-.chdr{font-size:15px;font-weight:700;display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;color:var(--t)}
-.ccnt{background:var(--g);color:#fff;border-radius:99px;font-size:11px;font-weight:700;padding:2px 9px}
-.cempty{text-align:center;padding:28px 0;color:var(--m);font-size:13px}
-.ci{display:flex;gap:10px;padding:10px 0;border-bottom:1px solid var(--b);align-items:flex-start}
-.cimg{width:42px;height:42px;border-radius:8px;background:var(--bg);display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden}
-.cimg img{width:100%;height:100%;object-fit:cover;border-radius:8px}
-.cn{font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--t)}
-.csz{font-size:11px;color:var(--m);margin-top:1px}
-.cp{font-size:13px;font-weight:700;color:var(--g);flex-shrink:0;padding-top:2px}
-.qr{display:flex;align-items:center;gap:5px;margin-top:5px}
-.qb{width:22px;height:22px;border-radius:5px;border:1px solid var(--b);background:transparent;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;font-family:inherit;color:var(--t)}
-.totbl{margin-top:12px;padding-top:12px;border-top:1px solid var(--b)}
-.tr{display:flex;justify-content:space-between;font-size:13px;color:var(--m);margin-bottom:5px}
-.tr.grand{font-weight:700;font-size:15px;color:var(--t);margin-top:8px}
-.cbtn{width:100%;margin-top:12px;padding:11px;background:var(--g);color:#fff;border:none;border-radius:9px;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit;transition:background .15s}
+/* ── Product Grid ───────────────────────────────────── */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:20px}
+.pc{background:var(--w);border:1px solid var(--b);border-radius:14px;overflow:hidden;transition:all .25s;cursor:pointer}
+.pc:hover{transform:translateY(-3px);box-shadow:0 8px 28px rgba(28,43,58,.1);border-color:transparent}
+.pimg{width:100%;aspect-ratio:4/5;background:var(--bg);position:relative;overflow:hidden}
+.pimg img{width:100%;height:100%;object-fit:cover;transition:transform .4s}
+.pc:hover .pimg img{transform:scale(1.05)}
+.pimg-count{position:absolute;bottom:10px;right:10px;background:rgba(28,43,58,.55);color:#fff;font-size:10px;letter-spacing:.3px;padding:3px 8px;border-radius:99px;backdrop-filter:blur(4px)}
+.smask{position:absolute;inset:0;background:rgba(28,43,58,.45);display:flex;align-items:center;justify-content:center}
+.smask-text{color:#fff;font-size:12px;letter-spacing:1.5px;font-weight:500}
+.pbody{padding:14px 16px}
+.pcat{font-size:10px;letter-spacing:1.5px;color:var(--m);text-transform:uppercase;margin-bottom:5px}
+.pname{font-family:var(--serif);font-size:15px;font-weight:500;margin-bottom:4px;color:var(--t);transition:color .15s}
+.pc:hover .pname{color:var(--g)}
+.psize{font-size:11px;color:var(--m);margin-bottom:8px;letter-spacing:.3px}
+.pprice{font-size:16px;font-weight:600;color:var(--g)}
+.pview{font-size:11px;color:var(--m);margin-top:6px;letter-spacing:.5px;display:flex;align-items:center;gap:4px;opacity:0;transition:opacity .2s}
+.pc:hover .pview{opacity:1}
+
+/* ── Cart (Desktop) ─────────────────────────────────── */
+.cbox{background:var(--w);border:1px solid var(--b);border-radius:14px;padding:22px;position:sticky;top:80px}
+.chdr{font-family:var(--serif);font-size:16px;font-weight:500;display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;color:var(--t)}
+.ccnt{background:var(--g);color:#fff;border-radius:99px;font-size:10px;font-weight:700;padding:2px 9px;letter-spacing:.3px}
+.cempty{text-align:center;padding:32px 0;color:var(--m);font-size:13px;letter-spacing:.3px}
+.ci{display:flex;gap:12px;padding:12px 0;border-bottom:1px solid var(--b);align-items:flex-start}
+.cimg{width:48px;height:48px;border-radius:8px;background:var(--bg);flex-shrink:0;overflow:hidden}
+.cimg img{width:100%;height:100%;object-fit:cover}
+.cn{font-size:13px;font-weight:600;color:var(--t);margin-bottom:2px}
+.csz{font-size:11px;color:var(--m);letter-spacing:.3px}
+.cp{font-size:13px;font-weight:600;color:var(--g);flex-shrink:0}
+.qr{display:flex;align-items:center;gap:6px;margin-top:6px}
+.qb{width:24px;height:24px;border-radius:6px;border:1px solid var(--b);background:transparent;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;color:var(--t);transition:all .15s}
+.qb:hover{border-color:var(--g);color:var(--g)}
+.totbl{margin-top:14px;padding-top:14px;border-top:1px solid var(--b)}
+.tr{display:flex;justify-content:space-between;font-size:13px;color:var(--m);margin-bottom:6px;letter-spacing:.3px}
+.tr.grand{font-weight:600;font-size:15px;color:var(--t);margin-top:10px}
+.cbtn{width:100%;margin-top:14px;padding:13px;background:var(--g);color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;font-family:var(--sans);letter-spacing:.8px;transition:background .15s}
 .cbtn:hover{background:#1e3450}
 
-/* Mobile cart button */
-.m-cart-btn{display:none;position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--g);color:#fff;border:none;border-radius:99px;padding:13px 28px;font-size:15px;font-weight:700;font-family:inherit;cursor:pointer;z-index:90;box-shadow:0 4px 16px rgba(44,74,110,.3);white-space:nowrap}
-
-/* Mobile cart drawer */
+/* ── Mobile cart btn ────────────────────────────────── */
+.m-cart-btn{display:none;position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--g);color:#fff;border:none;border-radius:99px;padding:14px 32px;font-size:14px;font-weight:600;font-family:var(--sans);cursor:pointer;z-index:90;box-shadow:0 6px 20px rgba(44,74,110,.35);letter-spacing:.5px;white-space:nowrap}
 .m-cart-overlay{position:fixed;inset:0;background:rgba(28,43,58,.5);z-index:150;display:none}
 .m-cart-overlay.open{display:block}
-.m-cart{position:fixed;bottom:0;left:0;right:0;background:var(--w);border-radius:18px 18px 0 0;padding:20px;z-index:160;max-height:80vh;overflow-y:auto;transform:translateY(100%);transition:transform .3s}
+.m-cart{position:fixed;bottom:0;left:0;right:0;background:var(--w);border-radius:20px 20px 0 0;padding:22px;z-index:160;max-height:80vh;overflow-y:auto;transform:translateY(100%);transition:transform .3s cubic-bezier(.32,.72,0,1)}
 .m-cart.open{transform:translateY(0)}
-.m-cart-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
-.m-cart-close{background:transparent;border:none;font-size:22px;cursor:pointer;color:var(--m);line-height:1}
+.m-cart-handle{width:36px;height:4px;background:var(--b);border-radius:2px;margin:0 auto 18px}
 
-/* Checkout Modal */
-.ov{position:fixed;inset:0;background:rgba(28,43,58,.55);z-index:200;display:none;align-items:flex-end;justify-content:center}
+/* ── Product Detail Modal ───────────────────────────── */
+.drawer-overlay{position:fixed;inset:0;background:rgba(28,43,58,.6);z-index:200;display:none;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(3px)}
+.drawer-overlay.open{display:flex}
+.drawer{background:var(--w);border-radius:18px;width:100%;max-width:820px;max-height:88vh;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 24px 64px rgba(28,43,58,.2)}
+.drawer-close{padding:16px 20px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--b);flex-shrink:0}
+.drawer-close-btn{background:transparent;border:none;font-size:20px;cursor:pointer;color:var(--m);line-height:1;width:32px;height:32px;display:flex;align-items:center;justify-content:center;border-radius:50%;transition:background .15s}
+.drawer-close-btn:hover{background:var(--bg)}
+.drawer-cat{font-size:10px;letter-spacing:1.5px;color:var(--m);text-transform:uppercase}
+.drawer-content{padding:24px;flex:1;overflow-y:auto;display:grid;grid-template-columns:1fr 1fr;gap:24px}
+@media(max-width:640px){.drawer-content{grid-template-columns:1fr}.drawer{max-height:92vh;border-radius:20px 20px 0 0;margin-top:auto}}
+
+/* Drawer image gallery */
+.d-main-img{width:100%;aspect-ratio:4/5;object-fit:cover;border-radius:12px;margin-bottom:12px;background:var(--bg)}
+.d-main-placeholder{width:100%;aspect-ratio:4/5;background:var(--bg);border-radius:12px;margin-bottom:12px;display:flex;align-items:center;justify-content:center;color:var(--b);font-size:48px}
+.d-thumbs{display:flex;gap:8px;margin-bottom:20px;overflow-x:auto;padding-bottom:4px}
+.d-thumb{width:64px;height:64px;border-radius:8px;object-fit:cover;cursor:pointer;border:2px solid transparent;flex-shrink:0;opacity:.6;transition:all .15s}
+.d-thumb.on{border-color:var(--g);opacity:1}
+
+.d-name{font-family:var(--serif);font-size:22px;font-weight:500;color:var(--t);margin-bottom:6px;line-height:1.3}
+.d-price{font-size:20px;font-weight:600;color:var(--g);margin-bottom:6px}
+.d-size{font-size:12px;color:var(--m);letter-spacing:.5px;margin-bottom:14px}
+.d-divider{border:none;border-top:1px solid var(--b);margin:16px 0}
+.d-section-title{font-size:10px;letter-spacing:1.5px;color:var(--m);text-transform:uppercase;margin-bottom:8px}
+.d-desc{font-size:14px;color:var(--t);line-height:1.8;white-space:pre-wrap}
+.d-add-btn{width:100%;padding:14px;background:var(--g);color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;font-family:var(--sans);letter-spacing:.8px;transition:background .15s;margin-top:20px}
+.d-add-btn:hover{background:#1e3450}
+.d-add-btn:disabled{background:var(--b);color:var(--m);cursor:not-allowed}
+.d-stock{font-size:12px;color:var(--m);text-align:center;margin-top:8px;letter-spacing:.3px}
+
+/* ── Lightbox ───────────────────────────────────────── */
+.lb{position:fixed;inset:0;background:rgba(10,15,20,.94);z-index:500;display:none;flex-direction:column;align-items:center;justify-content:center}
+.lb.open{display:flex}
+.lb-img{max-width:90vw;max-height:74vh;object-fit:contain;border-radius:8px}
+.lb-thumbs{display:flex;gap:8px;margin-top:16px;overflow-x:auto;padding:4px 20px;max-width:90vw}
+.lb-thumb{width:52px;height:52px;border-radius:6px;object-fit:cover;cursor:pointer;opacity:.5;border:2px solid transparent;flex-shrink:0;transition:all .15s}
+.lb-thumb.on{opacity:1;border-color:#fff}
+.lb-close{position:absolute;top:20px;right:22px;background:transparent;border:none;color:#fff;font-size:22px;cursor:pointer;opacity:.7;transition:opacity .15s}
+.lb-close:hover{opacity:1}
+.lb-nav{position:absolute;top:50%;transform:translateY(-50%);background:rgba(255,255,255,.12);border:none;color:#fff;width:44px;height:44px;border-radius:50%;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .15s}
+.lb-nav:hover{background:rgba(255,255,255,.25)}
+.lb-prev{left:18px}.lb-right{right:18px}
+.lb-info{color:rgba(255,255,255,.6);font-size:12px;margin-top:10px;letter-spacing:.5px}
+
+/* ── Checkout Modal ─────────────────────────────────── */
+.ov{position:fixed;inset:0;background:rgba(28,43,58,.6);z-index:300;display:none;align-items:flex-end;justify-content:center;backdrop-filter:blur(3px)}
 .ov.open{display:flex}
-.mo{background:var(--w);border-radius:18px 18px 0 0;padding:26px;width:100%;max-width:500px;max-height:92vh;overflow-y:auto}
-.mtitle{font-size:17px;font-weight:700;margin-bottom:4px;color:var(--t)}
-.msub{font-size:13px;color:var(--m);margin-bottom:20px}
-.fg{display:flex;flex-direction:column;gap:5px;margin-bottom:13px}
-.lbl{font-size:11px;font-weight:700;color:var(--m);text-transform:uppercase;letter-spacing:.5px}
-input[type=text],input[type=email],input[type=tel],textarea{padding:10px 12px;border:1px solid var(--b);border-radius:8px;font-size:14px;font-family:inherit;background:var(--w);color:var(--t);outline:none;transition:border-color .15s;width:100%}
+.mo{background:var(--w);border-radius:20px 20px 0 0;padding:28px;width:100%;max-width:520px;max-height:92vh;overflow-y:auto}
+.mo-handle{width:36px;height:4px;background:var(--b);border-radius:2px;margin:0 auto 20px}
+.mtitle{font-family:var(--serif);font-size:20px;font-weight:500;margin-bottom:4px;color:var(--t)}
+.msub{font-size:13px;color:var(--m);margin-bottom:22px;letter-spacing:.3px}
+.fg{display:flex;flex-direction:column;gap:5px;margin-bottom:14px}
+.lbl{font-size:10px;font-weight:700;color:var(--m);text-transform:uppercase;letter-spacing:.8px}
+input[type=text],input[type=email],input[type=tel],textarea{padding:11px 14px;border:1px solid var(--b);border-radius:9px;font-size:14px;font-family:var(--sans);background:var(--w);color:var(--t);outline:none;transition:border-color .15s;width:100%}
 input:focus,textarea:focus{border-color:var(--g)}
-textarea{resize:vertical;min-height:72px}
-.f2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:13px}
-.po{display:flex;align-items:center;gap:11px;padding:11px;border:1.5px solid var(--b);border-radius:9px;cursor:pointer;margin-bottom:7px;transition:all .15s}
+textarea{resize:vertical;min-height:76px}
+.f2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px}
+.po{display:flex;align-items:center;gap:12px;padding:13px;border:1.5px solid var(--b);border-radius:10px;cursor:pointer;margin-bottom:8px;transition:all .15s}
 .po:hover{background:var(--bg)}.po.sel{border-color:var(--g);background:var(--gl)}
-.pl{font-size:14px;font-weight:600;color:var(--t)}.ps{font-size:11px;color:var(--m);margin-top:1px}
-.ordsum{background:var(--bg);padding:12px;border-radius:9px;font-size:13px;margin-top:14px;border:1px solid var(--b)}
-.mftr{display:flex;gap:8px;margin-top:14px;justify-content:flex-end}
-.btn{display:inline-flex;align-items:center;padding:9px 20px;border-radius:8px;font-size:14px;font-weight:600;font-family:inherit;cursor:pointer;transition:all .15s;border:none}
+.pl{font-size:14px;font-weight:600;color:var(--t);letter-spacing:.2px}.ps{font-size:11px;color:var(--m);margin-top:2px;letter-spacing:.3px}
+.ordsum{background:var(--bg);padding:14px;border-radius:10px;font-size:13px;margin-top:16px;border:1px solid var(--b)}
+.ordsum-row{display:flex;justify-content:space-between;color:var(--m);margin-bottom:5px}
+.ordsum-note{font-size:11px;color:var(--m);margin-top:10px;line-height:1.6;letter-spacing:.2px;padding-top:8px;border-top:1px solid var(--b)}
+.mftr{display:flex;gap:10px;margin-top:16px;justify-content:flex-end}
+.btn{display:inline-flex;align-items:center;padding:10px 22px;border-radius:9px;font-size:14px;font-weight:600;font-family:var(--sans);cursor:pointer;transition:all .15s;border:none;letter-spacing:.3px}
 .bg{background:var(--g);color:#fff}.bg:hover{background:#1e3450}.bg:disabled{opacity:.4;cursor:not-allowed}
 .bo{background:transparent;border:1px solid var(--b);color:var(--m)}.bo:hover{background:var(--bg)}
-.sbox{text-align:center;padding:28px 0}
-#toast{position:fixed;bottom:80px;right:16px;background:var(--t);color:#fff;padding:10px 16px;border-radius:10px;font-size:13px;font-weight:500;z-index:999;opacity:0;transform:translateY(12px);transition:all .25s;pointer-events:none;max-width:calc(100vw - 32px)}
-#toast.show{opacity:1;transform:translateY(0)}
-.loading{text-align:center;padding:40px;color:var(--m);font-size:14px}
+.sbox{text-align:center;padding:32px 0}
+.s-icon{width:56px;height:56px;background:var(--gl);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 16px}
 
-@media(max-width:700px){
+/* ── Footer ─────────────────────────────────────────── */
+footer{background:var(--t);color:rgba(255,255,255,.7);padding:48px 32px 32px;margin-top:60px}
+.footer-inner{max-width:1280px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr 1fr;gap:40px}
+.footer-logo{font-family:var(--serif);font-size:20px;color:#fff;margin-bottom:8px}
+.footer-logo span{color:rgba(44,130,200,.8)}
+.footer-tagline{font-size:12px;letter-spacing:.5px;line-height:1.7}
+.footer-section-title{font-size:10px;letter-spacing:1.8px;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:14px;font-weight:600}
+.footer-list{list-style:none;display:flex;flex-direction:column;gap:8px}
+.footer-list li{font-size:13px;line-height:1.6;letter-spacing:.2px}
+.footer-list li strong{color:rgba(255,255,255,.9)}
+.footer-bottom{max-width:1280px;margin:32px auto 0;padding-top:20px;border-top:1px solid rgba(255,255,255,.08);font-size:11px;letter-spacing:.5px;color:rgba(255,255,255,.3);text-align:center}
+
+/* ── Toast ──────────────────────────────────────────── */
+#toast{position:fixed;bottom:88px;right:20px;background:var(--t);color:#fff;padding:11px 18px;border-radius:10px;font-size:13px;font-weight:500;z-index:999;opacity:0;transform:translateY(12px);transition:all .25s;pointer-events:none;max-width:calc(100vw - 40px);letter-spacing:.3px}
+#toast.show{opacity:1;transform:translateY(0)}
+.loading{text-align:center;padding:60px;color:var(--m);font-size:14px;letter-spacing:.5px}
+
+/* ── Responsive ─────────────────────────────────────── */
+@media(max-width:760px){
   .layout{grid-template-columns:1fr}
-  .grid{grid-template-columns:repeat(2,1fr);gap:10px}
   .cbox{display:none}
   .m-cart-btn{display:block}
-  .wrap{padding:16px 14px 100px}
-  .topbar{padding:0 16px}
+  .grid{grid-template-columns:repeat(2,1fr);gap:12px}
+  .wrap{padding:20px 16px 100px}
+  .topbar{padding:0 18px;height:56px}
   .f2{grid-template-columns:1fr}
-  .mo{border-radius:18px 18px 0 0;max-width:100%}
-  #toast{bottom:90px}
+  .mo{border-radius:20px 20px 0 0;max-width:100%}
+  .footer-inner{grid-template-columns:1fr}
+  footer{padding:36px 20px 24px}
+  #toast{bottom:100px}
+  .drawer{width:100vw}
 }
-@media(min-width:701px){
+@media(min-width:761px){
   .ov{align-items:center}
-  .mo{border-radius:14px;max-width:430px}
+  .mo{border-radius:16px;max-width:480px;max-height:88vh}
+  .mo-handle{display:none}
+  #toast{bottom:24px}
 }
 </style>
 </head>
@@ -129,20 +203,40 @@ textarea{resize:vertical;min-height:72px}
 const API = 'https://pottery-shop.onrender.com';
 </script>
 
+<!-- ── Topbar ─────────────────────────────────────────── -->
 <div class="topbar">
-  <div class="logo">是陶<span>。</span></div>
+  <a class="logo-wrap" href="#">
+    <!-- SVG Logo -->
+    <svg class="logo-svg" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="18" cy="18" r="17" stroke="#2C4A6E" stroke-width="1.2" fill="none"/>
+      <ellipse cx="18" cy="22" rx="8" ry="5.5" stroke="#2C4A6E" stroke-width="1.2" fill="none"/>
+      <path d="M10 22 Q10 14 18 12 Q26 14 26 22" stroke="#2C4A6E" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+      <line x1="18" y1="12" x2="18" y2="8" stroke="#2C4A6E" stroke-width="1.2" stroke-linecap="round"/>
+      <circle cx="18" cy="7" r="1.2" fill="#2C4A6E"/>
+    </svg>
+    <div class="logo-text"><div class="logo-zh">是陶<span>。</span></div><div class="logo-en">It's Pottery</div></div>
+  </a>
+  <div class="nav-right">
+    <a href="#footer-info" class="nav-link">運費說明</a>
+    <a href="#footer-info" class="nav-link">付款方式</a>
+  </div>
 </div>
 
+<!-- ── Main ──────────────────────────────────────────── -->
 <div class="wrap">
-  <div class="fbar">
-    <button class="fc on" onclick="setCat(this,'')">全部</button>
-    <button class="fc" onclick="setCat(this,'花器')">花器</button>
-    <button class="fc" onclick="setCat(this,'線香座')">線香座</button>
-    <button class="fc" onclick="setCat(this,'陶器皿')">陶器皿</button>
-    <button class="fc" onclick="setCat(this,'其他')">其他</button>
+  <div class="section-header">
+    <div class="section-title">作品選覽</div>
+    <div class="fbar">
+      <button class="fc on" onclick="setCat(this,'')">全部</button>
+      <button class="fc" onclick="setCat(this,'花器')">花器</button>
+      <button class="fc" onclick="setCat(this,'線香座')">線香座</button>
+      <button class="fc" onclick="setCat(this,'陶器皿')">陶器皿</button>
+      <button class="fc" onclick="setCat(this,'其他')">其他</button>
+    </div>
   </div>
+
   <div class="layout">
-    <div class="grid" id="grid"><div class="loading">載入中...</div></div>
+    <div class="grid" id="grid"><div class="loading">載入中⋯</div></div>
     <div class="cbox" id="desktop-cart">
       <div class="chdr"><span>購物車</span><span class="ccnt" id="ccnt-d">0</span></div>
       <div id="cbody-d"><div class="cempty">尚未加入任何商品</div></div>
@@ -156,16 +250,43 @@ const API = 'https://pottery-shop.onrender.com';
   </div>
 </div>
 
-<!-- Mobile cart button -->
-<button class="m-cart-btn" id="m-cart-btn" onclick="openMCart()">購物車 <span id="ccnt-m" style="background:rgba(255,255,255,.25);border-radius:99px;padding:1px 8px;font-size:12px">0</span></button>
+<!-- ── Footer ─────────────────────────────────────────── -->
+<footer id="footer-info">
+  <div class="footer-inner">
+    <div>
+      <div class="footer-logo">是陶<span>。</span></div>
+      <div class="footer-tagline">手作陶藝，每件作品皆為獨一無二的存在<br>以土為媒，傳遞日常中的美好</div>
+    </div>
+    <div>
+      <div class="footer-section-title">運費說明</div>
+      <ul class="footer-list">
+        <li><strong>運費 NT$160</strong>（全台灣本島）</li>
+        <li>離島地區運費另計，下單後聯繫確認</li>
+        <li>單筆訂單滿 NT$3,000 免運費</li>
+        <li>商品以氣泡紙及紙箱妥善包裝出貨</li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-section-title">付款方式</div>
+      <ul class="footer-list">
+        <li><strong>銀行轉帳</strong><br>下單後將提供匯款帳號，請於 3 天內完成付款，逾期訂單將自動取消</li>
+        <li style="margin-top:8px"><strong>出貨時間</strong><br>確認付款後 3–5 個工作天出貨，陶器製作為手工，若有特殊情況將提前通知</li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">© 是陶。 All rights reserved</div>
+</footer>
+
+<!-- ── Mobile cart button ─────────────────────────────── -->
+<button class="m-cart-btn" id="m-cart-btn" onclick="openMCart()">
+  購物車 <span id="ccnt-m" style="background:rgba(255,255,255,.22);border-radius:99px;padding:1px 9px;font-size:12px;margin-left:4px">0</span>
+</button>
 
 <!-- Mobile cart drawer -->
 <div class="m-cart-overlay" id="m-cart-overlay" onclick="closeMCart()"></div>
 <div class="m-cart" id="m-cart">
-  <div class="m-cart-hdr">
-    <div style="font-size:15px;font-weight:700;color:var(--t)">購物車</div>
-    <button class="m-cart-close" onclick="closeMCart()">×</button>
-  </div>
+  <div class="m-cart-handle"></div>
+  <div style="font-family:var(--serif);font-size:16px;font-weight:500;color:var(--t);margin-bottom:16px">購物車</div>
   <div id="cbody-m"><div class="cempty">尚未加入任何商品</div></div>
   <div class="totbl" id="totbl-m" style="display:none">
     <div class="tr"><span>小計</span><span id="sub-m"></span></div>
@@ -175,7 +296,35 @@ const API = 'https://pottery-shop.onrender.com';
   </div>
 </div>
 
-<!-- Lightbox -->
+<!-- ── Product Detail Modal ───────────────────────────── -->
+<div class="drawer-overlay" id="drawer-overlay" onclick="closeDrawer()">
+  <div class="drawer" id="drawer" onclick="event.stopPropagation()">
+    <div class="drawer-close">
+      <div class="drawer-cat" id="d-cat"></div>
+      <button class="drawer-close-btn" onclick="closeDrawer()">×</button>
+    </div>
+    <div class="drawer-content">
+      <!-- Left: Images -->
+      <div>
+        <img class="d-main-img" id="d-main-img" src="" alt="" style="width:100%;aspect-ratio:1;object-fit:cover;border-radius:12px;cursor:zoom-in;margin-bottom:10px" onclick="openLbFromDrawer()">
+        <div class="d-thumbs" id="d-thumbs"></div>
+      </div>
+      <!-- Right: Info -->
+      <div style="display:flex;flex-direction:column">
+        <div class="d-name" id="d-name"></div>
+        <div class="d-price" id="d-price"></div>
+        <div class="d-size" id="d-size"></div>
+        <hr class="d-divider">
+        <div class="d-section-title">商品說明</div>
+        <div class="d-desc" id="d-desc" style="flex:1"></div>
+        <button class="d-add-btn" id="d-add-btn" onclick="addFromDrawer()">加入購物車</button>
+        <div class="d-stock" id="d-stock"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── Lightbox ───────────────────────────────────────── -->
 <div class="lb" id="lb">
   <button class="lb-close" onclick="closeLb()">×</button>
   <button class="lb-nav lb-prev" onclick="lbNav(-1)">‹</button>
@@ -185,9 +334,10 @@ const API = 'https://pottery-shop.onrender.com';
   <div class="lb-thumbs" id="lb-thumbs"></div>
 </div>
 
-<!-- Checkout Modal -->
+<!-- ── Checkout Modal ─────────────────────────────────── -->
 <div class="ov" id="ov">
   <div class="mo">
+    <div class="mo-handle"></div>
     <div id="cv">
       <div class="mtitle">填寫聯絡資料</div>
       <div class="msub">我們將以電話或 Email 確認訂單並安排出貨</div>
@@ -195,40 +345,57 @@ const API = 'https://pottery-shop.onrender.com';
         <div class="fg" style="margin:0"><label class="lbl">姓名 *</label><input type="text" id="cn" placeholder="王小明"></div>
         <div class="fg" style="margin:0"><label class="lbl">電話 *</label><input type="tel" id="cp" placeholder="0912-345-678"></div>
       </div>
-      <div class="fg" style="margin-top:13px"><label class="lbl">電子郵件 *</label><input type="email" id="ce" placeholder="you@example.com"></div>
+      <div class="fg" style="margin-top:14px"><label class="lbl">電子郵件 *</label><input type="email" id="ce" placeholder="you@example.com"></div>
       <div class="fg"><label class="lbl">收件地址 *</label><input type="text" id="ca" placeholder="台北市信義區..."></div>
       <div class="fg"><label class="lbl">備註</label><textarea id="cnote" placeholder="特殊需求、包裝要求..."></textarea></div>
-      <div class="lbl" style="margin:4px 0 9px">付款方式</div>
+
+      <div class="lbl" style="margin:6px 0 10px">付款方式</div>
       <div class="po sel" onclick="setPay('銀行轉帳',this)">
-        <div><div class="pl">銀行轉帳</div><div class="ps">下單後提供匯款帳號，3 天內完成付款</div></div>
-        <input type="radio" name="pay" checked style="margin-left:auto">
+        <div>
+          <div class="pl">銀行轉帳</div>
+          <div class="ps">下單後提供帳號，請於 3 天內完成匯款</div>
+        </div>
+        <input type="radio" name="pay" checked style="margin-left:auto;accent-color:var(--g)">
       </div>
+
       <div class="ordsum">
-        <div style="display:flex;justify-content:space-between;color:var(--m)"><span>訂單金額</span><span id="mtotal"></span></div>
-        <div style="font-size:11px;color:var(--m);margin-top:6px">送出後，工坊會盡快與您聯繫</div>
+        <div class="ordsum-row"><span>商品小計</span><span id="mtotal-sub"></span></div>
+        <div class="ordsum-row"><span>運費</span><span>NT$160</span></div>
+        <div class="ordsum-row" style="font-weight:600;color:var(--t);font-size:15px;margin-top:6px"><span>合計</span><span id="mtotal"></span></div>
+        <div class="ordsum-note">
+          付款確認後 3–5 個工作天出貨<br>
+          如有問題將以 Email 或電話聯繫您
+        </div>
       </div>
       <div class="mftr">
         <button class="btn bo" onclick="closeModal()">返回</button>
-        <button class="btn bg" id="obtn" onclick="placeOrder()">送出訂單</button>
+        <button class="btn bg" id="obtn" onclick="placeOrder()">確認下單</button>
       </div>
     </div>
+
     <div class="sbox" id="sv" style="display:none">
-      <div style="font-size:17px;font-weight:700;margin-bottom:10px;color:var(--t)">訂單已送出</div>
-      <div style="font-size:13px;color:var(--m);margin-bottom:6px">訂單編號：<strong id="onum"></strong></div>
-      <div style="font-size:13px;color:var(--m);margin-bottom:24px;line-height:1.8">感謝您的支持<br>我們將盡快以電話或 Email 確認您的訂單</div>
+      <div class="s-icon">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M5 12l5 5L19 7" stroke="#2C4A6E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <div style="font-family:var(--serif);font-size:20px;font-weight:500;margin-bottom:8px;color:var(--t)">訂單已送出</div>
+      <div style="font-size:13px;color:var(--m);margin-bottom:6px;letter-spacing:.3px">訂單編號：<strong id="onum"></strong></div>
+      <div style="font-size:13px;color:var(--m);margin-bottom:28px;line-height:1.8;letter-spacing:.3px">感謝您的支持<br>我們將盡快以電話或 Email 確認您的訂單</div>
       <button class="btn bg" onclick="closeModal();resetCart()">繼續選購</button>
     </div>
   </div>
 </div>
 
 <div id="toast"></div>
+
 <script>
 function toast(msg,ok=true){const t=document.getElementById('toast');t.textContent=msg;t.style.background=ok?'#1C2B3A':'#8B6F47';t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2600);}
 
 let products=[],cart=[],cat='',pay='銀行轉帳';
 let lbImgs=[],lbIdx=0;
+let drawerProduct=null;
+let drawerImgIdx=0;
 
-// ── Products ──────────────────────────────────────────────
+// ── Load ──────────────────────────────────────────────────
 async function load(){
   try{
     const url=cat?`${API}/products?category=${encodeURIComponent(cat)}`:`${API}/products`;
@@ -238,83 +405,120 @@ async function load(){
   }catch(e){document.getElementById('grid').innerHTML=`<div class="loading" style="color:var(--r)">${e.message}</div>`;}
 }
 function setCat(btn,c){document.querySelectorAll('.fc').forEach(x=>x.classList.remove('on'));btn.classList.add('on');cat=c;load();}
-
-function getImgs(p){
-  if(p.image_urls&&p.image_urls.length)return p.image_urls;
-  if(p.image_url)return[p.image_url];
-  return[];
-}
+function getImgs(p){return p.image_urls&&p.image_urls.length?p.image_urls:p.image_url?[p.image_url]:[];}
 
 function render(){
   const g=document.getElementById('grid');
-  if(!products.length){g.innerHTML='<div class="loading">此分類暫無商品</div>';return;}
+  if(!products.length){g.innerHTML='<div class="loading">此分類暫無作品</div>';return;}
   g.innerHTML=products.map(p=>{
     const so=p.stock===0;
     const imgs=getImgs(p);
-    const mainImg=imgs.length?`<img src="${imgs[0]}" loading="lazy">`:`<div style="width:100%;height:100%;background:var(--bg);display:flex;align-items:center;justify-content:center;font-size:32px;color:var(--b)">◻</div>`;
+    const mainImg=imgs.length?`<img src="${imgs[0]}" loading="lazy">`:`<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:var(--b);font-size:32px">◻</div>`;
     const countBadge=imgs.length>1?`<div class="pimg-count">${imgs.length} 張</div>`:'';
-    const sizeInfo=(p.sizes||'').trim()?`<div class="psize">${p.sizes}</div>`:'';
-    const descInfo=(p.description||'').trim()?`<div class="pdesc">${p.description}</div>`:'';
-    return `<div class="pc">
-      <div class="pimg" onclick="openLb(${p.id})">${mainImg}${countBadge}${so?'<div class="smask">售完</div>':''}</div>
+    return`<div class="pc" onclick="openDrawer(${p.id})">
+      <div class="pimg">
+        ${mainImg}${countBadge}
+        ${so?`<div class="smask"><div class="smask-text">SOLD OUT</div></div>`:''}
+      </div>
       <div class="pbody">
+        <div class="pcat">${p.category}</div>
         <div class="pname">${p.name}</div>
-        ${sizeInfo}
+        ${(p.sizes||'').trim()?`<div class="psize">${p.sizes}</div>`:''}
         <div class="pprice">NT$${p.price.toLocaleString()}</div>
-        ${descInfo}
-        <button class="abtn" ${so?'disabled':''} onclick="add(${p.id})">${so?'已售完':'加入購物車'}</button>
+        <div class="pview">查看詳細 →</div>
       </div>
     </div>`;
   }).join('');
 }
 
+// ── Product Drawer ────────────────────────────────────────
+function openDrawer(pid){
+  const p=products.find(x=>x.id===pid);
+  if(!p)return;
+  drawerProduct=p;
+  drawerImgIdx=0;
+  const imgs=getImgs(p);
+  const so=p.stock===0;
+
+  document.getElementById('d-cat').textContent=p.category.toUpperCase();
+  document.getElementById('d-name').textContent=p.name;
+  document.getElementById('d-price').textContent=`NT$${p.price.toLocaleString()}`;
+  document.getElementById('d-size').textContent=(p.sizes||'').trim()?`尺寸：${p.sizes}`:'';
+  document.getElementById('d-desc').textContent=(p.description||'').trim()||'暫無說明';
+
+  const addBtn=document.getElementById('d-add-btn');
+  addBtn.disabled=so;
+  addBtn.textContent=so?'已售完':'加入購物車';
+  document.getElementById('d-stock').textContent=so?'':`庫存：${p.stock} 件`;
+
+  // Main image
+  if(imgs.length){
+    const mi=document.getElementById('d-main-img');
+    mi.src=imgs[0];mi.style.display='block';
+    mi.previousElementSibling&&mi.previousElementSibling.classList.contains('d-main-placeholder')&&(mi.previousElementSibling.style.display='none');
+  }
+
+  // Thumbs
+  document.getElementById('d-thumbs').innerHTML=imgs.length>1
+    ?imgs.map((u,i)=>`<img class="d-thumb ${i===0?'on':''}" src="${u}" onclick="drawerThumb(${i})">`).join(''):'';
+
+  document.getElementById('drawer-overlay').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+
+function drawerThumb(idx){
+  drawerImgIdx=idx;
+  const imgs=getImgs(drawerProduct);
+  document.getElementById('d-main-img').src=imgs[idx];
+  document.querySelectorAll('.d-thumb').forEach((t,i)=>t.classList.toggle('on',i===idx));
+}
+
+function openLbFromDrawer(){
+  const imgs=getImgs(drawerProduct);
+  if(!imgs.length)return;
+  lbImgs=imgs;lbIdx=drawerImgIdx;
+  renderLb();
+  document.getElementById('lb').classList.add('open');
+}
+
+function closeDrawer(){
+  document.getElementById('drawer-overlay').classList.remove('open');
+  document.body.style.overflow='';
+}
+
+function addFromDrawer(){
+  if(!drawerProduct)return;
+  add(drawerProduct.id);
+}
+
 // ── Lightbox ──────────────────────────────────────────────
 function openLb(pid){
   const p=products.find(x=>x.id===pid);
-  lbImgs=getImgs(p);
+  lbImgs=getImgs(p);lbIdx=0;
   if(!lbImgs.length)return;
-  lbIdx=0;
   renderLb();
   document.getElementById('lb').classList.add('open');
   document.body.style.overflow='hidden';
 }
-function closeLb(){
-  document.getElementById('lb').classList.remove('open');
-  document.body.style.overflow='';
-}
-function lbNav(d){
-  lbIdx=(lbIdx+d+lbImgs.length)%lbImgs.length;
-  renderLb();
-}
+function closeLb(){document.getElementById('lb').classList.remove('open');document.body.style.overflow='';}
+function lbNav(d){lbIdx=(lbIdx+d+lbImgs.length)%lbImgs.length;renderLb();}
 function lbGo(i){lbIdx=i;renderLb();}
 function renderLb(){
   document.getElementById('lb-img').src=lbImgs[lbIdx];
   document.getElementById('lb-info').textContent=lbImgs.length>1?`${lbIdx+1} / ${lbImgs.length}`:'';
-  document.getElementById('lb-thumbs').innerHTML=lbImgs.map((u,i)=>
-    `<img class="lb-thumb ${i===lbIdx?'on':''}" src="${u}" onclick="lbGo(${i})">`
-  ).join('');
-  // hide nav if single image
+  document.getElementById('lb-thumbs').innerHTML=lbImgs.map((u,i)=>`<img class="lb-thumb ${i===lbIdx?'on':''}" src="${u}" onclick="lbGo(${i})">`).join('');
   document.querySelectorAll('.lb-nav').forEach(n=>n.style.display=lbImgs.length>1?'flex':'none');
 }
-// Swipe support for lightbox
-let lbTouchX=null;
-document.getElementById('lb').addEventListener('touchstart',e=>lbTouchX=e.touches[0].clientX);
-document.getElementById('lb').addEventListener('touchend',e=>{
-  if(lbTouchX===null)return;
-  const dx=e.changedTouches[0].clientX-lbTouchX;
-  if(Math.abs(dx)>40)lbNav(dx<0?1:-1);
-  lbTouchX=null;
-});
-document.addEventListener('keydown',e=>{
-  if(!document.getElementById('lb').classList.contains('open'))return;
-  if(e.key==='ArrowLeft')lbNav(-1);
-  if(e.key==='ArrowRight')lbNav(1);
-  if(e.key==='Escape')closeLb();
-});
+let lbTx=null;
+document.getElementById('lb').addEventListener('touchstart',e=>lbTx=e.touches[0].clientX);
+document.getElementById('lb').addEventListener('touchend',e=>{if(lbTx===null)return;if(Math.abs(e.changedTouches[0].clientX-lbTx)>40)lbNav(e.changedTouches[0].clientX<lbTx?1:-1);lbTx=null;});
+document.addEventListener('keydown',e=>{if(document.getElementById('lb').classList.contains('open')){if(e.key==='ArrowLeft')lbNav(-1);if(e.key==='ArrowRight')lbNav(1);if(e.key==='Escape')closeLb();}});
 
 // ── Cart ──────────────────────────────────────────────────
 function add(pid){
-  const p=products.find(x=>x.id===pid),ex=cart.find(c=>c.pid===pid);
+  const p=products.find(x=>x.id===pid);
+  if(!p||p.stock===0)return;
+  const ex=cart.find(c=>c.pid===pid);
   if(ex)ex.qty++;else{const imgs=getImgs(p);cart.push({pid,qty:1,name:p.name,price:p.price,img:imgs[0]||null,sizes:p.sizes});}
   renderCart();toast(`已加入「${p.name}」`);
 }
@@ -322,18 +526,17 @@ function chgQty(pid,d){
   const i=cart.findIndex(c=>c.pid===pid);if(i<0)return;
   cart[i].qty+=d;if(cart[i].qty<=0)cart.splice(i,1);renderCart();
 }
-
-function cartItemsHTML(){
+function cartHTML(){
   return cart.map(c=>{
-    const img=c.img?`<img src="${c.img}">`:`<div style="width:42px;height:42px;background:var(--bg);border-radius:8px"></div>`;
-    return `<div class="ci">
+    const img=c.img?`<img src="${c.img}">`:'';
+    return`<div class="ci">
       <div class="cimg">${img}</div>
       <div style="flex:1;min-width:0">
         <div class="cn">${c.name}</div>
         ${c.sizes?`<div class="csz">${c.sizes}</div>`:''}
         <div class="qr">
           <button class="qb" onclick="chgQty(${c.pid},-1)">−</button>
-          <span style="font-size:13px;min-width:16px;text-align:center">${c.qty}</span>
+          <span style="font-size:13px;min-width:18px;text-align:center">${c.qty}</span>
           <button class="qb" onclick="chgQty(${c.pid},1)">+</button>
         </div>
       </div>
@@ -341,44 +544,28 @@ function cartItemsHTML(){
     </div>`;
   }).join('');
 }
-
 function renderCart(){
   const tot=cart.reduce((s,c)=>s+c.price*c.qty,0);
   const cnt=cart.reduce((s,c)=>s+c.qty,0);
-  // update counts
   document.getElementById('ccnt-d').textContent=cnt;
   document.getElementById('ccnt-m').textContent=cnt;
-  // desktop
-  const bd=document.getElementById('cbody-d'),td=document.getElementById('totbl-d');
-  // mobile
-  const bm=document.getElementById('cbody-m'),tm=document.getElementById('totbl-m');
-  if(!cart.length){
-    bd.innerHTML=bm.innerHTML='<div class="cempty">尚未加入任何商品</div>';
-    td.style.display=tm.style.display='none';return;
+  const html=cart.length?cartHTML():'<div class="cempty">尚未加入任何商品</div>';
+  ['cbody-d','cbody-m'].forEach(id=>document.getElementById(id).innerHTML=html);
+  const show=cart.length>0;
+  ['totbl-d','totbl-m'].forEach(id=>document.getElementById(id).style.display=show?'block':'none');
+  if(show){
+    ['sub-d','sub-m'].forEach(id=>document.getElementById(id).textContent='NT$'+tot.toLocaleString());
+    ['grand-d','grand-m'].forEach(id=>document.getElementById(id).textContent='NT$'+(tot+160).toLocaleString());
   }
-  const html=cartItemsHTML();
-  bd.innerHTML=bm.innerHTML=html;
-  td.style.display=tm.style.display='block';
-  ['sub-d','sub-m'].forEach(id=>document.getElementById(id).textContent='NT$'+tot.toLocaleString());
-  ['grand-d','grand-m'].forEach(id=>document.getElementById(id).textContent='NT$'+(tot+160).toLocaleString());
 }
-
-// Mobile cart drawer
-function openMCart(){
-  document.getElementById('m-cart-overlay').classList.add('open');
-  document.getElementById('m-cart').classList.add('open');
-  document.body.style.overflow='hidden';
-}
-function closeMCart(){
-  document.getElementById('m-cart-overlay').classList.remove('open');
-  document.getElementById('m-cart').classList.remove('open');
-  document.body.style.overflow='';
-}
+function openMCart(){document.getElementById('m-cart-overlay').classList.add('open');document.getElementById('m-cart').classList.add('open');document.body.style.overflow='hidden';}
+function closeMCart(){document.getElementById('m-cart-overlay').classList.remove('open');document.getElementById('m-cart').classList.remove('open');document.body.style.overflow='';}
 
 // ── Checkout ──────────────────────────────────────────────
 function openModal(){
-  const tot=cart.reduce((s,c)=>s+c.price*c.qty,0)+160;
-  document.getElementById('mtotal').textContent='NT$'+tot.toLocaleString();
+  const sub=cart.reduce((s,c)=>s+c.price*c.qty,0);
+  document.getElementById('mtotal-sub').textContent='NT$'+sub.toLocaleString();
+  document.getElementById('mtotal').textContent='NT$'+(sub+160).toLocaleString();
   document.getElementById('ov').classList.add('open');
   document.getElementById('cv').style.display='block';
   document.getElementById('sv').style.display='none';
@@ -393,7 +580,7 @@ async function placeOrder(){
   const name=document.getElementById('cn').value.trim(),phone=document.getElementById('cp').value.trim();
   const email=document.getElementById('ce').value.trim(),addr=document.getElementById('ca').value.trim();
   if(!name||!phone||!email||!addr){toast('請填寫所有必填欄位',false);return;}
-  const btn=document.getElementById('obtn');btn.disabled=true;btn.textContent='送出中...';
+  const btn=document.getElementById('obtn');btn.disabled=true;btn.textContent='送出中⋯';
   try{
     const res=await fetch(`${API}/orders`,{
       method:'POST',headers:{'Content-Type':'application/json'},
@@ -409,7 +596,7 @@ async function placeOrder(){
     document.getElementById('cv').style.display='none';
     document.getElementById('sv').style.display='block';
   }catch(e){toast(e.message,false);}
-  finally{btn.disabled=false;btn.textContent='送出訂單';}
+  finally{btn.disabled=false;btn.textContent='確認下單';}
 }
 function resetCart(){cart=[];renderCart();load();}
 load();
