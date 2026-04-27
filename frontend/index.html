@@ -726,13 +726,6 @@ async function placeOrder(){
     document.getElementById('sv-submit-btn').disabled=true;
     document.getElementById('cv').style.display='none';
     document.getElementById('sv').style.display='block';
-    // load bank info from API
-    fetch(`${API}/bank-info`).then(r=>r.json()).then(b=>{
-      document.getElementById('bk-name').textContent=b.bank_name||'—';
-      document.getElementById('bk-code').textContent=b.bank_code||'—';
-      document.getElementById('bk-holder').textContent=b.bank_holder||'—';
-      document.getElementById('bk-account').textContent=b.bank_account||'—';
-    }).catch(()=>{});
   }catch(e){toast(e.message,false);}
   finally{btn.disabled=false;btn.textContent='確認下單';}
 }
@@ -798,6 +791,19 @@ async function submitPayment(){
   }
 }
 load();
+
+// 預先載入銀行資訊
+async function loadBankInfo(){
+  try{
+    const res = await fetch(`${API}/bank-info`);
+    const b = await res.json();
+    document.getElementById('bk-name').textContent    = b.bank_name    || '—';
+    document.getElementById('bk-code').textContent    = b.bank_code    || '—';
+    document.getElementById('bk-holder').textContent  = b.bank_holder  || '—';
+    document.getElementById('bk-account').textContent = b.bank_account || '—';
+  }catch(e){}
+}
+loadBankInfo();
 </script>
 </body>
 </html>
