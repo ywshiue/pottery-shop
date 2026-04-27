@@ -287,7 +287,7 @@ const API = 'https://pottery-shop.onrender.com';
     <div>
       <div class="footer-section-title">付款方式</div>
       <ul class="footer-list">
-        <li><strong>銀行轉帳</strong><br>下單後將提供匯款帳號，請於 3 天內完成付款，逾期訂單將自動取消</li>
+        <li><strong>銀行轉帳</strong><br>下單後將提供匯款帳號，請於 24 小時內完成付款，逾期訂單將自動取消</li>
         <li style="margin-top:8px"><strong>出貨時間</strong><br>確認付款後 3–5 個工作天出貨，若有特殊情況將提前通知</li>
       </ul>
     </div>
@@ -379,7 +379,7 @@ const API = 'https://pottery-shop.onrender.com';
       <div class="po sel" onclick="setPay('銀行轉帳',this)">
         <div>
           <div class="pl">銀行轉帳</div>
-          <div class="ps">下單後提供帳號，請於 3 天內完成匯款</div>
+          <div class="ps">下單後提供帳號，請於 24 小時內完成匯款</div>
         </div>
         <input type="radio" name="pay" checked style="margin-left:auto;accent-color:var(--g)">
       </div>
@@ -401,7 +401,7 @@ const API = 'https://pottery-shop.onrender.com';
 
     <div id="sv" style="display:none">
 
-      <!-- 步驟一：顯示匯款資訊 -->
+      <!-- 匯款資訊 + 後五碼輸入（同一頁） -->
       <div id="sv-bank" style="text-align:center">
         <div class="s-icon">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M5 12l5 5L19 7" stroke="#2C4A6E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -409,8 +409,7 @@ const API = 'https://pottery-shop.onrender.com';
         <div style="font-family:var(--serif);font-size:20px;font-weight:500;margin-bottom:4px;color:var(--t)">訂單已建立</div>
         <div style="font-size:13px;color:var(--m);margin-bottom:18px;letter-spacing:.3px">訂單編號：<strong id="onum"></strong></div>
 
-        <!-- 銀行匯款資訊 -->
-        <div style="background:var(--gl);border:1px solid #B8D0E8;border-radius:12px;padding:18px 20px;text-align:left;margin-bottom:14px">
+        <div style="background:var(--gl);border:1px solid #B8D0E8;border-radius:12px;padding:18px 20px;text-align:left;margin-bottom:12px">
           <div style="font-family:var(--serif);font-size:11px;font-weight:500;color:var(--g);letter-spacing:2px;margin-bottom:12px;text-transform:uppercase">請匯款至以下帳戶</div>
           <div style="display:flex;flex-direction:column;gap:9px;font-size:13px">
             <div style="display:flex;justify-content:space-between">
@@ -420,10 +419,6 @@ const API = 'https://pottery-shop.onrender.com';
             <div style="display:flex;justify-content:space-between">
               <span style="color:var(--m)">銀行代碼</span>
               <span style="font-weight:500;color:var(--t)" id="bk-code">—</span>
-            </div>
-            <div style="display:flex;justify-content:space-between">
-              <span style="color:var(--m)">戶名</span>
-              <span style="font-weight:500;color:var(--t)" id="bk-holder">—</span>
             </div>
             <div style="border-top:1px solid #B8D0E8;padding-top:10px;margin-top:2px;display:flex;justify-content:space-between;align-items:center">
               <span style="color:var(--m)">帳號</span>
@@ -436,34 +431,28 @@ const API = 'https://pottery-shop.onrender.com';
           </div>
         </div>
 
-        <div style="background:var(--rl);border-radius:9px;padding:12px 14px;text-align:left;margin-bottom:18px">
+        <div style="background:var(--rl);border-radius:9px;padding:12px 14px;text-align:left;margin-bottom:16px">
           <div style="font-size:12px;color:var(--r);line-height:1.8">
-            ⚠️ 請於 <strong>3 天內完成匯款</strong><br>
+            ⚠️ 請於 <strong>24 小時內完成匯款</strong><br>
             逾期將自動取消訂單，恕不另行通知
           </div>
         </div>
 
-        <button class="btn bg" style="width:100%;justify-content:center;margin-bottom:10px" onclick="showPayConfirm()">我已完成匯款</button>
-        <div style="font-size:12px;color:var(--m);letter-spacing:.3px;line-height:1.7;margin-top:6px">完成匯款後，請點擊上方按鈕<br>填入匯款帳號後五碼，我們收到確認後才會出貨</div>
-      </div>
-
-      <!-- 步驟二：填入後五碼 -->
-      <div id="sv-confirm" style="display:none;text-align:center">
-        <div style="font-family:var(--serif);font-size:18px;font-weight:500;margin-bottom:6px;color:var(--t)">填入匯款資訊</div>
-        <div style="font-size:13px;color:var(--m);margin-bottom:20px;letter-spacing:.3px;line-height:1.8">請填入您的<strong style="color:var(--t)">匯款帳號後五碼</strong><br>我們收到後五碼確認後才會開始出貨</div>
-
-        <div style="text-align:left;margin-bottom:16px">
-          <div style="font-size:10px;font-weight:700;color:var(--m);text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px">匯款帳號後五碼 *</div>
-          <input type="text" id="sv-last5" maxlength="5" placeholder="例：12345"
-            style="width:100%;padding:12px;border:1px solid var(--b);border-radius:8px;font-size:18px;letter-spacing:6px;text-align:center;font-family:var(--sans);background:var(--w);color:var(--t);outline:none"
-            oninput="this.value=this.value.replace(/[^0-9]/g,'');document.getElementById('sv-submit-btn').disabled=this.value.length!==5">
+        <div style="border:1px solid var(--b);border-radius:12px;padding:16px;text-align:left;margin-bottom:14px;background:var(--w)">
+          <div style="font-size:12px;color:var(--m);line-height:1.8;margin-bottom:12px">
+            匯款完成後請於下方輸入<strong style="color:var(--t)">匯款帳號後五碼</strong><br>
+            我們收到確認後才會安排出貨
+          </div>
+          <div style="font-size:10px;font-weight:700;color:var(--m);text-transform:uppercase;letter-spacing:.8px;margin-bottom:7px">匯款帳號後五碼 *</div>
+          <input type="text" id="sv-last5" maxlength="5" placeholder="請輸入後五碼"
+            style="width:100%;padding:12px;border:1px solid var(--b);border-radius:8px;font-size:20px;letter-spacing:8px;text-align:center;font-family:var(--sans);background:var(--w);color:var(--t);outline:none;transition:border-color .15s"
+            oninput="this.value=this.value.replace(/[^0-9]/g,'');var btn=document.getElementById('sv-submit-btn');btn.disabled=this.value.length!==5;btn.style.opacity=this.value.length===5?'1':'.4'">
         </div>
 
-        <button class="btn bg" style="width:100%;justify-content:center;margin-bottom:10px" id="sv-submit-btn" onclick="submitPayment()" disabled>確認已匯款</button>
-        <button class="btn bo" style="width:100%;justify-content:center;font-size:12px" onclick="document.getElementById('sv-confirm').style.display='none';document.getElementById('sv-bank').style.display='block'">返回匯款資訊</button>
+        <button class="btn bg" style="width:100%;justify-content:center;padding:13px;font-size:14px;letter-spacing:.5px;opacity:.4" id="sv-submit-btn" onclick="submitPayment()" disabled>我已完成匯款</button>
       </div>
 
-      <!-- 步驟三：完成 -->
+      <!-- 完成頁 -->
       <div id="sv-done" style="display:none;text-align:center;padding:12px 0">
         <div class="s-icon">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M5 12l5 5L19 7" stroke="#2C4A6E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -477,6 +466,7 @@ const API = 'https://pottery-shop.onrender.com';
         <button class="btn bg" onclick="closeModal();resetCart()">繼續選購</button>
       </div>
 
+    </div>
     </div>
   </div>
 </div>
@@ -710,8 +700,9 @@ async function placeOrder(){
     document.getElementById('sv-amount').textContent='NT$'+data.total.toLocaleString();
     // reset steps
     document.getElementById('sv-bank').style.display='block';
-    document.getElementById('sv-confirm').style.display='none';
     document.getElementById('sv-done').style.display='none';
+    document.getElementById('sv-last5').value='';
+    document.getElementById('sv-submit-btn').disabled=true;
     document.getElementById('cv').style.display='none';
     document.getElementById('sv').style.display='block';
     // load bank info from API
@@ -728,10 +719,6 @@ function resetCart(){cart=[];renderCart();load();}
 
 let currentOrderId=null;
 
-function showPayConfirm(){
-  document.getElementById('sv-bank').style.display='none';
-  document.getElementById('sv-confirm').style.display='block';
-}
 
 async function submitPayment(){
   const last5=document.getElementById('sv-last5').value.trim();
@@ -748,7 +735,7 @@ async function submitPayment(){
       body:JSON.stringify({last5_digits:last5})
     });
     document.getElementById('onum2').textContent='#'+currentOrderId;
-    document.getElementById('sv-confirm').style.display='none';
+    document.getElementById('sv-bank').style.display='none';
     document.getElementById('sv-done').style.display='block';
   }catch(e){
     btn.disabled=false;btn.textContent='確認已匯款';
