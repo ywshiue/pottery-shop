@@ -438,15 +438,36 @@ const API = 'https://pottery-shop.onrender.com';
           </div>
         </div>
 
-        <div style="border:1px solid var(--b);border-radius:12px;padding:16px;text-align:left;margin-bottom:14px;background:var(--w)">
-          <div style="font-size:12px;color:var(--m);line-height:1.8;margin-bottom:12px">
-            匯款完成後請於下方輸入<strong style="color:var(--t)">匯款帳號後五碼</strong><br>
-            我們收到確認後才會安排出貨
+        <!-- 後五碼輸入區塊 -->
+        <div style="border:2px solid var(--g);border-radius:12px;padding:18px;text-align:left;margin-bottom:14px;background:var(--gl)">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+            <div style="width:20px;height:20px;background:var(--g);border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none"><path d="M12 2v10m0 0l-4-4m4 4l4-4" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <div style="font-size:13px;font-weight:600;color:var(--g);letter-spacing:.3px">匯款完成後，請填入帳號後五碼</div>
           </div>
-          <div style="font-size:10px;font-weight:700;color:var(--m);text-transform:uppercase;letter-spacing:.8px;margin-bottom:7px">匯款帳號後五碼 *</div>
-          <input type="text" id="sv-last5" maxlength="5" placeholder="請輸入後五碼"
-            style="width:100%;padding:12px;border:1px solid var(--b);border-radius:8px;font-size:20px;letter-spacing:8px;text-align:center;font-family:var(--sans);background:var(--w);color:var(--t);outline:none;transition:border-color .15s"
-            oninput="this.value=this.value.replace(/[^0-9]/g,'');var btn=document.getElementById('sv-submit-btn');btn.disabled=this.value.length!==5;btn.style.opacity=this.value.length===5?'1':'.4'">
+          <div style="font-size:12px;color:var(--m);margin-bottom:14px;line-height:1.7;padding-left:28px">
+            填入後按下方按鈕，我們確認後才會出貨
+          </div>
+          <!-- 五個獨立格子 -->
+          <div style="display:flex;gap:8px;justify-content:center;margin-bottom:6px" id="last5-boxes">
+            <input type="text" maxlength="1" class="last5-box"
+              style="width:48px;height:56px;border:2px solid var(--b);border-radius:10px;font-size:22px;font-weight:600;text-align:center;font-family:var(--sans);background:#fff;color:var(--t);outline:none;transition:all .15s"
+              oninput="last5Input(this,0)" onkeydown="last5Key(event,0)" inputmode="numeric">
+            <input type="text" maxlength="1" class="last5-box"
+              style="width:48px;height:56px;border:2px solid var(--b);border-radius:10px;font-size:22px;font-weight:600;text-align:center;font-family:var(--sans);background:#fff;color:var(--t);outline:none;transition:all .15s"
+              oninput="last5Input(this,1)" onkeydown="last5Key(event,1)" inputmode="numeric">
+            <input type="text" maxlength="1" class="last5-box"
+              style="width:48px;height:56px;border:2px solid var(--b);border-radius:10px;font-size:22px;font-weight:600;text-align:center;font-family:var(--sans);background:#fff;color:var(--t);outline:none;transition:all .15s"
+              oninput="last5Input(this,2)" onkeydown="last5Key(event,2)" inputmode="numeric">
+            <input type="text" maxlength="1" class="last5-box"
+              style="width:48px;height:56px;border:2px solid var(--b);border-radius:10px;font-size:22px;font-weight:600;text-align:center;font-family:var(--sans);background:#fff;color:var(--t);outline:none;transition:all .15s"
+              oninput="last5Input(this,3)" onkeydown="last5Key(event,3)" inputmode="numeric">
+            <input type="text" maxlength="1" class="last5-box"
+              style="width:48px;height:56px;border:2px solid var(--b);border-radius:10px;font-size:22px;font-weight:600;text-align:center;font-family:var(--sans);background:#fff;color:var(--t);outline:none;transition:all .15s"
+              oninput="last5Input(this,4)" onkeydown="last5Key(event,4)" inputmode="numeric">
+          </div>
+          <input type="hidden" id="sv-last5">
         </div>
 
         <button class="btn bg" style="width:100%;justify-content:center;padding:13px;font-size:14px;letter-spacing:.5px;opacity:.4" id="sv-submit-btn" onclick="submitPayment()" disabled>我已完成匯款</button>
@@ -706,7 +727,7 @@ async function placeOrder(){
     document.getElementById('cv').style.display='none';
     document.getElementById('sv').style.display='block';
     // load bank info from API
-    fetch(`${API}/orders/bank-info`).then(r=>r.json()).then(b=>{
+    fetch(`${API}/bank-info`).then(r=>r.json()).then(b=>{
       document.getElementById('bk-name').textContent=b.bank_name||'—';
       document.getElementById('bk-code').textContent=b.bank_code||'—';
       document.getElementById('bk-holder').textContent=b.bank_holder||'—';
@@ -716,6 +737,41 @@ async function placeOrder(){
   finally{btn.disabled=false;btn.textContent='確認下單';}
 }
 function resetCart(){cart=[];renderCart();load();}
+
+function last5Input(el, idx){
+  el.value=el.value.replace(/[^0-9]/g,'');
+  el.style.borderColor = el.value ? '#2C4A6E' : 'var(--b)';
+  el.style.background = el.value ? '#E8EEF5' : '#fff';
+  // auto advance
+  if(el.value){
+    const boxes=document.querySelectorAll('.last5-box');
+    if(idx<4) boxes[idx+1].focus();
+  }
+  // update hidden input and button
+  const boxes=document.querySelectorAll('.last5-box');
+  const val=[...boxes].map(b=>b.value).join('');
+  document.getElementById('sv-last5').value=val;
+  const btn=document.getElementById('sv-submit-btn');
+  const done=val.length===5;
+  btn.disabled=!done;
+  btn.style.opacity=done?'1':'.4';
+}
+
+function last5Key(e, idx){
+  if(e.key==='Backspace'){
+    const boxes=document.querySelectorAll('.last5-box');
+    if(!boxes[idx].value && idx>0){
+      boxes[idx-1].focus();
+      boxes[idx-1].value='';
+      boxes[idx-1].style.borderColor='var(--b)';
+      boxes[idx-1].style.background='#fff';
+      const val=[...boxes].map(b=>b.value).join('');
+      document.getElementById('sv-last5').value=val;
+      document.getElementById('sv-submit-btn').disabled=true;
+      document.getElementById('sv-submit-btn').style.opacity='.4';
+    }
+  }
+}
 
 let currentOrderId=null;
 
