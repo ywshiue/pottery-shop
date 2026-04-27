@@ -11,125 +11,128 @@
 :root{--g:#2C4A6E;--gl:#E8EEF5;--t:#1C2B3A;--m:#6B7280;--b:#D4CFC9;--bg:#E0DCD5;--w:#F5F2EE;--r:#8B6F47;--rl:#F5EDE0;--al:#F0EBE0;--a:#7A6040}
 body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--t);font-size:15px;line-height:1.6}
 
-/* ── Login ────────────────────────────────────────────── */
+/* ── Login ─────────────────────────────────────────────── */
 .login-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
 .login-box{background:var(--w);border:1px solid var(--b);border-radius:16px;padding:36px 32px;width:100%;max-width:360px;text-align:center;box-shadow:0 4px 24px rgba(28,43,58,.08)}
 .login-logo{font-size:22px;font-weight:700;margin-bottom:6px;color:var(--t)}.login-logo span{color:var(--g)}
 .login-sub{font-size:13px;color:var(--m);margin-bottom:28px}
 .err{font-size:12px;color:var(--r);margin-bottom:12px;padding:9px;background:var(--rl);border-radius:7px;display:none;text-align:left}
 
-/* ── Topbar ───────────────────────────────────────────── */
-.topbar{background:var(--w);border-bottom:1px solid var(--b);padding:0 20px;height:52px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
-.logo{font-size:17px;font-weight:700;color:var(--t)}.logo span{color:var(--g)}
+/* ── Topbar ─────────────────────────────────────────────── */
+.topbar{background:var(--w);border-bottom:1px solid var(--b);padding:0 18px;height:52px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+.logo{font-size:16px;font-weight:700;color:var(--t)}.logo span{color:var(--g)}
 
-/* ── Tabs ─────────────────────────────────────────────── */
-.tabs{display:flex;gap:4px;margin-bottom:18px;border-bottom:1px solid var(--b)}
-.tb{padding:10px 16px;font-size:14px;font-weight:500;cursor:pointer;color:var(--m);border-bottom:2px solid transparent;margin-bottom:-1px;transition:all .15s;font-family:inherit;background:none;border-top:none;border-left:none;border-right:none}
-.tb.on{color:var(--g);border-bottom-color:var(--g)}
+/* ── Top tab nav (replaces bottom nav) ──────────────────── */
+.top-tabs{display:flex;background:var(--w);border-bottom:1px solid var(--b);position:sticky;top:52px;z-index:99}
+.top-tab{flex:1;padding:12px 0;border:none;background:transparent;font-family:inherit;font-size:14px;font-weight:500;color:var(--m);cursor:pointer;border-bottom:2px solid transparent;transition:all .15s;display:flex;align-items:center;justify-content:center;gap:6px}
+.top-tab.on{color:var(--g);border-bottom-color:var(--g);background:var(--gl)}
+.tab-icon{font-size:16px}
 
-/* ── Order filter tabs ───────────────────────────────── */
-.o-filter-bar{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px}
-.o-ftab{padding:5px 14px;border-radius:99px;border:1px solid var(--b);font-size:12px;cursor:pointer;background:transparent;color:var(--m);transition:all .15s;font-family:inherit;white-space:nowrap}
-.o-ftab.on{background:var(--g);color:#fff;border-color:var(--g)}
-.o-ftab .cnt{background:rgba(255,255,255,.25);border-radius:99px;padding:0 6px;font-size:11px;margin-left:4px}
-.o-ftab:not(.on) .cnt{background:var(--bg);color:var(--m)}
-
-/* ── Mobile nav ───────────────────────────────────────── */
-.m-nav{display:none;position:fixed;bottom:0;left:0;right:0;background:var(--w);border-top:1px solid var(--b);z-index:100}
-.m-nav-inner{display:flex}
-.m-nav-btn{flex:1;padding:12px 0 10px;border:none;background:transparent;font-family:inherit;font-size:11px;color:var(--m);cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;transition:color .15s}
-.m-nav-btn.on{color:var(--g)}
-
+/* ── Pane ───────────────────────────────────────────────── */
 .pane{display:none}.pane.on{display:block}
-.wrap{max-width:1200px;margin:0 auto;padding:20px}
-.layout{display:grid;grid-template-columns:360px 1fr;gap:20px;align-items:start}
-.card{background:var(--w);border:1px solid var(--b);border-radius:12px;padding:18px}
-.ttl{font-size:16px;font-weight:700;margin-bottom:14px;color:var(--t)}
+.wrap{max-width:900px;margin:0 auto;padding:16px 14px 32px}
+
+/* ── Order filter bar ───────────────────────────────────── */
+.o-filter-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;margin-bottom:14px;padding-bottom:2px}
+.o-filter-bar{display:flex;gap:6px;min-width:max-content;padding:2px 2px}
+.o-ftab{display:flex;align-items:center;gap:5px;padding:8px 14px;border-radius:8px;border:1px solid var(--b);font-size:13px;font-weight:500;cursor:pointer;background:var(--w);color:var(--m);transition:all .15s;font-family:inherit;white-space:nowrap}
+.o-ftab:hover{border-color:var(--g);color:var(--g)}
+.o-ftab.on{background:var(--g);color:#fff;border-color:var(--g);box-shadow:0 2px 8px rgba(44,74,110,.2)}
+.o-ftab .fi{font-size:14px;line-height:1}
+.o-ftab .cnt{background:rgba(0,0,0,.08);border-radius:99px;padding:1px 8px;font-size:11px;font-weight:700;min-width:22px;text-align:center}
+.o-ftab.on .cnt{background:rgba(255,255,255,.3)}
+
+/* ── Order card ─────────────────────────────────────────── */
+.o-card{background:var(--w);border:1px solid var(--b);border-radius:12px;padding:16px;margin-bottom:12px;transition:box-shadow .15s}
+.o-card:hover{box-shadow:0 2px 10px rgba(28,43,58,.07)}
+.o-card-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px}
+.o-id{font-weight:700;font-size:14px;color:var(--t)}
+.o-date{font-size:11px;color:var(--m);margin-top:2px}
+.o-name{font-size:14px;font-weight:600;margin-bottom:3px}
+.o-contact{font-size:12px;color:var(--m);margin-bottom:2px}
+.o-addr{font-size:12px;color:var(--m);margin-bottom:8px}
+.o-items-str{font-size:13px;color:var(--t);background:var(--bg);padding:7px 10px;border-radius:7px;margin-bottom:10px;line-height:1.5}
+.o-amount{font-size:15px;font-weight:700;color:var(--g);margin-bottom:12px}
+.o-pay{font-size:11px;color:var(--m);font-weight:400;margin-left:6px}
+
+/* ── Progress: dot + line ───────────────────────────────── */
+.progress-wrap{margin-bottom:14px}
+.progress-label{font-size:10px;letter-spacing:.8px;color:var(--m);text-transform:uppercase;margin-bottom:10px}
+.progress-steps{display:flex;align-items:flex-start}
+.p-step{display:flex;flex-direction:column;align-items:center;flex:1;position:relative;cursor:pointer}
+/* connecting line */
+.p-step:not(:last-child)::after{content:'';position:absolute;top:14px;left:50%;width:100%;height:3px;background:var(--b);z-index:0;transition:background .2s}
+.p-step.done::after{background:var(--g)}
+.p-step.active::after{background:var(--b)}
+/* dot */
+.p-dot{width:28px;height:28px;border-radius:50%;border:3px solid var(--b);background:var(--w);display:flex;align-items:center;justify-content:center;font-size:12px;position:relative;z-index:1;transition:all .2s;color:var(--m)}
+.p-step:hover .p-dot{border-color:var(--g);background:var(--gl)}
+.p-step.done .p-dot{background:var(--g);border-color:var(--g);color:#fff}
+.p-step.active .p-dot{border-color:var(--g);border-width:3px;background:var(--w);box-shadow:0 0 0 4px var(--gl);color:var(--g)}
+.p-step-label{font-size:10px;font-weight:600;margin-top:6px;text-align:center;white-space:nowrap;color:var(--m);transition:color .2s}
+.p-step.done .p-step-label{color:var(--g)}
+.p-step.active .p-step-label{color:var(--g);font-weight:700}
+/* cancelled */
+.cancelled-wrap{display:flex;align-items:center;gap:8px;background:var(--rl);padding:10px 14px;border-radius:8px;color:var(--r)}
+.cancelled-wrap span{font-size:13px;font-weight:600}
+
+.o-note{font-size:12px;color:var(--g);background:var(--gl);padding:8px 11px;border-radius:7px;margin-bottom:10px;line-height:1.5}
+.o-actions{display:flex;gap:7px;flex-wrap:wrap}
+
+/* ── Buttons ────────────────────────────────────────────── */
+.btn{display:inline-flex;align-items:center;gap:4px;padding:7px 14px;border-radius:7px;font-size:12px;font-weight:600;font-family:inherit;cursor:pointer;transition:all .15s;border:none}
+.bg{background:var(--g);color:#fff}.bg:hover{background:#1e3450}.bg:disabled{opacity:.4;cursor:not-allowed}
+.bo{background:transparent;border:1px solid var(--b);color:var(--m)}.bo:hover{background:var(--bg)}
+.br{background:transparent;border:1px solid var(--b);color:var(--r)}.br:hover{background:var(--rl);border-color:var(--r)}
+
+/* ── Product form & list ────────────────────────────────── */
+.card{background:var(--w);border:1px solid var(--b);border-radius:12px;padding:18px;margin-bottom:16px}
+.ttl{font-size:15px;font-weight:700;margin-bottom:14px;color:var(--t)}
 .fg{display:flex;flex-direction:column;gap:5px;margin-bottom:12px}
-.lbl{font-size:11px;font-weight:700;color:var(--m);text-transform:uppercase;letter-spacing:.5px}
+.lbl{font-size:10px;font-weight:700;color:var(--m);text-transform:uppercase;letter-spacing:.8px}
 input[type=text],input[type=number],input[type=email],input[type=password],select,textarea{padding:9px 12px;border:1px solid var(--b);border-radius:8px;font-size:14px;font-family:inherit;background:var(--w);color:var(--t);outline:none;transition:border-color .15s;width:100%}
 input:focus,select:focus,textarea:focus{border-color:var(--g)}
 textarea{resize:vertical;min-height:68px}
 .f2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .size-row{display:flex;align-items:center;gap:6px}
-.size-row input{width:72px;text-align:center;padding:8px 6px}
-.size-sep{color:var(--b);font-size:16px}
+.size-row input{text-align:center;padding:8px 6px}
+.size-sep{color:var(--b);font-size:16px;flex-shrink:0}
 
-/* ── Multi image ──────────────────────────────────────── */
-.img-upload-area{border:2px dashed var(--b);border-radius:10px;padding:16px;transition:all .15s;position:relative}
+/* Multi image */
+.img-upload-area{border:2px dashed var(--b);border-radius:9px;padding:14px;transition:all .15s;position:relative;text-align:center}
 .img-upload-area:hover{border-color:var(--g);background:var(--gl)}
 .img-upload-area input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
-.img-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:10px}
-.img-item{position:relative;aspect-ratio:1;border-radius:8px;overflow:hidden;background:var(--bg)}
+.img-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:8px}
+.img-item{position:relative;aspect-ratio:1;border-radius:7px;overflow:hidden;background:var(--bg)}
 .img-item img{width:100%;height:100%;object-fit:cover}
-.img-item-del{position:absolute;top:4px;right:4px;width:20px;height:20px;background:rgba(28,43,58,.7);color:#fff;border:none;border-radius:50%;font-size:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1}
-.img-item-main{position:absolute;bottom:4px;left:4px;font-size:10px;background:var(--g);color:#fff;padding:1px 6px;border-radius:4px}
-.img-add-hint{text-align:center;padding:12px 0;color:var(--m);font-size:13px}
+.img-item-del{position:absolute;top:3px;right:3px;width:20px;height:20px;background:rgba(28,43,58,.7);color:#fff;border:none;border-radius:50%;font-size:12px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.img-item-main{position:absolute;bottom:3px;left:3px;font-size:9px;background:var(--g);color:#fff;padding:1px 5px;border-radius:3px}
+.img-add-hint{font-size:12px;color:var(--m);padding:8px 0}
 
-/* ── Buttons ──────────────────────────────────────────── */
-.btn{display:inline-flex;align-items:center;gap:5px;padding:9px 18px;border-radius:8px;font-size:14px;font-weight:600;font-family:inherit;cursor:pointer;transition:all .15s;border:none}
-.bg{background:var(--g);color:#fff}.bg:hover{background:#1e3450}.bg:disabled{opacity:.4;cursor:not-allowed}
-.bo{background:transparent;border:1px solid var(--b);color:var(--m)}.bo:hover{background:var(--bg)}
-.br{background:transparent;border:1px solid var(--b);color:var(--r)}.br:hover{background:var(--rl);border-color:var(--r)}
-.btn-sm{padding:5px 11px;font-size:12px}
-
-/* ── Table ────────────────────────────────────────────── */
-table{width:100%;border-collapse:collapse;font-size:13px}
-th{text-align:left;padding:10px 12px;background:var(--bg);color:var(--m);font-size:11px;text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid var(--b)}
-td{padding:10px 12px;border-bottom:1px solid var(--b);vertical-align:middle;color:var(--t)}
-tr:last-child td{border-bottom:none}
-.bdg{display:inline-block;padding:2px 9px;border-radius:99px;font-size:11px;font-weight:600}
+/* Product card (mobile list) */
+.p-card{background:var(--w);border:1px solid var(--b);border-radius:10px;padding:14px;margin-bottom:10px;display:flex;gap:12px;align-items:flex-start}
+.p-card-img{width:60px;height:60px;border-radius:8px;object-fit:cover;background:var(--bg);flex-shrink:0}
+.p-card-info{flex:1;min-width:0}
+.p-card-name{font-size:14px;font-weight:600;margin-bottom:2px}
+.p-card-meta{font-size:11px;color:var(--m);margin-bottom:6px}
+.p-card-price{font-size:14px;font-weight:700;color:var(--g)}
+.bdg{display:inline-block;padding:2px 8px;border-radius:99px;font-size:10px;font-weight:600;margin-left:6px}
 .bg2{background:var(--gl);color:var(--g)}.ba{background:var(--al);color:var(--a)}.br2{background:var(--rl);color:var(--r)}
-.timg{width:40px;height:40px;border-radius:7px;object-fit:cover}
 
-/* ── Order progress steps ─────────────────────────────── */
-.steps{display:flex;align-items:center;gap:0;margin:10px 0 14px}
-.step-item{display:flex;flex-direction:column;align-items:center;flex:1;position:relative;cursor:pointer}
-.step-item:not(:last-child)::after{content:'';position:absolute;top:12px;left:50%;width:100%;height:2px;background:var(--b);z-index:0}
-.step-item.done::after,.step-item.active::after{background:var(--g)}
-.step-dot{width:24px;height:24px;border-radius:50%;border:2px solid var(--b);background:var(--w);display:flex;align-items:center;justify-content:center;font-size:10px;position:relative;z-index:1;transition:all .2s}
-.step-item.done .step-dot{background:var(--g);border-color:var(--g);color:#fff}
-.step-item.active .step-dot{background:var(--w);border-color:var(--g);box-shadow:0 0 0 3px var(--gl)}
-.step-item.cancelled .step-dot{background:var(--rl);border-color:var(--r);color:var(--r)}
-.step-label{font-size:10px;color:var(--m);margin-top:4px;text-align:center;white-space:nowrap}
-.step-item.active .step-label{color:var(--g);font-weight:700}
-.step-item.done .step-label{color:var(--g)}
-
-/* ── Order card (mobile + desktop card view) ─────────── */
-.o-card{background:var(--w);border:1px solid var(--b);border-radius:12px;padding:16px;margin-bottom:12px}
-.o-card-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
-.o-id{font-weight:700;font-size:14px}
-.o-customer{font-size:13px;font-weight:600;margin-bottom:2px}
-.o-meta{font-size:12px;color:var(--m);margin-bottom:3px}
-.o-items-str{font-size:12px;color:var(--m);margin-bottom:10px}
-.o-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
-
-/* ── Note modal ───────────────────────────────────────── */
+/* Note modal */
 .note-ov{position:fixed;inset:0;background:rgba(28,43,58,.55);z-index:300;display:none;align-items:flex-end;justify-content:center}
 .note-ov.open{display:flex}
-.note-mo{background:var(--w);border-radius:18px 18px 0 0;padding:24px;width:100%;max-width:500px}
-.note-title{font-size:16px;font-weight:700;margin-bottom:14px;color:var(--t)}
-.note-ftr{display:flex;gap:8px;margin-top:12px;justify-content:flex-end}
+.note-mo{background:var(--w);border-radius:18px 18px 0 0;padding:22px;width:100%;max-width:500px}
+.note-title{font-size:15px;font-weight:700;margin-bottom:12px;color:var(--t)}
+.note-ftr{display:flex;gap:8px;margin-top:10px;justify-content:flex-end}
 
-/* ── Toast ────────────────────────────────────────────── */
-#toast{position:fixed;bottom:80px;right:16px;background:var(--t);color:#fff;padding:10px 16px;border-radius:10px;font-size:13px;font-weight:500;z-index:999;opacity:0;transform:translateY(12px);transition:all .25s;pointer-events:none;max-width:calc(100vw - 32px)}
+#toast{position:fixed;bottom:20px;right:14px;background:var(--t);color:#fff;padding:10px 16px;border-radius:9px;font-size:13px;font-weight:500;z-index:999;opacity:0;transform:translateY(12px);transition:all .25s;pointer-events:none;max-width:calc(100vw - 28px)}
 #toast.show{opacity:1;transform:translateY(0)}
 
-/* ── Responsive ───────────────────────────────────────── */
-@media(max-width:900px){.layout{grid-template-columns:1fr}}
-@media(max-width:640px){
-  .wrap{padding:14px 14px 80px}
-  .topbar{padding:0 14px}
-  .tabs{display:none}
-  .m-nav{display:block}
-  .f2{grid-template-columns:1fr}
-  .size-row input{width:60px}
-  .desktop-only{display:none}
-}
-@media(min-width:641px){
-  .m-nav{display:none}
-  .mobile-only{display:none}
-  #toast{bottom:24px}
+@media(min-width:700px){
+  .wrap{padding:20px 20px 32px}
+  .p-step-label{font-size:10px}
+  .o-ftab{padding:7px 16px}
 }
 </style>
 </head>
@@ -139,7 +142,7 @@ tr:last-child td{border-bottom:none}
 const API = 'https://pottery-shop.onrender.com';
 </script>
 
-<!-- ══ 登入畫面 ══════════════════════════════════════════ -->
+<!-- ══ 登入 ═══════════════════════════════════════════════ -->
 <div class="login-wrap" id="login-screen">
   <div class="login-box">
     <div class="login-logo">是陶<span>。</span></div>
@@ -147,116 +150,113 @@ const API = 'https://pottery-shop.onrender.com';
     <div class="fg" style="text-align:left"><label class="lbl">Email</label><input type="email" id="l-email" placeholder="your@email.com"></div>
     <div class="fg" style="text-align:left;margin-bottom:16px"><label class="lbl">密碼</label><input type="password" id="l-pwd" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()"></div>
     <div class="err" id="l-err"></div>
-    <button class="btn bg" style="width:100%;justify-content:center" id="l-btn" onclick="doLogin()">登入</button>
+    <button class="btn bg" style="width:100%;justify-content:center;padding:11px;font-size:14px" id="l-btn" onclick="doLogin()">登入</button>
   </div>
 </div>
 
-<!-- ══ 管理後台 ══════════════════════════════════════════ -->
+<!-- ══ 後台 ═══════════════════════════════════════════════ -->
 <div id="admin-screen" style="display:none">
+
+  <!-- Topbar -->
   <div class="topbar">
-    <div class="logo">是陶<span>。</span> <span style="font-size:12px;color:var(--m);font-weight:400">管理後台</span></div>
+    <div class="logo">是陶<span>。</span> <span style="font-size:11px;color:var(--m);font-weight:400">後台</span></div>
     <div style="display:flex;align-items:center;gap:10px">
-      <span style="font-size:12px;color:var(--m)" id="user-email"></span>
-      <button class="btn bo" style="padding:5px 12px;font-size:12px" onclick="doLogout()">登出</button>
+      <span style="font-size:11px;color:var(--m)" id="user-email"></span>
+      <button class="btn bo" style="padding:4px 10px" onclick="doLogout()">登出</button>
     </div>
+  </div>
+
+  <!-- Top tab nav -->
+  <div class="top-tabs">
+    <button class="top-tab on" id="nav-orders" onclick="tab('orders')">
+      <span class="tab-icon">≡</span>訂單管理
+    </button>
+    <button class="top-tab" id="nav-products" onclick="tab('products')">
+      <span class="tab-icon">◻</span>商品管理
+    </button>
   </div>
 
   <div class="wrap">
-    <div class="tabs">
-      <button class="tb on" onclick="tab('products')">商品管理</button>
-      <button class="tb" onclick="tab('orders')">訂單管理</button>
-    </div>
 
-    <!-- ── 商品 TAB ──────────────────────────────────── -->
-    <div id="p-products" class="pane on">
-      <div class="layout">
-        <!-- 表單 -->
-        <div class="card">
-          <div class="ttl" id="ftitle">新增商品</div>
-          <input type="hidden" id="eid">
-
-          <div class="fg">
-            <label class="lbl">商品照片（最多 6 張）</label>
-            <div id="img-grid" class="img-grid"></div>
-            <div class="img-upload-area" id="img-upload-area">
-              <input type="file" accept="image/*" multiple id="fi" onchange="addFiles(this.files)">
-              <div class="img-add-hint">點擊新增照片</div>
-            </div>
-            <div style="font-size:11px;color:var(--m);margin-top:4px">第一張為主圖，點 × 刪除</div>
-          </div>
-
-          <div class="fg"><label class="lbl">商品名稱 *</label><input type="text" id="fname" placeholder="例：青釉花器"></div>
-          <div class="f2" style="margin-bottom:12px">
-            <div class="fg" style="margin:0"><label class="lbl">分類 *</label>
-              <select id="fcat"><option>花器</option><option>線香座</option><option>陶器皿</option><option>其他</option></select>
-            </div>
-            <div class="fg" style="margin:0"><label class="lbl">庫存 *</label><input type="number" id="fstock" placeholder="1" min="0"></div>
-          </div>
-          <div class="fg"><label class="lbl">售價（NT$）*</label><input type="number" id="fprice" placeholder="1200" min="1"></div>
-          <div class="fg">
-            <label class="lbl">尺寸（cm）</label>
-            <div class="size-row">
-              <input type="number" id="flen" placeholder="長" min="0" step="0.1">
-              <span class="size-sep">×</span>
-              <input type="number" id="fwid" placeholder="寬" min="0" step="0.1">
-              <span class="size-sep">×</span>
-              <input type="number" id="fhgt" placeholder="高" min="0" step="0.1">
-              <span style="font-size:12px;color:var(--m);white-space:nowrap">cm</span>
-            </div>
-          </div>
-          <div class="fg"><label class="lbl">商品描述</label><textarea id="fdesc" placeholder="釉色、燒製方式、使用說明..."></textarea></div>
-          <div style="display:flex;gap:8px;margin-top:4px">
-            <button class="btn bg" id="sbtn" onclick="save()">儲存商品</button>
-            <button class="btn bo" onclick="reset()">清除</button>
-          </div>
-        </div>
-
-        <!-- 商品列表 -->
-        <div>
-          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
-            <div style="font-size:16px;font-weight:700;color:var(--t)">商品列表 <span id="pcnt" style="color:var(--m);font-size:13px;font-weight:400"></span></div>
-          </div>
-
-          <!-- 桌機表格 -->
-          <div class="card desktop-only" style="padding:0;overflow:hidden">
-            <table>
-              <thead><tr><th>圖片</th><th>名稱</th><th>分類</th><th>尺寸</th><th>售價</th><th>庫存</th><th>操作</th></tr></thead>
-              <tbody id="ptbody"></tbody>
-            </table>
-          </div>
-          <!-- 手機卡片 -->
-          <div id="p-card-list" class="mobile-only"></div>
+    <!-- ── 訂單 TAB ──────────────────────────────────────── -->
+    <div id="p-orders" class="pane on">
+      <!-- Filter bar: scrollable single row -->
+      <div class="o-filter-wrap">
+        <div class="o-filter-bar">
+          <button class="o-ftab on" onclick="filterOrders(this,'all')">
+            <span class="fi">☰</span>全部<span class="cnt" id="cnt-all">0</span>
+          </button>
+          <button class="o-ftab" onclick="filterOrders(this,'pending')">
+            <span class="fi">★</span>待確認<span class="cnt" id="cnt-pending">0</span>
+          </button>
+          <button class="o-ftab" onclick="filterOrders(this,'confirmed')">
+            <span class="fi">✔</span>已確認<span class="cnt" id="cnt-confirmed">0</span>
+          </button>
+          <button class="o-ftab" onclick="filterOrders(this,'shipped')">
+            <span class="fi">▶</span>已出貨<span class="cnt" id="cnt-shipped">0</span>
+          </button>
+          <button class="o-ftab" onclick="filterOrders(this,'completed')">
+            <span class="fi">◆</span>完成<span class="cnt" id="cnt-completed">0</span>
+          </button>
+          <button class="o-ftab" onclick="filterOrders(this,'cancelled')">
+            <span class="fi">✕</span>取消<span class="cnt" id="cnt-cancelled">0</span>
+          </button>
         </div>
       </div>
-    </div>
-
-    <!-- ── 訂單 TAB ──────────────────────────────────── -->
-    <div id="p-orders" class="pane">
-      <!-- 分頁篩選 -->
-      <div class="o-filter-bar" id="o-filter-bar">
-        <button class="o-ftab on" onclick="filterOrders(this,'all')">全部 <span class="cnt" id="cnt-all">0</span></button>
-        <button class="o-ftab" onclick="filterOrders(this,'pending')">待確認 <span class="cnt" id="cnt-pending">0</span></button>
-        <button class="o-ftab" onclick="filterOrders(this,'confirmed')">已確認 <span class="cnt" id="cnt-confirmed">0</span></button>
-        <button class="o-ftab" onclick="filterOrders(this,'shipped')">已出貨 <span class="cnt" id="cnt-shipped">0</span></button>
-        <button class="o-ftab" onclick="filterOrders(this,'completed')">已完成 <span class="cnt" id="cnt-completed">0</span></button>
-        <button class="o-ftab" onclick="filterOrders(this,'cancelled')">已取消 <span class="cnt" id="cnt-cancelled">0</span></button>
-      </div>
-
-      <!-- 訂單卡片列表（桌機 + 手機共用卡片） -->
       <div id="o-card-list"></div>
     </div>
-  </div>
 
-  <!-- 手機底部導覽 -->
-  <div class="m-nav">
-    <div class="m-nav-inner">
-      <button class="m-nav-btn on" id="nav-products" onclick="tab('products')">
-        <span style="font-size:18px">◻</span>商品
-      </button>
-      <button class="m-nav-btn" id="nav-orders" onclick="tab('orders')">
-        <span style="font-size:18px">≡</span>訂單
-      </button>
+    <!-- ── 商品 TAB ──────────────────────────────────────── -->
+    <div id="p-products" class="pane">
+
+      <!-- 新增/編輯表單 -->
+      <div class="card">
+        <div class="ttl" id="ftitle">新增商品</div>
+        <input type="hidden" id="eid">
+
+        <div class="fg">
+          <label class="lbl">商品照片（最多 6 張）</label>
+          <div id="img-grid" class="img-grid"></div>
+          <div class="img-upload-area" id="img-upload-area">
+            <input type="file" accept="image/*" multiple id="fi" onchange="addFiles(this.files)">
+            <div class="img-add-hint">點擊新增照片</div>
+          </div>
+          <div style="font-size:10px;color:var(--m);margin-top:3px">第一張為主圖，點 × 刪除</div>
+        </div>
+
+        <div class="fg"><label class="lbl">商品名稱 *</label><input type="text" id="fname" placeholder="例：青釉花器"></div>
+        <div class="f2" style="margin-bottom:12px">
+          <div class="fg" style="margin:0"><label class="lbl">分類 *</label>
+            <select id="fcat"><option>花器</option><option>線香座</option><option>陶器皿</option><option>其他</option></select>
+          </div>
+          <div class="fg" style="margin:0"><label class="lbl">庫存 *</label><input type="number" id="fstock" placeholder="1" min="0"></div>
+        </div>
+        <div class="fg"><label class="lbl">售價（NT$）*</label><input type="number" id="fprice" placeholder="1200" min="1"></div>
+        <div class="fg">
+          <label class="lbl">尺寸（cm）</label>
+          <div class="size-row">
+            <input type="number" id="flen" placeholder="長" min="0" step="0.1" style="width:80px">
+            <span class="size-sep">×</span>
+            <input type="number" id="fwid" placeholder="寬" min="0" step="0.1" style="width:80px">
+            <span class="size-sep">×</span>
+            <input type="number" id="fhgt" placeholder="高" min="0" step="0.1" style="width:80px">
+            <span style="font-size:11px;color:var(--m);flex-shrink:0">cm</span>
+          </div>
+        </div>
+        <div class="fg"><label class="lbl">商品描述</label><textarea id="fdesc" placeholder="釉色、燒製方式、使用說明..."></textarea></div>
+        <div style="display:flex;gap:8px">
+          <button class="btn bg" style="padding:9px 18px;font-size:13px" id="sbtn" onclick="save()">儲存商品</button>
+          <button class="btn bo" style="padding:9px 18px;font-size:13px" onclick="reset()">清除</button>
+        </div>
+      </div>
+
+      <!-- 商品列表 -->
+      <div style="font-size:14px;font-weight:700;color:var(--t);margin-bottom:10px">
+        商品列表 <span id="pcnt" style="color:var(--m);font-size:12px;font-weight:400"></span>
+      </div>
+      <div id="p-card-list"></div>
     </div>
+
   </div>
 </div>
 
@@ -265,7 +265,7 @@ const API = 'https://pottery-shop.onrender.com';
   <div class="note-mo">
     <div class="note-title">內部備註</div>
     <input type="hidden" id="note-order-id">
-    <textarea id="note-text" placeholder="記錄處理進度、聯絡紀錄..." style="width:100%;min-height:100px;padding:10px 12px;border:1px solid var(--b);border-radius:8px;font-size:14px;font-family:inherit;background:var(--w);color:var(--t);outline:none;resize:vertical"></textarea>
+    <textarea id="note-text" placeholder="記錄處理進度、聯絡紀錄..." style="width:100%;min-height:90px;padding:10px 12px;border:1px solid var(--b);border-radius:8px;font-size:14px;font-family:inherit;background:var(--w);color:var(--t);outline:none;resize:vertical"></textarea>
     <div class="note-ftr">
       <button class="btn bo" onclick="closeNote()">取消</button>
       <button class="btn bg" onclick="saveNote()">儲存</button>
@@ -278,6 +278,7 @@ const API = 'https://pottery-shop.onrender.com';
 let TOKEN='';
 let allOrders=[];
 let currentFilter='all';
+let imgFiles=[],pendingUrls=[];
 
 function toast(msg,ok=true){const t=document.getElementById('toast');t.textContent=msg;t.style.background=ok?'#1C2B3A':'#8B6F47';t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2600);}
 
@@ -301,7 +302,7 @@ async function doLogin(){
     document.getElementById('login-screen').style.display='none';
     document.getElementById('admin-screen').style.display='block';
     document.getElementById('user-email').textContent=data.email;
-    loadProducts();
+    loadOrders(); // 預設顯示訂單
   }catch(e){errEl.textContent=e.message;errEl.style.display='block';}
   finally{btn.disabled=false;btn.textContent='登入';}
 }
@@ -309,19 +310,17 @@ function doLogout(){TOKEN='';document.getElementById('admin-screen').style.displ
 
 // ── Tab ───────────────────────────────────────────────────
 function tab(name){
-  document.querySelectorAll('.tb').forEach((t,i)=>t.classList.toggle('on',['products','orders'][i]===name));
-  document.querySelectorAll('.m-nav-btn').forEach((t,i)=>t.classList.toggle('on',['products','orders'][i]===name));
+  document.querySelectorAll('.top-tab').forEach((t,i)=>t.classList.toggle('on',['orders','products'][i]===name));
   document.querySelectorAll('.pane').forEach(p=>p.classList.remove('on'));
   document.getElementById('p-'+name).classList.add('on');
   if(name==='orders')loadOrders();else loadProducts();
 }
 
 // ── Multi-image ───────────────────────────────────────────
-let imgFiles=[],pendingUrls=[];
 function addFiles(files){
   const rem=6-pendingUrls.length-imgFiles.length;
   const toAdd=Math.min(files.length,rem);
-  if(toAdd<=0){toast('最多 6 張照片',false);return;}
+  if(toAdd<=0){toast('最多 6 張',false);return;}
   for(let i=0;i<toAdd;i++)imgFiles.push(files[i]);
   renderImgGrid();
 }
@@ -332,19 +331,11 @@ function removeImg(idx){
 }
 function renderImgGrid(){
   const grid=document.getElementById('img-grid');
-  const allCount=pendingUrls.length+imgFiles.length;
-  const existHTML=pendingUrls.map((url,i)=>`
-    <div class="img-item"><img src="${url}">
-    ${i===0?'<div class="img-item-main">主圖</div>':''}
-    <button class="img-item-del" onclick="removeImg(${i})">×</button></div>`).join('');
-  const newHTML=imgFiles.map((f,i)=>{
-    const idx=pendingUrls.length+i;
-    return`<div class="img-item"><img src="${URL.createObjectURL(f)}">
-    ${idx===0?'<div class="img-item-main">主圖</div>':''}
-    <button class="img-item-del" onclick="removeImg(${idx})">×</button></div>`;
-  }).join('');
-  grid.innerHTML=existHTML+newHTML;
-  document.getElementById('img-upload-area').style.display=allCount>=6?'none':'block';
+  const all=pendingUrls.length+imgFiles.length;
+  const eH=pendingUrls.map((url,i)=>`<div class="img-item"><img src="${url}">${i===0?'<div class="img-item-main">主圖</div>':''}<button class="img-item-del" onclick="removeImg(${i})">×</button></div>`).join('');
+  const nH=imgFiles.map((f,i)=>{const idx=pendingUrls.length+i;return`<div class="img-item"><img src="${URL.createObjectURL(f)}">${idx===0?'<div class="img-item-main">主圖</div>':''}<button class="img-item-del" onclick="removeImg(${idx})">×</button></div>`;}).join('');
+  grid.innerHTML=eH+nH;
+  document.getElementById('img-upload-area').style.display=all>=6?'none':'block';
 }
 async function uploadAllNewImgs(){
   const uploaded=[];
@@ -397,6 +388,7 @@ function reset(){
   document.getElementById('ftitle').textContent='新增商品';
 }
 function editP(p){
+  tab('products');
   document.getElementById('eid').value=p.id;
   document.getElementById('fname').value=p.name;
   document.getElementById('fcat').value=p.category;
@@ -411,12 +403,12 @@ function editP(p){
   window.scrollTo({top:0,behavior:'smooth'});
 }
 async function archiveP(id,name){
-  if(!confirm(`封存「${name}」？（庫存設為 0，訂單記錄保留）`))return;
+  if(!confirm(`封存「${name}」？`))return;
   try{await api(`/products/${id}`,{method:'DELETE'});toast('已封存');loadProducts();}
-  catch(e){toast('操作失敗',false);}
+  catch(e){toast('失敗',false);}
 }
 async function deleteP(id,name){
-  if(!confirm(`永久刪除「${name}」？\n此操作無法復原！`))return;
+  if(!confirm(`永久刪除「${name}」？\n無法復原！`))return;
   try{await api(`/products/${id}/permanent`,{method:'DELETE'});toast('已刪除');loadProducts();}
   catch(e){toast('刪除失敗',false);}
 }
@@ -426,66 +418,37 @@ async function loadProducts(){
   try{
     const data=await api('/products');
     document.getElementById('pcnt').textContent=`(${data.length} 項)`;
-
-    const rowHTML=p=>{
+    const list=document.getElementById('p-card-list');
+    if(!data.length){list.innerHTML='<div style="text-align:center;color:var(--m);padding:30px;font-size:13px">尚無商品</div>';return;}
+    list.innerHTML=data.map(p=>{
       const imgs=p.image_urls&&p.image_urls.length?p.image_urls:(p.image_url?[p.image_url]:[]);
       const sc=p.stock>5?'bg2':p.stock>0?'ba':'br2';
       const sl=p.stock>5?'充足':p.stock>0?'低庫存':'售完';
-      return{imgs,sc,sl};
-    };
-
-    // 桌機表格
-    const tbody=document.getElementById('ptbody');
-    if(!data.length){
-      tbody.innerHTML='<tr><td colspan="7" style="text-align:center;color:var(--m);padding:30px">尚無商品</td></tr>';
-      document.getElementById('p-card-list').innerHTML='<div style="text-align:center;color:var(--m);padding:30px;font-size:13px">尚無商品</div>';
-      return;
-    }
-    tbody.innerHTML=data.map(p=>{
-      const{imgs,sc,sl}=rowHTML(p);
-      const img=imgs.length?`<img class="timg" src="${imgs[0]}">`:`<div style="width:40px;height:40px;border-radius:7px;background:var(--bg)"></div>`;
-      return`<tr>
-        <td>${img}${imgs.length>1?`<span style="font-size:10px;color:var(--m);margin-left:4px">+${imgs.length-1}</span>`:''}</td>
-        <td style="font-weight:600">${p.name}</td>
-        <td style="color:var(--m)">${p.category}</td>
-        <td style="color:var(--m);font-size:12px">${p.sizes||'—'}</td>
-        <td style="font-weight:600;white-space:nowrap">NT$${p.price.toLocaleString()}</td>
-        <td><span class="bdg ${sc}">${sl} ${p.stock}</span></td>
-        <td style="white-space:nowrap">
-          <button class="btn bo btn-sm" onclick='editP(${JSON.stringify(p)})'>編輯</button>
-          <button class="btn br btn-sm" style="margin-left:4px" onclick="archiveP(${p.id},'${p.name.replace(/'/g,"\\'")}')">封存</button>
-          <button class="btn br btn-sm" style="margin-left:4px" onclick="deleteP(${p.id},'${p.name.replace(/'/g,"\\'")}')">刪除</button>
-        </td>
-      </tr>`;
-    }).join('');
-
-    // 手機卡片
-    document.getElementById('p-card-list').innerHTML=data.map(p=>{
-      const{imgs,sc,sl}=rowHTML(p);
-      return`<div class="o-card">
-        <div class="o-card-hdr">
-          <div><div class="o-customer">${p.name}</div><div class="o-meta">${p.category}${p.sizes?' · '+p.sizes:''}</div></div>
-          <div style="text-align:right"><div style="font-weight:700;color:var(--g)">NT$${p.price.toLocaleString()}</div><span class="bdg ${sc}">${sl} ${p.stock}</span></div>
-        </div>
-        ${imgs.length?`<img src="${imgs[0]}" style="width:100%;height:130px;object-fit:cover;border-radius:8px;margin-bottom:10px">`:''}
-        <div class="o-actions">
-          <button class="btn bo btn-sm" onclick='editP(${JSON.stringify(p)})'>編輯</button>
-          <button class="btn br btn-sm" onclick="archiveP(${p.id},'${p.name.replace(/'/g,"\\'")}')">封存</button>
-          <button class="btn br btn-sm" onclick="deleteP(${p.id},'${p.name.replace(/'/g,"\\'")}')">刪除</button>
+      return`<div class="p-card">
+        ${imgs.length?`<img class="p-card-img" src="${imgs[0]}">`:`<div class="p-card-img" style="display:flex;align-items:center;justify-content:center;color:var(--b)">◻</div>`}
+        <div class="p-card-info">
+          <div class="p-card-name">${p.name} <span class="bdg ${sc}">${sl} ${p.stock}</span></div>
+          <div class="p-card-meta">${p.category}${p.sizes?' · '+p.sizes:''}</div>
+          <div class="p-card-price">NT$${p.price.toLocaleString()}</div>
+          <div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap">
+            <button class="btn bo" onclick='editP(${JSON.stringify(p)})'>編輯</button>
+            <button class="btn br" onclick="archiveP(${p.id},'${p.name.replace(/'/g,"\\'")}')">封存</button>
+            <button class="btn br" onclick="deleteP(${p.id},'${p.name.replace(/'/g,"\\'")}')">刪除</button>
+          </div>
         </div>
       </div>`;
     }).join('');
-  }catch(e){toast('載入失敗：'+e.message,false);}
+  }catch(e){toast('載入失敗',false);}
 }
 
 // ── Orders ────────────────────────────────────────────────
 const STEPS=[
-  {key:'pending',  label:'待確認'},
-  {key:'confirmed',label:'已確認'},
-  {key:'shipped',  label:'已出貨'},
-  {key:'completed',label:'完成'},
+  {key:'pending',  label:'待確認', icon:'★', cls:'s-pending'},
+  {key:'confirmed',label:'已確認', icon:'✔', cls:'s-confirmed'},
+  {key:'shipped',  label:'已出貨', icon:'▶', cls:'s-shipped'},
+  {key:'completed',label:'完成',   icon:'◆', cls:'s-completed'},
 ];
-const SL={pending:'待確認',confirmed:'已確認',shipped:'已出貨',completed:'完成',cancelled:'取消'};
+const SL={pending:'待確認',confirmed:'已確認',shipped:'已出貨',completed:'完成',cancelled:'已取消'};
 const SC={pending:'ba',confirmed:'bg2',shipped:'bg2',completed:'bg2',cancelled:'br2'};
 
 async function loadOrders(){
@@ -493,12 +456,11 @@ async function loadOrders(){
     allOrders=await api('/orders');
     updateFilterCounts();
     renderOrders();
-  }catch(e){toast('載入失敗：'+e.message,false);}
+  }catch(e){toast('載入訂單失敗',false);}
 }
 
 function updateFilterCounts(){
-  const keys=['all','pending','confirmed','shipped','completed','cancelled'];
-  keys.forEach(k=>{
+  ['all','pending','confirmed','shipped','completed','cancelled'].forEach(k=>{
     const el=document.getElementById('cnt-'+k);
     if(el)el.textContent=k==='all'?allOrders.length:allOrders.filter(o=>o.status===k).length;
   });
@@ -511,23 +473,27 @@ function filterOrders(btn,filter){
   renderOrders();
 }
 
-function stepsHTML(orderId,status){
+function progressHTML(orderId, status){
   if(status==='cancelled'){
-    return`<div class="steps">
-      <div class="step-item cancelled" style="flex:unset">
-        <div class="step-dot">×</div><div class="step-label" style="color:var(--r)">已取消</div>
-      </div>
+    return`<div class="progress-wrap">
+      <div class="progress-label">訂單狀態</div>
+      <div class="cancelled-wrap"><span>✕</span><span>已取消</span></div>
     </div>`;
   }
   const activeIdx=STEPS.findIndex(s=>s.key===status);
-  return`<div class="steps">${STEPS.map((s,i)=>{
-    const cls=i<activeIdx?'done':i===activeIdx?'active':'';
-    const dot=i<activeIdx?'✓':i+1;
-    return`<div class="step-item ${cls}" onclick="updateStatus(${orderId},'${s.key}')">
-      <div class="step-dot">${dot}</div>
-      <div class="step-label">${s.label}</div>
-    </div>`;
-  }).join('')}</div>`;
+  return`<div class="progress-wrap">
+    <div class="progress-label">訂單進度 — 點擊切換狀態</div>
+    <div class="progress-steps">
+      ${STEPS.map((s,i)=>{
+        const cls = i < activeIdx ? 'done' : i === activeIdx ? 'active' : '';
+        const dotContent = i < activeIdx ? '✓' : (i === activeIdx ? '●' : '○');
+        return`<div class="p-step ${cls}" onclick="updateStatus(${orderId},'${s.key}')">
+          <div class="p-dot">${dotContent}</div>
+          <div class="p-step-label">${s.label}</div>
+        </div>`;
+      }).join('')}
+    </div>
+  </div>`;
 }
 
 function renderOrders(){
@@ -539,25 +505,27 @@ function renderOrders(){
   }
   list.innerHTML=filtered.map(o=>{
     const itemStr=(o.items||[]).map(i=>`${i.product_name} ×${i.qty}`).join('、');
+    const canDelete=o.status==='cancelled';
     return`<div class="o-card" id="ocard-${o.id}">
-      <div class="o-card-hdr">
-        <div class="o-id">#${o.id} <span style="font-size:12px;font-weight:400;color:var(--m)">${(o.created_at||'').slice(0,10)}</span></div>
-        <span class="bdg ${SC[o.status]||'ba'}">${SL[o.status]||o.status}</span>
+      <div class="o-card-top">
+        <div>
+          <div class="o-id">#${o.id}</div>
+          <div class="o-date">${(o.created_at||'').slice(0,16)}</div>
+        </div>
+        <span class="bdg ${SC[o.status]||'ba'}" style="font-size:11px">${SL[o.status]||o.status}</span>
       </div>
-      <div class="o-customer">${o.customer_name}</div>
-      <div class="o-meta">${o.customer_phone} · ${o.customer_email}</div>
-      <div class="o-meta">${o.address}</div>
+      <div class="o-name">${o.customer_name}</div>
+      <div class="o-contact">📞 ${o.customer_phone}</div>
+      <div class="o-contact">✉️ ${o.customer_email}</div>
+      <div class="o-addr" style="margin-top:2px">📍 ${o.address}</div>
       <div class="o-items-str">${itemStr}</div>
-      <div style="font-weight:700;color:var(--g);margin-bottom:10px">NT$${o.total_amount.toLocaleString()} <span style="font-size:12px;font-weight:400;color:var(--m)">· ${o.payment_method}</span></div>
-      ${stepsHTML(o.id,o.status)}
-      ${o.internal_note?`<div style="font-size:12px;color:var(--g);background:var(--gl);padding:8px 10px;border-radius:8px;margin-bottom:10px">備註：${o.internal_note}</div>`:''}
+      <div class="o-amount">NT$${o.total_amount.toLocaleString()}<span class="o-pay">${o.payment_method}</span></div>
+      ${progressHTML(o.id, o.status)}
+      ${o.internal_note?`<div class="o-note">備註：${o.internal_note}</div>`:''}
       <div class="o-actions">
-        ${o.status!=='cancelled'?`<button class="btn br btn-sm" onclick="updateStatus(${o.id},'cancelled')">標記取消</button>`:''}
-        <button class="btn bo btn-sm" onclick="openNote(${o.id},'${(o.internal_note||'').replace(/'/g,"\\'")}')">備註</button>
-        ${o.status==='cancelled'
-          ?`<button class="btn br btn-sm" onclick="deleteOrder(${o.id})">刪除訂單</button>`
-          :`<button class="btn btn-sm" style="background:transparent;border:1px solid var(--b);color:var(--b);cursor:not-allowed" disabled title="請先標記取消才能刪除">刪除訂單</button>`
-        }
+        ${o.status!=='cancelled'?`<button class="btn br" onclick="updateStatus(${o.id},'cancelled')">標記取消</button>`:''}
+        <button class="btn bo" onclick="openNote(${o.id},'${(o.internal_note||'').replace(/'/g,"\\'")}')">備註</button>
+        <button class="btn br" ${canDelete?'':`disabled title="請先標記取消" style="opacity:.35;cursor:not-allowed"`} onclick="${canDelete?`deleteOrder(${o.id})`:''}">刪除</button>
       </div>
     </div>`;
   }).join('');
@@ -567,9 +535,8 @@ async function updateStatus(id,status){
   try{
     await api(`/orders/${id}`,{method:'PATCH',body:JSON.stringify({status})});
     const o=allOrders.find(x=>x.id===id);
-    if(o){o.status=status;}
-    updateFilterCounts();
-    renderOrders();
+    if(o)o.status=status;
+    updateFilterCounts();renderOrders();
     toast('狀態已更新');
   }catch(e){toast('更新失敗',false);}
 }
@@ -579,13 +546,12 @@ async function deleteOrder(id){
   try{
     await api(`/orders/${id}`,{method:'DELETE'});
     allOrders=allOrders.filter(o=>o.id!==id);
-    updateFilterCounts();
-    renderOrders();
+    updateFilterCounts();renderOrders();
     toast('訂單已刪除');
   }catch(e){toast('刪除失敗',false);}
 }
 
-// ── Note modal ────────────────────────────────────────────
+// ── Note ──────────────────────────────────────────────────
 function openNote(id,note){
   document.getElementById('note-order-id').value=id;
   document.getElementById('note-text').value=note||'';
@@ -599,12 +565,9 @@ async function saveNote(){
     const o=allOrders.find(x=>x.id==id);
     await api(`/orders/${id}`,{method:'PATCH',body:JSON.stringify({status:o?.status||'pending',internal_note:note})});
     if(o)o.internal_note=note;
-    renderOrders();
-    toast('備註已儲存');closeNote();
+    renderOrders();toast('備註已儲存');closeNote();
   }catch(e){toast('儲存失敗',false);}
 }
-
-loadProducts();
 </script>
 </body>
 </html>
