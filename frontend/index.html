@@ -600,7 +600,7 @@ async function placeOrder(){
   if(!name||!phone||!email||!addr){toast('請填寫所有必填欄位',false);return;}
   const btn=document.getElementById('obtn');btn.disabled=true;btn.textContent='送出中⋯';
   try{
-    const res=await fetch(`${API}/orders`,{
+    const res=await fetch(`${API}/orders/`,{
       method:'POST',headers:{'Content-Type':'application/json'},
       body:JSON.stringify({
         customer_name:name,customer_email:email,customer_phone:phone,
