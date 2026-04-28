@@ -769,7 +769,13 @@ function add(pid){
     if(ex.qty>=p.stock){toast('已達庫存上限',false);return;}
     ex.qty++;
   }else{const imgs=getImgs(p);cart.push({pid,qty:1,name:p.name,price:p.price,img:imgs[0]||null,sizes:p.sizes});}
-  renderCart();toast(`已加入「${p.name}」`);
+  renderCart();
+  // 手機版：自動開啟購物車抽屜
+  if(window.innerWidth<=760){
+    openMCart();
+  } else {
+    toast(`已加入「${p.name}」`);
+  }
 }
 function chgQty(pid,d){
   const i=cart.findIndex(c=>c.pid===pid);if(i<0)return;
