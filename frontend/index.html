@@ -893,7 +893,8 @@ async function placeOrder(){
     document.getElementById('sv-amount').textContent='NT$'+data.total.toLocaleString();
     // reset steps
     document.getElementById('sv-bank').style.display='block';
-    document.getElementById('sv-done').style.display='none';
+    document.getElementById('sv-paid-done').style.display='none';
+    document.getElementById('sv-cancel-done').style.display='none';
     document.getElementById('sv-last5').value='';
     document.getElementById('sv-submit-btn').disabled=true;
     document.getElementById('cv').style.display='none';
