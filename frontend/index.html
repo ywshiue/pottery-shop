@@ -31,8 +31,8 @@ body{font-family:var(--sans);background:var(--bg);color:var(--t);font-size:14px;
 .section-header{margin-bottom:28px}
 .section-title{font-family:var(--serif);font-size:20px;font-weight:400;color:var(--t);margin-bottom:12px;letter-spacing:2px}
 .fbar{display:flex;flex-wrap:wrap;gap:8px}
-.fc{padding:6px 18px;border-radius:99px;border:1px solid var(--b);font-size:12px;letter-spacing:.5px;cursor:pointer;background:transparent;color:var(--m);transition:all .2s;font-family:var(--sans);font-weight:300}
-.fc.on{background:var(--g);color:#fff;border-color:var(--g);letter-spacing:.8px}
+.fc{padding:6px 18px;border-radius:99px;border:1px solid var(--b);font-size:12px;letter-spacing:.5px;cursor:pointer;background:transparent;color:var(--m);transition:all .2s;font-family:var(--sans);font-weight:300;flex-shrink:0;white-space:nowrap}
+.fc.on{background:var(--g);color:#fff;border-color:var(--g);letter-spacing:.8px;flex-shrink:0}
 
 /* ── Layout ─────────────────────────────────────────── */
 .layout{display:grid;grid-template-columns:1fr 320px;gap:24px;align-items:start}
@@ -246,7 +246,7 @@ const API = 'https://pottery-shop.onrender.com';
       <button class="fc on" onclick="setCat(this,'')">全部</button>
       <button class="fc" onclick="setCat(this,'花器')">花器</button>
       <button class="fc" onclick="setCat(this,'線香座')">線香座</button>
-      <button class="fc" onclick="setCat(this,'陶器皿')">陶器皿</button>
+      <button class="fc" onclick="setCat(this,'器皿')">器皿</button>
       <button class="fc" onclick="setCat(this,'其他')">其他</button>
     </div>
   </div>
@@ -605,6 +605,7 @@ const API = 'https://pottery-shop.onrender.com';
         </div>
 
         <button class="btn bg" style="width:100%;justify-content:center;padding:13px;font-size:14px;letter-spacing:.5px;opacity:.4" id="sv-submit-btn" onclick="submitPayment()" disabled>我已完成匯款</button>
+        <button class="btn bo" style="width:100%;justify-content:center;margin-top:8px;font-size:13px;color:var(--r);border-color:var(--r)" onclick="cancelOrder()">取消訂單</button>
       </div>
 
       <!-- 完成頁 -->
@@ -953,6 +954,23 @@ function last5Key(e, idx){
 let currentOrderId=null;
 
 
+async function cancelOrder(){
+  if(!confirm('確定要取消此訂單？\n取消後將無法復原。'))return;
+  if(!currentOrderId)return;
+  try{
+    const res=await fetch(`${API}/orders/${currentOrderId}/cancel`,{
+      method:'POST',headers:{'Content-Type':'application/json'}
+    });
+    if(!res.ok)throw new Error();
+    // 顯示取消完成
+    document.getElementById('sv-bank').style.display='none';
+    document.getElementById('sv-done').style.display='block';
+    document.getElementById('onum2').textContent='#'+currentOrderId;
+    document.querySelector('#sv-done .btn').textContent='關閉';
+    document.querySelector('#sv-done div:nth-child(3)').innerHTML='您的訂單已取消<br>相關通知已寄至您的 Email';
+  }catch(e){toast('取消失敗，請稍後再試',false);}
+}
+
 async function submitPayment(){
   const last5=document.getElementById('sv-last5').value.trim();
   if(last5.length!==5){
@@ -1056,6 +1074,25 @@ async function loadBankInfo(){
 }
 loadBankInfo();
 loadPublicQA();
+// 每 30 秒自動更新商品庫存
+setInterval(()=>{
+  fetch(`${API}/products${cat?'?category='+encodeURIComponent(cat):''}`)
+    .then(r=>r.json())
+    .then(data=>{
+      products=data;
+      render();
+      // 同步更新購物車庫存上限
+      cart=cart.filter(c=>{
+        const p=products.find(x=>x.id===c.pid);
+        return p&&p.stock>0;
+      });
+      cart.forEach(c=>{
+        const p=products.find(x=>x.id===c.pid);
+        if(p&&c.qty>p.stock) c.qty=p.stock;
+      });
+      renderCart();
+    }).catch(()=>{});
+}, 30000);
 
 function fillBankInfo(){
   const set=(id,val)=>{const el=document.getElementById(id);if(el)el.textContent=val||'—';};
