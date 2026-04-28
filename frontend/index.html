@@ -770,11 +770,10 @@ function add(pid){
     ex.qty++;
   }else{const imgs=getImgs(p);cart.push({pid,qty:1,name:p.name,price:p.price,img:imgs[0]||null,sizes:p.sizes});}
   renderCart();
-  // 手機版：自動開啟購物車抽屜
+  toast(`已加入「${p.name}」`);
+  // 手機版：加入後自動關閉商品詳細視窗
   if(window.innerWidth<=760){
-    openMCart();
-  } else {
-    toast(`已加入「${p.name}」`);
+    closeDrawer();
   }
 }
 function chgQty(pid,d){
