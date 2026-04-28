@@ -28,6 +28,13 @@ class StatusUpdate(BaseModel):
 
 VALID_STATUS = {"pending", "confirmed", "shipped", "completed", "cancelled"}
 
+class EditOrderIn(BaseModel):
+    customer_name:  Optional[str] = None
+    customer_phone: Optional[str] = None
+    customer_email: Optional[str] = None
+    address:        Optional[str] = None
+    note:           Optional[str] = None
+
 # ── 寄信（Resend）────────────────────────────────────────────
 async def send_order_email(order_id: int, order: OrderIn, total: int):
     """有新訂單時寄 Email 通知給店家"""
@@ -328,6 +335,18 @@ async def send_payment_notify(order_id: int, order: dict, items: list, last5: st
     except Exception:
         pass
 
+
+
+@router.patch("/{order_id}/edit")
+async def edit_order(order_id: int, body: EditOrderIn, authorization: str = Header(...)):
+    """管理員編輯訂單顧客資料"""
+    token = authorization.replace("Bearer ", "")
+    await verify_admin_token(token)
+    payload = {k: v for k, v in body.model_dump().items() if v is not None}
+    if not payload:
+        raise HTTPException(status_code=400, detail="沒有要更新的資料")
+    await sb_fetch(f"/orders?id=eq.{order_id}", method="PATCH", body=payload)
+    return {"message": "訂單已更新"}
 
 @router.delete("/{order_id}")
 async def delete_order(order_id: int, authorization: str = Header(...)):
