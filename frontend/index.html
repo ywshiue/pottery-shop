@@ -258,7 +258,6 @@ const API = 'https://pottery-shop.onrender.com';
       <div id="cbody-d"><div class="cempty">尚未加入任何商品</div></div>
       <div class="totbl" id="totbl-d" style="display:none">
         <div class="tr"><span>小計</span><span id="sub-d"></span></div>
-        <div class="tr"><span>運費</span><span id="shipping-d" style="font-size:12px;color:var(--m)">結帳時確認</span></div>
         <div class="tr grand"><span>合計</span><span id="grand-d"></span></div>
         <button class="cbtn" onclick="openModal()">前往結帳</button>
       </div>
@@ -481,39 +480,32 @@ const API = 'https://pottery-shop.onrender.com';
       </div>
       <div class="fg" id="addr-field"><label class="lbl">收件地址 *</label><input type="text" id="ca" placeholder="台北市信義區..."></div>
       <div class="fg" id="pickup-time-field" style="display:none">
-        <label class="lbl">希望面交日期與時間 *</label>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:4px">
-          <div>
-            <input type="date" id="ca-pickup-date"
-              style="width:100%;padding:10px 12px;border:1px solid var(--b);border-radius:8px;font-size:14px;font-family:inherit;background:var(--w);color:var(--t);outline:none"
-              onchange="updatePickupTime()">
-          </div>
-          <div>
-            <select id="ca-pickup-hour"
-              style="width:100%;padding:10px 12px;border:1px solid var(--b);border-radius:8px;font-size:14px;font-family:inherit;background:var(--w);color:var(--t);outline:none"
-              onchange="updatePickupTime()">
-              <option value="">選擇時間</option>
-              <option value="09:00">09:00</option>
-              <option value="10:00">10:00</option>
-              <option value="11:00">11:00</option>
-              <option value="12:00">12:00</option>
-              <option value="13:00">13:00</option>
-              <option value="14:00">14:00</option>
-              <option value="15:00">15:00</option>
-              <option value="16:00">16:00</option>
-              <option value="17:00">17:00</option>
-            </select>
-          </div>
-        </div>
+        <label class="lbl">希望面交日期 *</label>
+        <input type="date" id="ca-pickup-date"
+          style="width:100%;padding:10px 12px;border:1px solid var(--b);border-radius:8px;font-size:14px;font-family:inherit;background:var(--w);color:var(--t);outline:none;margin-bottom:10px"
+          onchange="updatePickupTime()">
+        <label class="lbl" style="margin-top:2px">希望面交時段 *</label>
+        <select id="ca-pickup-hour"
+          style="width:100%;padding:10px 12px;border:1px solid var(--b);border-radius:8px;font-size:14px;font-family:inherit;background:var(--w);color:var(--t);outline:none"
+          onchange="updatePickupTime()">
+          <option value="">選擇時段</option>
+          <option value="09:00–10:00">09:00 – 10:00</option>
+          <option value="10:00–11:00">10:00 – 11:00</option>
+          <option value="11:00–12:00">11:00 – 12:00</option>
+          <option value="12:00–13:00">12:00 – 13:00</option>
+          <option value="13:00–14:00">13:00 – 14:00</option>
+          <option value="14:00–15:00">14:00 – 15:00</option>
+          <option value="15:00–16:00">15:00 – 16:00</option>
+          <option value="16:00–17:00">16:00 – 17:00</option>
+        </select>
         <input type="hidden" id="ca-pickup-time">
-        <div style="font-size:11px;color:var(--m);margin-top:5px;letter-spacing:.2px">選擇後我們將確認是否可行並與您聯繫</div>
+        <div style="font-size:11px;color:var(--m);margin-top:6px;letter-spacing:.2px">選擇後我們將確認是否可行並與您聯繫</div>
       </div>
       <div class="fg"><label class="lbl">備註</label><textarea id="cnote" placeholder="特殊需求、包裝要求..."></textarea></div>
 
       <div class="lbl" style="margin:6px 0 10px">付款方式</div>
       <div style="background:var(--rl);border-radius:8px;padding:10px 12px;margin-bottom:12px;font-size:12px;color:var(--r);line-height:1.7">
-        ⚠️ 本店目前僅支援<strong>線上銀行轉帳</strong>及<strong>工作室面交</strong><br>
-        不接受現金匯款以外的付款方式
+        ⚠️ 本店僅支援<strong>線上銀行轉帳</strong>，不提供現金付款
       </div>
       <div class="po sel" onclick="setPay('銀行轉帳',this)">
         <div>
@@ -525,7 +517,7 @@ const API = 'https://pottery-shop.onrender.com';
 
       <div class="ordsum">
         <div class="ordsum-row"><span>商品小計</span><span id="mtotal-sub"></span></div>
-        <div class="ordsum-row"><span>運費</span><span id="mtotal-shipping">NT$160</span></div>
+        <div class="ordsum-row" id="ordsum-shipping-row"><span>運費</span><span id="mtotal-shipping">NT$160</span></div>
         <div class="ordsum-row" style="font-weight:600;color:var(--t);font-size:15px;margin-top:6px"><span>合計</span><span id="mtotal"></span></div>
         <div class="ordsum-note">
           付款確認後 3–5 個工作天出貨<br>
@@ -840,7 +832,8 @@ function openModal(){
   const sub=cart.reduce((s,c)=>s+c.price*c.qty,0);
   document.getElementById('mtotal-sub').textContent='NT$'+sub.toLocaleString();
   const shipping=shippingMethod==='面交'?0:160;
-  document.getElementById('mtotal-shipping').textContent=shipping===0?'免運費（面交）':'NT$160';
+  const shippingRow=document.getElementById('ordsum-shipping-row');
+  if(shippingRow) shippingRow.style.display=shipping===0?'none':'flex';
   document.getElementById('mtotal').textContent='NT$'+(sub+shipping).toLocaleString();
   document.getElementById('ov').classList.add('open');
   document.getElementById('cv').style.display='block';
@@ -910,9 +903,11 @@ function selectShip(radio){
   // 更新結帳金額
   const sub=cart.reduce((s,c)=>s+c.price*c.qty,0);
   const shipping=isPickup?0:160;
+  const shippingRow=document.getElementById('ordsum-shipping-row');
   const mts=document.getElementById('mtotal-shipping');
   const mt=document.getElementById('mtotal');
-  if(mts) mts.textContent=shipping===0?'免運費（面交）':'NT$160';
+  if(shippingRow) shippingRow.style.display=isPickup?'none':'flex';
+  if(mts) mts.textContent='NT$160';
   if(mt) mt.textContent='NT$'+(sub+shipping).toLocaleString();
 }
 
