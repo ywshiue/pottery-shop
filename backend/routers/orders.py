@@ -336,3 +336,72 @@ async def delete_order(order_id: int, authorization: str = Header(...)):
     await sb_fetch(f"/order_items?order_id=eq.{order_id}", method="DELETE")
     await sb_fetch(f"/orders?id=eq.{order_id}", method="DELETE")
     return {"message": "訂單已刪除"}
+
+
+class CancelRequest(BaseModel):
+    pass
+
+@router.post("/{order_id}/cancel")
+async def cancel_order_by_customer(order_id: int):
+    """消費者主動取消訂單，恢復庫存並寄通知信"""
+    orders = await sb_fetch(f"/orders?id=eq.{order_id}")
+    if not orders:
+        raise HTTPException(status_code=404, detail="找不到訂單")
+
+    order = orders[0]
+    if order["status"] not in ("pending", "paid"):
+        raise HTTPException(status_code=400, detail="此訂單無法取消")
+
+    # 更新狀態
+    await sb_fetch(f"/orders?id=eq.{order_id}", method="PATCH", body={"status": "cancelled"})
+
+    # 恢復庫存
+    items = await sb_fetch(f"/order_items?order_id=eq.{order_id}")
+    for item in items:
+        prod = await sb_fetch(f"/products?id=eq.{item['product_id']}", use_secret=False)
+        if prod:
+            new_stock = prod[0]["stock"] + item["qty"]
+            await sb_fetch(f"/products?id=eq.{item['product_id']}", method="PATCH", body={"stock": new_stock})
+
+    # 寄取消通知信給消費者
+    await send_cancel_email(order)
+
+    return {"message": "訂單已取消"}
+
+
+async def send_cancel_email(order: dict):
+    api_key = os.getenv("RESEND_API_KEY")
+    if not api_key or not order.get("customer_email"):
+        return
+
+    html = f"""
+    <div style="font-family:'Helvetica Neue',Arial,sans-serif;max-width:520px;margin:0 auto;background:#F5F2EE;padding:28px 24px;border-radius:12px">
+      <h2 style="color:#8B6F47;font-size:18px;margin:0 0 16px">是陶。訂單已取消</h2>
+      <div style="background:#fff;border-radius:10px;padding:16px 20px;margin-bottom:16px">
+        <p style="font-size:14px;color:#1C2B3A;line-height:1.9;margin:0">
+          親愛的 {order.get('customer_name', '')}，<br><br>
+          您的訂單 <strong>#{order['id']}</strong> 已成功取消。<br>
+          如有任何疑問，歡迎透過 Instagram @ywshiue 與我們聯繫。
+        </p>
+      </div>
+      <p style="font-size:11px;color:#9CA3AF;text-align:center;line-height:1.8;margin:0">
+        此信件為系統自動發送，請勿直接回覆<br>
+        是陶。It's Pottery
+      </p>
+    </div>"""
+
+    try:
+        async with httpx.AsyncClient() as client:
+            await client.post(
+                "https://api.resend.com/emails",
+                headers={"Authorization": f"Bearer {api_key}", "Content-Type": "application/json"},
+                json={
+                    "from": "是陶。<onboarding@resend.dev>",
+                    "to": [order["customer_email"]],
+                    "subject": f"是陶。訂單 #{order['id']} 已取消",
+                    "html": html,
+                },
+                timeout=10,
+            )
+    except Exception:
+        pass
