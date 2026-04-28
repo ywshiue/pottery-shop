@@ -87,18 +87,18 @@ body{font-family:var(--sans);background:var(--bg);color:var(--t);font-size:14px;
 /* ── Product Detail Modal ───────────────────────────── */
 .drawer-overlay{position:fixed;inset:0;background:rgba(28,43,58,.6);z-index:200;display:none;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(3px);overflow:hidden}
 .drawer-overlay.open{display:flex}
-.drawer{background:var(--w);border-radius:18px;width:100%;max-width:820px;max-height:88vh;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 24px 64px rgba(28,43,58,.2);overscroll-behavior:contain}
+.drawer{background:var(--w);border-radius:18px;width:100%;max-width:820px;max-height:88vh;overflow:clip;display:flex;flex-direction:column;box-shadow:0 24px 64px rgba(28,43,58,.2)}
 .drawer-close{padding:16px 20px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--b);flex-shrink:0}
 .drawer-close-btn{background:transparent;border:none;font-size:20px;cursor:pointer;color:var(--m);line-height:1;width:32px;height:32px;display:flex;align-items:center;justify-content:center;border-radius:50%;transition:background .15s}
 .drawer-close-btn:hover{background:var(--bg)}
 .drawer-cat{font-size:10px;letter-spacing:1.5px;color:var(--m);text-transform:uppercase}
-.drawer-content{padding:24px;flex:1;overflow-y:auto;overflow-x:hidden;display:grid;grid-template-columns:1fr 1fr;gap:24px;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
+.drawer-content{padding:24px;flex:1;overflow-y:auto;overflow-x:hidden;display:grid;grid-template-columns:1fr 1fr;gap:24px;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;min-height:0}
 @media(max-width:640px){.drawer-content{grid-template-columns:1fr}.drawer{max-height:92vh;border-radius:20px 20px 0 0;margin-top:auto}}
 
 /* Drawer image gallery */
 .d-main-img{width:100%;aspect-ratio:4/5;object-fit:cover;border-radius:12px;margin-bottom:12px;background:var(--bg)}
 .d-main-placeholder{width:100%;aspect-ratio:4/5;background:var(--bg);border-radius:12px;margin-bottom:12px;display:flex;align-items:center;justify-content:center;color:var(--b);font-size:48px}
-.d-thumbs{display:flex;gap:8px;margin-bottom:20px;overflow-x:auto;padding-bottom:4px}
+.d-thumbs{display:flex;gap:8px;margin-bottom:20px;overflow-x:auto;padding-bottom:4px;overflow-y:visible}
 .d-thumb{width:64px;height:64px;border-radius:8px;object-fit:cover;cursor:pointer;border:2px solid transparent;flex-shrink:0;opacity:.6;transition:all .15s}
 .d-thumb.on{border-color:var(--g);opacity:1}
 
@@ -108,10 +108,10 @@ body{font-family:var(--sans);background:var(--bg);color:var(--t);font-size:14px;
 .d-divider{border:none;border-top:1px solid var(--b);margin:16px 0}
 .d-section-title{font-size:10px;letter-spacing:1.5px;color:var(--m);text-transform:uppercase;margin-bottom:8px}
 .d-desc{font-size:14px;color:var(--t);line-height:1.8;white-space:pre-wrap}
-.d-add-btn{width:100%;padding:14px;background:var(--g);color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;font-family:var(--sans);letter-spacing:.8px;transition:background .15s;margin-top:20px}
+.d-add-btn{width:100%;padding:14px;background:var(--g);color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;font-family:var(--sans);letter-spacing:.8px;transition:background .15s;margin-top:20px;flex-shrink:0}
 .d-add-btn:hover{background:#1e3450}
 .d-add-btn:disabled{background:var(--b);color:var(--m);cursor:not-allowed}
-.d-stock{font-size:12px;color:var(--m);text-align:center;margin-top:8px;letter-spacing:.3px}
+.d-stock{font-size:12px;color:var(--m);text-align:center;margin-top:8px;letter-spacing:.3px;padding-bottom:8px}
 
 /* ── Lightbox ───────────────────────────────────────── */
 .lb{position:fixed;inset:0;background:rgba(10,15,20,.94);z-index:500;display:none;flex-direction:column;align-items:center;justify-content:center}
@@ -425,7 +425,7 @@ const API = 'https://pottery-shop.onrender.com';
     <div class="drawer-content">
       <!-- Left: Images -->
       <div>
-        <img class="d-main-img" id="d-main-img" src="" alt="" style="width:100%;aspect-ratio:1;object-fit:cover;border-radius:12px;cursor:zoom-in;margin-bottom:10px" onclick="openLbFromDrawer()">
+        <img class="d-main-img" id="d-main-img" src="" alt="" style="width:100%;aspect-ratio:1;object-fit:cover;border-radius:12px;cursor:zoom-in;margin-bottom:10px;display:block" onclick="openLbFromDrawer()">
         <div class="d-thumbs" id="d-thumbs"></div>
       </div>
       <!-- Right: Info -->
