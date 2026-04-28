@@ -293,7 +293,7 @@ const API = 'https://pottery-shop.onrender.com';
     <button class="faq-q" onclick="toggleFaq(this)">
       <span>付款方式有哪些？</span><span class="faq-icon">+</span>
     </button>
-    <div class="faq-a">目前僅支援<strong>銀行轉帳</strong>及<strong>工作室面交</strong>（高雄市茄萣區）。下單後系統將提供匯款帳號，請於 24 小時內完成轉帳，逾期訂單將自動取消。</div>
+    <div class="faq-a">本店僅支援<strong>線上銀行轉帳</strong>，不提供現金付款。下單後系統將提供匯款帳號，請於 24 小時內完成轉帳，逾期訂單將自動取消。</div>
   </div>
 
   <div class="faq-item">
@@ -319,9 +319,9 @@ const API = 'https://pottery-shop.onrender.com';
 
   <div class="faq-item">
     <button class="faq-q" onclick="toggleFaq(this)">
-      <span>可以面交嗎？</span><span class="faq-icon">+</span>
+      <span>取貨方式有哪些？</span><span class="faq-icon">+</span>
     </button>
-    <div class="faq-a">可以，僅限<strong>高雄市茄萣區工作室</strong>面交。結帳時選擇「工作室面交」，下單後我們會與您另行約定時間。</div>
+    <div class="faq-a">提供兩種取貨方式：<strong>宅配到府</strong>（運費 NT$160，全台本島）及<strong>工作室取貨</strong>（高雄市茄萣區，免運費）。選擇工作室取貨時，請於結帳填寫希望取貨的日期與時段，我們將確認後與您聯繫。</div>
   </div>
 
   <div class="faq-item">
@@ -379,7 +379,7 @@ const API = 'https://pottery-shop.onrender.com';
       <div class="footer-section-title">付款方式</div>
       <ul class="footer-list">
         <li><strong>銀行轉帳</strong><br>下單後將提供匯款帳號，請於 24 小時內完成付款，逾期訂單將自動取消</li>
-        <li style="margin-top:8px"><strong>工作室面交</strong><br>高雄市茄萣區，結帳時選擇面交，另行約定時間</li>
+        <li style="margin-top:8px"><strong>工作室取貨</strong><br>高雄市茄萣區，結帳選擇工作室取貨，另行確認時間，免運費</li>
         <li style="margin-top:8px"><strong>出貨時間</strong><br>確認付款後 3–5 個工作天出貨，若有特殊情況將提前通知</li>
       </ul>
     </div>
@@ -472,18 +472,18 @@ const API = 'https://pottery-shop.onrender.com';
             <div><div style="font-size:14px;font-weight:500;color:var(--t)">宅配到府</div><div style="font-size:11px;color:var(--m);margin-top:1px">運費 NT$160，寄送至填寫地址</div></div>
           </label>
           <label style="display:flex;align-items:center;gap:10px;padding:10px 12px;border:1.5px solid var(--b);border-radius:8px;cursor:pointer;transition:all .15s" id="pickup-label">
-            <input type="radio" name="ship" value="面交" onchange="selectShip(this)" style="accent-color:var(--g)">
-            <div><div style="font-size:14px;font-weight:500;color:var(--t)">工作室面交</div><div style="font-size:11px;color:var(--m);margin-top:1px">高雄市茄萣區，下單後另行約定時間，免運費</div></div>
+            <input type="radio" name="ship" value="取貨" onchange="selectShip(this)" style="accent-color:var(--g)">
+            <div><div style="font-size:14px;font-weight:500;color:var(--t)">工作室取貨</div><div style="font-size:11px;color:var(--m);margin-top:1px">高雄市茄萣區工作室，下單後確認取貨時間，免運費</div></div>
           </label>
         </div>
       </div>
       <div class="fg" id="addr-field"><label class="lbl">收件地址 *</label><input type="text" id="ca" placeholder="台北市信義區..."></div>
       <div class="fg" id="pickup-time-field" style="display:none">
-        <label class="lbl">希望面交日期 *</label>
+        <label class="lbl">希望取貨日期 *</label>
         <input type="date" id="ca-pickup-date"
-          style="width:100%;padding:10px 12px;border:1px solid var(--b);border-radius:8px;font-size:14px;font-family:inherit;background:var(--w);color:var(--t);outline:none;margin-bottom:10px"
+          style="width:100%;max-width:220px;padding:9px 12px;border:1px solid var(--b);border-radius:8px;font-size:14px;font-family:inherit;background:var(--w);color:var(--t);outline:none;margin-bottom:10px;display:block"
           onchange="updatePickupTime()">
-        <label class="lbl" style="margin-top:2px">希望面交時段 *</label>
+        <label class="lbl" style="margin-top:2px">希望取貨時段 *</label>
         <select id="ca-pickup-hour"
           style="width:100%;padding:10px 12px;border:1px solid var(--b);border-radius:8px;font-size:14px;font-family:inherit;background:var(--w);color:var(--t);outline:none"
           onchange="updatePickupTime()">
@@ -509,7 +509,7 @@ const API = 'https://pottery-shop.onrender.com';
       <div class="po sel" onclick="setPay('銀行轉帳',this)">
         <div>
           <div class="pl">銀行轉帳</div>
-          <div class="ps">宅配或面交均使用銀行轉帳，請於 24 小時內完成</div>
+          <div class="ps">僅支援線上銀行轉帳，請於 24 小時內完成匯款</div>
         </div>
         <input type="radio" name="pay" checked style="margin-left:auto;accent-color:var(--g)">
       </div>
@@ -830,7 +830,7 @@ function closeMCart(){document.getElementById('m-cart-overlay').classList.remove
 function openModal(){
   const sub=cart.reduce((s,c)=>s+c.price*c.qty,0);
   document.getElementById('mtotal-sub').textContent='NT$'+sub.toLocaleString();
-  const shipping=shippingMethod==='面交'?0:160;
+  const shipping=shippingMethod==='取貨'?0:160;
   const shippingRow=document.getElementById('ordsum-shipping-row');
   if(shippingRow) shippingRow.style.display=shipping===0?'none':'flex';
   document.getElementById('mtotal').textContent='NT$'+(sub+shipping).toLocaleString();
@@ -850,9 +850,9 @@ async function placeOrder(){
   if(!name||!phone||!email){toast('請填寫所有必填欄位',false);return;}
   if(shippingMethod==='貨運'&&!addr){toast('請填寫收件地址',false);return;}
   const pickupTime=document.getElementById('ca-pickup-time')?.value||'';
-  if(shippingMethod==='面交'&&!pickupTime){toast('請選擇面交日期與時間',false);return;}
-  const finalAddr=shippingMethod==='面交'?`工作室面交（高雄茄萣）- 希望時間：${pickupTime}`:addr;
-  const shipping=shippingMethod==='面交'?0:160;
+  if(shippingMethod==='取貨'&&!pickupTime){toast('請選擇取貨日期與時段',false);return;}
+  const finalAddr=shippingMethod==='取貨'?`工作室取貨（高雄茄萣）- 希望時間：${pickupTime}`:addr;
+  const shipping=shippingMethod==='取貨'?0:160;
   const btn=document.getElementById('obtn');btn.disabled=true;btn.textContent='送出中⋯';
   try{
     const res=await fetch(`${API}/orders/`,{
@@ -884,8 +884,8 @@ function resetCart(){cart=[];renderCart();load();}
 let shippingMethod='貨運';
 function selectShip(radio){
   shippingMethod=radio.value;
-  const isPickup=radio.value==='面交';
-  // 地址/面交時間切換
+  const isPickup=radio.value==='取貨';
+  // 地址/取貨時間切換
   const addrField=document.getElementById('addr-field');
   const pickupField=document.getElementById('pickup-time-field');
   if(addrField) addrField.style.display=isPickup?'none':'block';
