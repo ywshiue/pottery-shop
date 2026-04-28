@@ -480,9 +480,12 @@ const API = 'https://pottery-shop.onrender.com';
       <div class="fg" id="addr-field"><label class="lbl">收件地址 *</label><input type="text" id="ca" placeholder="台北市信義區..."></div>
       <div class="fg" id="pickup-time-field" style="display:none">
         <label class="lbl">希望取貨日期 *</label>
-        <input type="date" id="ca-pickup-date"
-          style="width:100%;max-width:220px;padding:9px 12px;border:1px solid var(--b);border-radius:8px;font-size:14px;font-family:inherit;background:var(--w);color:var(--t);outline:none;margin-bottom:10px;display:block"
-          onchange="updatePickupTime()">
+        <div style="position:relative;margin-bottom:12px">
+          <svg style="position:absolute;left:12px;top:50%;transform:translateY(-50%);pointer-events:none;color:var(--m)" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          <input type="date" id="ca-pickup-date"
+            style="width:100%;padding:10px 12px 10px 36px;border:1px solid var(--b);border-radius:8px;font-size:14px;font-family:inherit;background:var(--w);color:var(--t);outline:none;display:block"
+            onchange="updatePickupTime()">
+        </div>
         <label class="lbl" style="margin-top:2px">希望取貨時段 *</label>
         <select id="ca-pickup-hour"
           style="width:100%;padding:10px 12px;border:1px solid var(--b);border-radius:8px;font-size:14px;font-family:inherit;background:var(--w);color:var(--t);outline:none"
