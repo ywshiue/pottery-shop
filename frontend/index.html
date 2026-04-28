@@ -80,7 +80,7 @@ body{font-family:var(--sans);background:var(--bg);color:var(--t);font-size:14px;
 .m-cart-btn{display:none;position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--g);color:#fff;border:none;border-radius:99px;padding:14px 32px;font-size:14px;font-weight:600;font-family:var(--sans);cursor:pointer;z-index:90;box-shadow:0 6px 20px rgba(44,74,110,.35);letter-spacing:.5px;white-space:nowrap}
 .m-cart-overlay{position:fixed;inset:0;background:rgba(28,43,58,.5);z-index:150;display:none}
 .m-cart-overlay.open{display:block}
-.m-cart{position:fixed;bottom:0;left:0;right:0;background:var(--w);border-radius:20px 20px 0 0;padding:22px;z-index:160;max-height:80vh;overflow-y:auto;overflow-x:hidden;transform:translateY(100%);transition:transform .3s cubic-bezier(.32,.72,0,1);-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
+.m-cart{position:fixed;bottom:0;left:0;right:0;background:var(--w);border-radius:20px 20px 0 0;padding:22px 22px 74px;z-index:160;max-height:80vh;overflow-y:auto;overflow-x:hidden;transform:translateY(100%);transition:transform .3s cubic-bezier(.32,.72,0,1);-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
 .m-cart.open{transform:translateY(0)}
 .m-cart-handle{width:36px;height:4px;background:var(--b);border-radius:2px;margin:0 auto 18px}
 
@@ -198,7 +198,7 @@ footer{background:var(--t);color:rgba(255,255,255,.7);padding:48px 32px 32px;mar
 }
 @media(min-width:761px){
   .ov{align-items:center}
-  .mo{border-radius:16px;max-width:480px;max-height:88vh}
+  .mo{border-radius:16px;max-width:480px;max-height:88vh;padding-bottom:74px}
   .mo-handle{display:none}
   #toast{bottom:24px}
 }
@@ -258,7 +258,7 @@ const API = 'https://pottery-shop.onrender.com';
       <div id="cbody-d"><div class="cempty">尚未加入任何商品</div></div>
       <div class="totbl" id="totbl-d" style="display:none">
         <div class="tr"><span>小計</span><span id="sub-d"></span></div>
-        <div class="tr"><span>運費</span><span>NT$160</span></div>
+        <div class="tr"><span>運費</span><span id="shipping-d" style="font-size:12px;color:var(--m)">結帳時確認</span></div>
         <div class="tr grand"><span>合計</span><span id="grand-d"></span></div>
         <button class="cbtn" onclick="openModal()">前往結帳</button>
       </div>
@@ -270,7 +270,7 @@ const API = 'https://pottery-shop.onrender.com';
 
 <!-- ── Q&A Modal ───────────────────────────────────────── -->
 <div class="ov" id="q-ov" style="z-index:250" onclick="if(event.target===this)closeQModal()">
-  <div class="mo" style="max-width:460px">
+  <div class="mo" style="max-width:460px;padding-bottom:74px">
     <div class="mo-handle"></div>
     <div style="font-family:var(--serif);font-size:20px;font-weight:400;color:var(--t);margin-bottom:6px;letter-spacing:1.5px">有其他疑問？</div>
     <div style="font-size:13px;color:var(--m);margin-bottom:20px;line-height:1.7;letter-spacing:.2px">送出後我們將盡快回覆，問答也會公開顯示供其他人參考</div>
@@ -480,6 +480,34 @@ const API = 'https://pottery-shop.onrender.com';
         </div>
       </div>
       <div class="fg" id="addr-field"><label class="lbl">收件地址 *</label><input type="text" id="ca" placeholder="台北市信義區..."></div>
+      <div class="fg" id="pickup-time-field" style="display:none">
+        <label class="lbl">希望面交日期與時間 *</label>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:4px">
+          <div>
+            <input type="date" id="ca-pickup-date"
+              style="width:100%;padding:10px 12px;border:1px solid var(--b);border-radius:8px;font-size:14px;font-family:inherit;background:var(--w);color:var(--t);outline:none"
+              onchange="updatePickupTime()">
+          </div>
+          <div>
+            <select id="ca-pickup-hour"
+              style="width:100%;padding:10px 12px;border:1px solid var(--b);border-radius:8px;font-size:14px;font-family:inherit;background:var(--w);color:var(--t);outline:none"
+              onchange="updatePickupTime()">
+              <option value="">選擇時間</option>
+              <option value="09:00">09:00</option>
+              <option value="10:00">10:00</option>
+              <option value="11:00">11:00</option>
+              <option value="12:00">12:00</option>
+              <option value="13:00">13:00</option>
+              <option value="14:00">14:00</option>
+              <option value="15:00">15:00</option>
+              <option value="16:00">16:00</option>
+              <option value="17:00">17:00</option>
+            </select>
+          </div>
+        </div>
+        <input type="hidden" id="ca-pickup-time">
+        <div style="font-size:11px;color:var(--m);margin-top:5px;letter-spacing:.2px">選擇後我們將確認是否可行並與您聯繫</div>
+      </div>
       <div class="fg"><label class="lbl">備註</label><textarea id="cnote" placeholder="特殊需求、包裝要求..."></textarea></div>
 
       <div class="lbl" style="margin:6px 0 10px">付款方式</div>
@@ -490,14 +518,14 @@ const API = 'https://pottery-shop.onrender.com';
       <div class="po sel" onclick="setPay('銀行轉帳',this)">
         <div>
           <div class="pl">銀行轉帳</div>
-          <div class="ps">下單後提供帳號，請於 24 小時內完成匯款</div>
+          <div class="ps">宅配或面交均使用銀行轉帳，請於 24 小時內完成</div>
         </div>
         <input type="radio" name="pay" checked style="margin-left:auto;accent-color:var(--g)">
       </div>
 
       <div class="ordsum">
         <div class="ordsum-row"><span>商品小計</span><span id="mtotal-sub"></span></div>
-        <div class="ordsum-row"><span>運費</span><span>NT$160</span></div>
+        <div class="ordsum-row"><span>運費</span><span id="mtotal-shipping">NT$160</span></div>
         <div class="ordsum-row" style="font-weight:600;color:var(--t);font-size:15px;margin-top:6px"><span>合計</span><span id="mtotal"></span></div>
         <div class="ordsum-note">
           付款確認後 3–5 個工作天出貨<br>
@@ -789,7 +817,9 @@ function renderCart(){
   ['totbl-d','totbl-m'].forEach(id=>document.getElementById(id).style.display=show?'block':'none');
   if(show){
     ['sub-d','sub-m'].forEach(id=>document.getElementById(id).textContent='NT$'+tot.toLocaleString());
-    ['grand-d','grand-m'].forEach(id=>document.getElementById(id).textContent='NT$'+(tot+160).toLocaleString());
+    ['grand-d','grand-m'].forEach(id=>document.getElementById(id).textContent='NT$'+tot.toLocaleString());
+    // 運費顯示：購物車先不加，結帳時依交貨方式決定
+    ['shipping-d','shipping-m'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent='結帳時確認';});
   }
   // disable + buttons at stock limit
   cart.forEach(c=>{
@@ -809,7 +839,9 @@ function closeMCart(){document.getElementById('m-cart-overlay').classList.remove
 function openModal(){
   const sub=cart.reduce((s,c)=>s+c.price*c.qty,0);
   document.getElementById('mtotal-sub').textContent='NT$'+sub.toLocaleString();
-  document.getElementById('mtotal').textContent='NT$'+(sub+160).toLocaleString();
+  const shipping=shippingMethod==='面交'?0:160;
+  document.getElementById('mtotal-shipping').textContent=shipping===0?'免運費（面交）':'NT$160';
+  document.getElementById('mtotal').textContent='NT$'+(sub+shipping).toLocaleString();
   document.getElementById('ov').classList.add('open');
   document.getElementById('cv').style.display='block';
   document.getElementById('sv').style.display='none';
@@ -825,7 +857,10 @@ async function placeOrder(){
   const email=document.getElementById('ce').value.trim(),addr=document.getElementById('ca').value.trim();
   if(!name||!phone||!email){toast('請填寫所有必填欄位',false);return;}
   if(shippingMethod==='貨運'&&!addr){toast('請填寫收件地址',false);return;}
-  const finalAddr=shippingMethod==='面交'?'工作室面交（高雄茄萣）':addr;
+  const pickupTime=document.getElementById('ca-pickup-time')?.value||'';
+  if(shippingMethod==='面交'&&!pickupTime){toast('請選擇面交日期與時間',false);return;}
+  const finalAddr=shippingMethod==='面交'?`工作室面交（高雄茄萣）- 希望時間：${pickupTime}`:addr;
+  const shipping=shippingMethod==='面交'?0:160;
   const btn=document.getElementById('obtn');btn.disabled=true;btn.textContent='送出中⋯';
   try{
     const res=await fetch(`${API}/orders/`,{
@@ -857,12 +892,28 @@ function resetCart(){cart=[];renderCart();load();}
 let shippingMethod='貨運';
 function selectShip(radio){
   shippingMethod=radio.value;
-  // 面交不需要填地址
+  const isPickup=radio.value==='面交';
+  // 地址/面交時間切換
   const addrField=document.getElementById('addr-field');
-  if(addrField) addrField.style.display=radio.value==='面交'?'none':'block';
-  // 更新label樣式
-  document.getElementById('ship-label').style.borderColor=radio.value==='貨運'?'var(--g)':'var(--b)';
-  document.getElementById('pickup-label').style.borderColor=radio.value==='面交'?'var(--g)':'var(--b)';
+  const pickupField=document.getElementById('pickup-time-field');
+  if(addrField) addrField.style.display=isPickup?'none':'block';
+  if(pickupField) pickupField.style.display=isPickup?'block':'none';
+  // set min date to today
+  const dateInput=document.getElementById('ca-pickup-date');
+  if(dateInput && isPickup && !dateInput.min){
+    const today=new Date();
+    dateInput.min=today.toISOString().split('T')[0];
+  }
+  // label 樣式
+  document.getElementById('ship-label').style.borderColor=isPickup?'var(--b)':'var(--g)';
+  document.getElementById('pickup-label').style.borderColor=isPickup?'var(--g)':'var(--b)';
+  // 更新結帳金額
+  const sub=cart.reduce((s,c)=>s+c.price*c.qty,0);
+  const shipping=isPickup?0:160;
+  const mts=document.getElementById('mtotal-shipping');
+  const mt=document.getElementById('mtotal');
+  if(mts) mts.textContent=shipping===0?'免運費（面交）':'NT$160';
+  if(mt) mt.textContent='NT$'+(sub+shipping).toLocaleString();
 }
 
 function last5Input(el, idx){
@@ -976,6 +1027,19 @@ async function loadPublicQA(){
         <div style="font-size:13px;color:var(--g);line-height:1.7">A：${q.answer}</div>
       </div>`).join('');
   }catch(e){}
+}
+
+function updatePickupTime(){
+  const d=document.getElementById('ca-pickup-date').value;
+  const h=document.getElementById('ca-pickup-hour').value;
+  if(d&&h){
+    const date=new Date(d);
+    const weekdays=['日','一','二','三','四','五','六'];
+    const formatted=`${d.replace(/-/g,'/')}（週${weekdays[date.getDay()]}）${h}`;
+    document.getElementById('ca-pickup-time').value=formatted;
+  } else {
+    document.getElementById('ca-pickup-time').value='';
+  }
 }
 
 function toggleFaq(btn){
