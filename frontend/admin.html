@@ -277,7 +277,7 @@ const API = 'https://pottery-shop.onrender.com';
 </div>
 
 <!-- 備註 Modal -->
-<div class="note-ov" id="note-ov">
+<div class="note-ov" id="note-ov" onclick="if(event.target===this)closeNote()">
   <div class="note-mo">
     <div class="note-title">內部備註</div>
     <input type="hidden" id="note-order-id">
@@ -524,11 +524,38 @@ function renderOrders(){
   list.innerHTML=filtered.map(o=>{
     const itemStr=(o.items||[]).map(i=>`${i.product_name} ×${i.qty}`).join('、');
     const canDelete=o.status==='cancelled';
+    const isDone=o.status==='completed'||o.status==='cancelled';
+
+    if(isDone){
+      return`<div class="o-card" style="opacity:.5;cursor:pointer;transition:opacity .2s" onclick="expandOrder(this)" id="ocard-${o.id}" data-expanded="false">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:8px">
+          <div style="display:flex;align-items:center;gap:10px;min-width:0;flex:1">
+            <div style="font-weight:700;font-size:13px;flex-shrink:0;color:var(--m)">#${o.id}</div>
+            <div style="font-size:13px;color:var(--m);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${o.customer_name}</div>
+            <div style="font-size:13px;font-weight:600;color:var(--m);flex-shrink:0">NT$${o.total_amount.toLocaleString()}</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:6px;flex-shrink:0">
+            <span class="bdg ${SC[o.status]||'ba'}" style="font-size:10px">${SL[o.status]||o.status}</span>
+            <span style="color:var(--b);font-size:16px;line-height:1" class="expand-icon">›</span>
+          </div>
+        </div>
+        <div class="o-detail" style="display:none;margin-top:12px;padding-top:12px;border-top:1px solid var(--b)">
+          <div class="o-contact">📞 ${o.customer_phone} · ✉️ ${o.customer_email}</div>
+          <div class="o-addr">📍 ${o.address}</div>
+          <div class="o-items-str" style="margin-top:6px">${itemStr}</div>
+          ${o.internal_note?`<div class="o-note">備註：${o.internal_note}</div>`:''}
+          <div class="o-actions" style="margin-top:8px">
+            <button class="btn bo" onclick="event.stopPropagation();openNote(${o.id},'${(o.internal_note||'').replace(/'/g,"\\'")}')" >備註</button>
+            <button class="btn br" ${canDelete?'':`disabled style="opacity:.35;cursor:not-allowed"`} onclick="event.stopPropagation();${canDelete?`deleteOrder(${o.id})`:''}" >刪除</button>
+          </div>
+        </div>
+      </div>`;
+    }
+
     return`<div class="o-card" id="ocard-${o.id}">
       <div class="o-card-top">
         <div>
-          <div class="o-id">#${o.id}</div>
-          <div class="o-date">${(o.created_at||'').slice(0,16)}</div>
+          <div class="o-id">#${o.id} <span style="font-size:11px;font-weight:400;color:var(--m)">${(o.created_at||'').slice(0,10)}</span></div>
         </div>
         <span class="bdg ${SC[o.status]||'ba'}" style="font-size:11px">${SL[o.status]||o.status}</span>
       </div>
@@ -537,16 +564,25 @@ function renderOrders(){
       <div class="o-contact">✉️ ${o.customer_email}</div>
       <div class="o-addr" style="margin-top:2px">📍 ${o.address}</div>
       <div class="o-items-str">${itemStr}</div>
-      <div class="o-amount">NT$${o.total_amount.toLocaleString()}<span class="o-pay">${o.payment_method}</span></div>
+      <div class="o-amount">NT$${o.total_amount.toLocaleString()}<span class="o-pay">· ${o.payment_method}</span></div>
       ${progressHTML(o.id, o.status)}
       ${o.internal_note?`<div class="o-note">備註：${o.internal_note}</div>`:''}
       <div class="o-actions">
-        ${o.status!=='cancelled'?`<button class="btn br" onclick="updateStatus(${o.id},'cancelled')">標記取消</button>`:''}
-        <button class="btn bo" onclick="openNote(${o.id},'${(o.internal_note||'').replace(/'/g,"\\'")}')">備註</button>
-        <button class="btn br" ${canDelete?'':`disabled title="請先標記取消" style="opacity:.35;cursor:not-allowed"`} onclick="${canDelete?`deleteOrder(${o.id})`:''}">刪除</button>
+        <button class="btn br" onclick="updateStatus(${o.id},'cancelled')">標記取消</button>
+        <button class="btn bo" onclick="openNote(${o.id},'${(o.internal_note||'').replace(/'/g,"\\'")}')" >備註</button>
       </div>
     </div>`;
   }).join('');
+}
+
+function expandOrder(card){
+  const detail=card.querySelector('.o-detail');
+  const icon=card.querySelector('.expand-icon');
+  const expanded=card.dataset.expanded==='true';
+  detail.style.display=expanded?'none':'block';
+  icon.textContent=expanded?'›':'⌃';
+  card.style.opacity=expanded?'.5':'1';
+  card.dataset.expanded=String(!expanded);
 }
 
 async function updateStatus(id,status){

@@ -21,7 +21,7 @@ body{font-family:var(--sans);background:var(--bg);color:var(--t);font-size:14px;
 
 /* ── Topbar ─────────────────────────────────────────── */
 .topbar{background:var(--w);border-bottom:1px solid var(--b);padding:0 32px;height:64px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 1px 8px rgba(28,43,58,.05)}
-.logo-wrap{display:flex;align-items:center;text-decoration:none}
+.logo-wrap{display:flex;align-items:center;text-decoration:none;overflow:visible}
 .nav-right{display:flex;align-items:center;gap:20px}
 .nav-link{font-family:var(--sans);font-size:12px;color:var(--m);text-decoration:none;letter-spacing:1px;transition:color .15s;font-weight:300}
 .nav-link:hover{color:var(--t)}
@@ -266,6 +266,15 @@ const API = 'https://pottery-shop.onrender.com';
   </div>
 </div>
 
+</div>
+
+<div style="text-align:center;padding:16px 0 32px">
+  <button onclick="openQModal()" style="background:transparent;border:none;cursor:pointer;font-family:var(--sans);font-size:13px;color:var(--g);letter-spacing:.5px;display:inline-flex;align-items:center;gap:6px;padding:10px 22px;border-radius:99px;border:1.5px solid var(--g);transition:all .2s" onmouseover="this.style.background='var(--gl)'" onmouseout="this.style.background='transparent'">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+    有其他疑問？點此提問
+  </button>
+</div>
+
 <!-- ── 公開問答 ─────────────────────────────────────── -->
 <div class="faq-wrap" id="public-qa-wrap" style="padding-bottom:0;display:none">
   <div class="faq-title" style="margin-bottom:14px">問答記錄</div>
@@ -273,18 +282,23 @@ const API = 'https://pottery-shop.onrender.com';
 </div>
 <div id="public-qa-spacer" style="display:none;height:16px"></div>
 
-<!-- ── Q&A 提問 ──────────────────────────────────────── -->
-<div class="faq-wrap" style="padding-bottom:0">
-  <div style="background:var(--w);border:1px solid var(--b);border-radius:14px;padding:24px">
-    <div style="font-family:var(--serif);font-size:18px;font-weight:400;color:var(--t);margin-bottom:6px;letter-spacing:1.5px">有其他問題？</div>
-    <div style="font-size:13px;color:var(--m);margin-bottom:18px;letter-spacing:.2px;line-height:1.7">填寫問題後送出，回覆將寄至您的 Email，問答也會公開顯示</div>
-    <div class="fg" style="margin-bottom:12px"><label class="lbl">Email *</label><input type="email" id="q-email" placeholder="you@example.com"></div>
-    <div class="fg" style="margin-bottom:14px"><label class="lbl">問題內容 *</label><textarea id="q-text" placeholder="請描述您的問題..." style="min-height:88px"></textarea></div>
-    <button class="btn bg" id="q-btn" onclick="submitQuestion()" style="letter-spacing:.5px">送出問題</button>
-    <div id="q-done" style="display:none;font-size:13px;color:var(--g);margin-top:10px;letter-spacing:.3px">已送出，我們將盡快回覆並公開答案 ✓</div>
+
+
+<!-- ── Q&A Modal ───────────────────────────────────────── -->
+<div class="ov" id="q-ov" style="z-index:250" onclick="if(event.target===this)closeQModal()">
+  <div class="mo" style="max-width:460px">
+    <div class="mo-handle"></div>
+    <div style="font-family:var(--serif);font-size:20px;font-weight:400;color:var(--t);margin-bottom:6px;letter-spacing:1.5px">有其他疑問？</div>
+    <div style="font-size:13px;color:var(--m);margin-bottom:20px;line-height:1.7;letter-spacing:.2px">送出後我們將盡快回覆，問答也會公開顯示供其他人參考</div>
+    <div class="fg"><label class="lbl">Email *</label><input type="email" id="q-email" placeholder="you@example.com"></div>
+    <div class="fg" style="margin-bottom:18px"><label class="lbl">問題內容 *</label><textarea id="q-text" placeholder="請描述您的問題..." style="min-height:96px"></textarea></div>
+    <div id="q-done" style="display:none;background:var(--gl);border-radius:8px;padding:11px 14px;font-size:13px;color:var(--g);margin-bottom:14px;letter-spacing:.3px">已送出，我們將盡快回覆並公開答案 ✓</div>
+    <div style="display:flex;gap:8px;justify-content:flex-end">
+      <button class="btn bo" onclick="closeQModal()">取消</button>
+      <button class="btn bg" id="q-btn" onclick="submitQuestion()">送出問題</button>
+    </div>
   </div>
 </div>
-<div style="height:48px"></div>
 
 <!-- ── Footer ─────────────────────────────────────────── -->
 
@@ -432,7 +446,7 @@ const API = 'https://pottery-shop.onrender.com';
 </div>
 
 <!-- ── Lightbox ───────────────────────────────────────── -->
-<div class="lb" id="lb">
+<div class="lb" id="lb" onclick="if(event.target===this)closeLb()">
   <button class="lb-close" onclick="closeLb()">×</button>
   <button class="lb-nav lb-prev" onclick="lbNav(-1)">‹</button>
   <img class="lb-img" id="lb-img" src="" alt="">
@@ -602,6 +616,8 @@ const API = 'https://pottery-shop.onrender.com';
 function toast(msg,ok=true){const t=document.getElementById('toast');t.textContent=msg;t.style.background=ok?'#1C2B3A':'#8B6F47';t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2600);}
 
 let products=[],cart=[],cat='',pay='銀行轉帳';
+let currentPage=1;
+const PAGE_SIZE=10;
 let lbImgs=[],lbIdx=0;
 let drawerProduct=null;
 let drawerImgIdx=0;
@@ -928,10 +944,22 @@ async function submitQuestion(){
     document.getElementById('q-email').value='';
     document.getElementById('q-text').value='';
     document.getElementById('q-done').style.display='block';
-    setTimeout(()=>document.getElementById('q-done').style.display='none',5000);
-    loadPublicQA(); // 重新載入公開問答
+    loadPublicQA();
+    setTimeout(()=>closeQModal(),2500);
   }catch(e){toast('送出失敗，請稍後再試',false);}
   finally{btn.disabled=false;btn.textContent='送出問題';}
+}
+
+function openQModal(){
+  document.getElementById('q-ov').classList.add('open');
+  document.getElementById('q-done').style.display='none';
+  document.getElementById('q-email').value='';
+  document.getElementById('q-text').value='';
+  document.body.style.overflow='hidden';
+}
+function closeQModal(){
+  document.getElementById('q-ov').classList.remove('open');
+  document.body.style.overflow='';
 }
 
 async function loadPublicQA(){
