@@ -130,7 +130,7 @@ body{font-family:var(--sans);background:var(--bg);color:var(--t);font-size:14px;
 /* ── Checkout Modal ─────────────────────────────────── */
 .ov{position:fixed;inset:0;background:rgba(28,43,58,.6);z-index:300;display:none;align-items:flex-end;justify-content:center;backdrop-filter:blur(3px);overflow:hidden}
 .ov.open{display:flex}
-.mo{background:var(--w);border-radius:20px 20px 0 0;padding:28px;width:100%;max-width:520px;max-height:92vh;overflow-y:auto}
+.mo{background:var(--w);border-radius:20px 20px 0 0;padding:28px 28px 74px;width:100%;max-width:520px;max-height:92vh;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
 .mo-handle{width:36px;height:4px;background:var(--b);border-radius:2px;margin:0 auto 20px}
 .mtitle{font-family:var(--serif);font-size:18px;font-weight:400;margin-bottom:4px;color:var(--t);letter-spacing:1.5px}
 .msub{font-size:13px;color:var(--m);margin-bottom:22px;letter-spacing:.3px}
@@ -190,7 +190,7 @@ footer{background:var(--t);color:rgba(255,255,255,.7);padding:48px 32px 32px;mar
   .wrap{padding:20px 16px 100px}
   .topbar{padding:0 16px;height:56px;overflow:visible}
   .f2{grid-template-columns:1fr}
-  .mo{border-radius:20px 20px 0 0;max-width:100%;padding-bottom:env(safe-area-inset-bottom, 28px)}
+  .mo{border-radius:20px 20px 0 0;max-width:100%;padding-bottom:74px}
   .footer-inner{grid-template-columns:1fr 1fr}
   footer{padding:36px 20px 24px}
   #toast{bottom:100px}
@@ -408,7 +408,6 @@ const API = 'https://pottery-shop.onrender.com';
   <div id="cbody-m"><div class="cempty">尚未加入任何商品</div></div>
   <div class="totbl" id="totbl-m" style="display:none">
     <div class="tr"><span>小計</span><span id="sub-m"></span></div>
-    <div class="tr"><span>運費</span><span>NT$160</span></div>
     <div class="tr grand"><span>合計</span><span id="grand-m"></span></div>
     <button class="cbtn" onclick="closeMCart();openModal()">前往結帳</button>
   </div>

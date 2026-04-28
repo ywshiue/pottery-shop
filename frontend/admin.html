@@ -19,7 +19,7 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--t);f
 .err{font-size:12px;color:var(--r);margin-bottom:12px;padding:9px;background:var(--rl);border-radius:7px;display:none;text-align:left}
 
 /* ── Topbar ─────────────────────────────────────────────── */
-.topbar{background:var(--w);border-bottom:1px solid var(--b);padding:0 18px;height:52px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+.topbar{background:var(--w);border-bottom:1px solid var(--b);padding:0 18px 0 14px;height:52px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;overflow:visible}
 .logo{font-family:'Shippori Mincho',serif;font-size:16px;font-weight:500;letter-spacing:2.5px;color:var(--t)}.logo span{color:var(--g)}
 
 /* ── Top tab nav (replaces bottom nav) ──────────────────── */
@@ -144,7 +144,7 @@ const API = 'https://pottery-shop.onrender.com';
 <!-- ══ 登入 ═══════════════════════════════════════════════ -->
 <div class="login-wrap" id="login-screen">
   <div class="login-box">
-    <svg width="56" height="56" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <svg width="58" height="58" viewBox="-2 -2 124 124" fill="none" xmlns="http://www.w3.org/2000/svg">
   <path d="M62 7 C76 3 94 10 106 24 C120 40 124 62 116 80 C107 100 88 112 66 114 C44 116 24 104 14 86 C2 66 2 42 16 24 C30 8 46 3 62 7 Z" stroke="#2C4A6E" stroke-width="2.5" fill="none"/>
   <path d="M62 17 C74 14 89 20 99 32 C111 46 114 65 107 81 C99 97 83 106 64 108 C45 110 28 101 20 87 C10 71 11 50 22 36 C34 20 49 16 62 17 Z" stroke="#7BA3C8" stroke-width="1.2" fill="none" opacity=".5"/>
   <ellipse cx="48" cy="44" rx="16" ry="10" stroke="#2C4A6E" stroke-width="1.4" fill="none" opacity=".5" transform="rotate(-15 48 44)"/>
@@ -170,7 +170,7 @@ const API = 'https://pottery-shop.onrender.com';
   <!-- Topbar -->
   <div class="topbar">
     <div style="display:flex;align-items:center;gap:8px">
-      <svg width="36" height="36" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <svg width="38" height="38" viewBox="-2 -2 124 124" fill="none" xmlns="http://www.w3.org/2000/svg">
   <path d="M62 7 C76 3 94 10 106 24 C120 40 124 62 116 80 C107 100 88 112 66 114 C44 116 24 104 14 86 C2 66 2 42 16 24 C30 8 46 3 62 7 Z" stroke="#2C4A6E" stroke-width="2.5" fill="none"/>
   <path d="M62 17 C74 14 89 20 99 32 C111 46 114 65 107 81 C99 97 83 106 64 108 C45 110 28 101 20 87 C10 71 11 50 22 36 C34 20 49 16 62 17 Z" stroke="#7BA3C8" stroke-width="1.2" fill="none" opacity=".5"/>
   <ellipse cx="48" cy="44" rx="16" ry="10" stroke="#2C4A6E" stroke-width="1.4" fill="none" opacity=".5" transform="rotate(-15 48 44)"/>
