@@ -194,10 +194,13 @@ const API = 'https://pottery-shop.onrender.com';
   <!-- Top tab nav -->
   <div class="top-tabs">
     <button class="top-tab on" id="nav-orders" onclick="tab('orders')">
-      <span class="tab-icon">≡</span>訂單管理
+      <span class="tab-icon">≡</span>訂單
     </button>
     <button class="top-tab" id="nav-products" onclick="tab('products')">
-      <span class="tab-icon">◻</span>商品管理
+      <span class="tab-icon">◻</span>商品
+    </button>
+    <button class="top-tab" id="nav-questions" onclick="tab('questions')">
+      <span class="tab-icon">？</span>提問
     </button>
   </div>
 
@@ -323,10 +326,12 @@ function doLogout(){TOKEN='';document.getElementById('admin-screen').style.displ
 
 // ── Tab ───────────────────────────────────────────────────
 function tab(name){
-  document.querySelectorAll('.top-tab').forEach((t,i)=>t.classList.toggle('on',['orders','products'][i]===name));
+  document.querySelectorAll('.top-tab').forEach((t,i)=>t.classList.toggle('on',['orders','products','questions'][i]===name));
   document.querySelectorAll('.pane').forEach(p=>p.classList.remove('on'));
   document.getElementById('p-'+name).classList.add('on');
-  if(name==='orders')loadOrders();else loadProducts();
+  if(name==='orders')loadOrders();
+  else if(name==='products')loadProducts();
+  else if(name==='questions')loadQuestions();
 }
 
 // ── Multi-image ───────────────────────────────────────────

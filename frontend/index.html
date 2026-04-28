@@ -266,6 +266,26 @@ const API = 'https://pottery-shop.onrender.com';
   </div>
 </div>
 
+<!-- ── 公開問答 ─────────────────────────────────────── -->
+<div class="faq-wrap" id="public-qa-wrap" style="padding-bottom:0;display:none">
+  <div class="faq-title" style="margin-bottom:14px">問答記錄</div>
+  <div id="public-qa-list"></div>
+</div>
+<div id="public-qa-spacer" style="display:none;height:16px"></div>
+
+<!-- ── Q&A 提問 ──────────────────────────────────────── -->
+<div class="faq-wrap" style="padding-bottom:0">
+  <div style="background:var(--w);border:1px solid var(--b);border-radius:14px;padding:24px">
+    <div style="font-family:var(--serif);font-size:18px;font-weight:400;color:var(--t);margin-bottom:6px;letter-spacing:1.5px">有其他問題？</div>
+    <div style="font-size:13px;color:var(--m);margin-bottom:18px;letter-spacing:.2px;line-height:1.7">填寫問題後送出，回覆將寄至您的 Email，問答也會公開顯示</div>
+    <div class="fg" style="margin-bottom:12px"><label class="lbl">Email *</label><input type="email" id="q-email" placeholder="you@example.com"></div>
+    <div class="fg" style="margin-bottom:14px"><label class="lbl">問題內容 *</label><textarea id="q-text" placeholder="請描述您的問題..." style="min-height:88px"></textarea></div>
+    <button class="btn bg" id="q-btn" onclick="submitQuestion()" style="letter-spacing:.5px">送出問題</button>
+    <div id="q-done" style="display:none;font-size:13px;color:var(--g);margin-top:10px;letter-spacing:.3px">已送出，我們將盡快回覆並公開答案 ✓</div>
+  </div>
+</div>
+<div style="height:48px"></div>
+
 <!-- ── Footer ─────────────────────────────────────────── -->
 
 <!-- ── FAQ ──────────────────────────────────────────── -->
@@ -433,11 +453,28 @@ const API = 'https://pottery-shop.onrender.com';
         <div class="fg" style="margin:0"><label class="lbl">電話 *</label><input type="tel" id="cp" placeholder="0912-345-678"></div>
       </div>
       <div class="fg" style="margin-top:14px"><label class="lbl">電子郵件 *</label><input type="email" id="ce" placeholder="you@example.com"></div>
-      <div class="fg"><label class="lbl">收件地址 *</label><input type="text" id="ca" placeholder="台北市信義區..."></div>
+
+      <div class="fg">
+        <label class="lbl">交貨方式 *</label>
+        <div style="display:flex;flex-direction:column;gap:7px;margin-top:2px">
+          <label style="display:flex;align-items:center;gap:10px;padding:10px 12px;border:1.5px solid var(--b);border-radius:8px;cursor:pointer;transition:all .15s" id="ship-label">
+            <input type="radio" name="ship" value="貨運" checked onchange="selectShip(this)" style="accent-color:var(--g)">
+            <div><div style="font-size:14px;font-weight:500;color:var(--t)">宅配到府</div><div style="font-size:11px;color:var(--m);margin-top:1px">運費 NT$160，寄送至填寫地址</div></div>
+          </label>
+          <label style="display:flex;align-items:center;gap:10px;padding:10px 12px;border:1.5px solid var(--b);border-radius:8px;cursor:pointer;transition:all .15s" id="pickup-label">
+            <input type="radio" name="ship" value="面交" onchange="selectShip(this)" style="accent-color:var(--g)">
+            <div><div style="font-size:14px;font-weight:500;color:var(--t)">工作室面交</div><div style="font-size:11px;color:var(--m);margin-top:1px">高雄市茄萣區，下單後另行約定時間，免運費</div></div>
+          </label>
+        </div>
+      </div>
+      <div class="fg" id="addr-field"><label class="lbl">收件地址 *</label><input type="text" id="ca" placeholder="台北市信義區..."></div>
       <div class="fg"><label class="lbl">備註</label><textarea id="cnote" placeholder="特殊需求、包裝要求..."></textarea></div>
 
       <div class="lbl" style="margin:6px 0 10px">付款方式</div>
-      <div class="lbl" style="font-size:11px;color:var(--r);margin-bottom:8px;letter-spacing:.3px">⚠️ 目前僅支援線上銀行轉帳，不接受現金或其他付款方式</div>
+      <div style="background:var(--rl);border-radius:8px;padding:10px 12px;margin-bottom:12px;font-size:12px;color:var(--r);line-height:1.7">
+        ⚠️ 本店目前僅支援<strong>線上銀行轉帳</strong>及<strong>工作室面交</strong><br>
+        不接受現金匯款以外的付款方式
+      </div>
       <div class="po sel" onclick="setPay('銀行轉帳',this)">
         <div>
           <div class="pl">銀行轉帳</div>
@@ -578,13 +615,15 @@ async function load(){
     products=await res.json();render();
   }catch(e){document.getElementById('grid').innerHTML=`<div class="loading" style="color:var(--r)">${e.message}</div>`;}
 }
-function setCat(btn,c){document.querySelectorAll('.fc').forEach(x=>x.classList.remove('on'));btn.classList.add('on');cat=c;load();}
+function setCat(btn,c){document.querySelectorAll('.fc').forEach(x=>x.classList.remove('on'));btn.classList.add('on');cat=c;currentPage=1;load();}
 function getImgs(p){return p.image_urls&&p.image_urls.length?p.image_urls:p.image_url?[p.image_url]:[];}
 
 function render(){
   const g=document.getElementById('grid');
   if(!products.length){g.innerHTML='<div class="loading">此分類暫無作品</div>';return;}
-  g.innerHTML=products.map(p=>{
+  const start=(currentPage-1)*PAGE_SIZE;
+  const paged=products.slice(start,start+PAGE_SIZE);
+  g.innerHTML=paged.map(p=>{
     const so=p.stock===0;
     const imgs=getImgs(p);
     const mainImg=imgs.length?`<img src="${imgs[0]}" loading="lazy">`:`<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:var(--b);font-size:32px">◻</div>`;
@@ -770,14 +809,16 @@ function setPay(v,el){
 async function placeOrder(){
   const name=document.getElementById('cn').value.trim(),phone=document.getElementById('cp').value.trim();
   const email=document.getElementById('ce').value.trim(),addr=document.getElementById('ca').value.trim();
-  if(!name||!phone||!email||!addr){toast('請填寫所有必填欄位',false);return;}
+  if(!name||!phone||!email){toast('請填寫所有必填欄位',false);return;}
+  if(shippingMethod==='貨運'&&!addr){toast('請填寫收件地址',false);return;}
+  const finalAddr=shippingMethod==='面交'?'工作室面交（高雄茄萣）':addr;
   const btn=document.getElementById('obtn');btn.disabled=true;btn.textContent='送出中⋯';
   try{
     const res=await fetch(`${API}/orders/`,{
       method:'POST',headers:{'Content-Type':'application/json'},
       body:JSON.stringify({
         customer_name:name,customer_email:email,customer_phone:phone,
-        address:addr,payment_method:pay,note:document.getElementById('cnote').value,
+        address:finalAddr,shipping_method:shippingMethod,payment_method:pay,note:document.getElementById('cnote').value,
         items:cart.map(c=>({product_id:c.pid,product_name:c.name,size:c.sizes||'',qty:c.qty,unit_price:c.price}))
       })
     });
@@ -798,6 +839,17 @@ async function placeOrder(){
   finally{btn.disabled=false;btn.textContent='確認下單';}
 }
 function resetCart(){cart=[];renderCart();load();}
+
+let shippingMethod='貨運';
+function selectShip(radio){
+  shippingMethod=radio.value;
+  // 面交不需要填地址
+  const addrField=document.getElementById('addr-field');
+  if(addrField) addrField.style.display=radio.value==='面交'?'none':'block';
+  // 更新label樣式
+  document.getElementById('ship-label').style.borderColor=radio.value==='貨運'?'var(--g)':'var(--b)';
+  document.getElementById('pickup-label').style.borderColor=radio.value==='面交'?'var(--g)':'var(--b)';
+}
 
 function last5Input(el, idx){
   el.value=el.value.replace(/[^0-9]/g,'');
@@ -860,6 +912,46 @@ async function submitPayment(){
 }
 load();
 
+async function submitQuestion(){
+  const email=document.getElementById('q-email').value.trim();
+  const question=document.getElementById('q-text').value.trim();
+  if(!email||!question){toast('請填寫所有欄位',false);return;}
+  const btn=document.getElementById('q-btn');
+  btn.disabled=true;btn.textContent='送出中...';
+  try{
+    const res=await fetch(`${API}/questions/`,{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({email,question})
+    });
+    if(!res.ok)throw new Error();
+    document.getElementById('q-email').value='';
+    document.getElementById('q-text').value='';
+    document.getElementById('q-done').style.display='block';
+    setTimeout(()=>document.getElementById('q-done').style.display='none',5000);
+    loadPublicQA(); // 重新載入公開問答
+  }catch(e){toast('送出失敗，請稍後再試',false);}
+  finally{btn.disabled=false;btn.textContent='送出問題';}
+}
+
+async function loadPublicQA(){
+  try{
+    const res=await fetch(`${API}/questions/public`);
+    const data=await res.json();
+    const wrap=document.getElementById('public-qa-wrap');
+    const spacer=document.getElementById('public-qa-spacer');
+    const list=document.getElementById('public-qa-list');
+    if(!data||!data.length){wrap.style.display='none';spacer.style.display='none';return;}
+    wrap.style.display='block';spacer.style.display='block';
+    list.innerHTML=data.map(q=>`
+      <div style="border-bottom:1px solid var(--b);padding:14px 0">
+        <div style="font-size:12px;color:var(--m);margin-bottom:6px;letter-spacing:.3px">${q.display_name}</div>
+        <div style="font-size:14px;font-weight:500;color:var(--t);margin-bottom:8px;line-height:1.6">Q：${q.question}</div>
+        <div style="font-size:13px;color:var(--g);line-height:1.7">A：${q.answer}</div>
+      </div>`).join('');
+  }catch(e){}
+}
+
 function toggleFaq(btn){
   const item=btn.closest('.faq-item');
   item.classList.toggle('open');
@@ -874,6 +966,7 @@ async function loadBankInfo(){
   }catch(e){}
 }
 loadBankInfo();
+loadPublicQA();
 
 function fillBankInfo(){
   const set=(id,val)=>{const el=document.getElementById(id);if(el)el.textContent=val||'—';};
