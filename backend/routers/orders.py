@@ -344,12 +344,14 @@ class CancelRequest(BaseModel):
 @router.post("/{order_id}/cancel")
 async def cancel_order_by_customer(order_id: int):
     """消費者主動取消訂單，恢復庫存並寄通知信"""
+    # 用 secret key 讀取（允許消費者查詢自己的訂單）
     orders = await sb_fetch(f"/orders?id=eq.{order_id}")
     if not orders:
         raise HTTPException(status_code=404, detail="找不到訂單")
 
     order = orders[0]
-    if order["status"] not in ("pending", "paid"):
+    # 允許 pending / paid / confirmed 都可以取消
+    if order["status"] in ("shipped", "completed", "cancelled"):
         raise HTTPException(status_code=400, detail="此訂單無法取消")
 
     # 更新狀態
@@ -358,10 +360,13 @@ async def cancel_order_by_customer(order_id: int):
     # 恢復庫存
     items = await sb_fetch(f"/order_items?order_id=eq.{order_id}")
     for item in items:
-        prod = await sb_fetch(f"/products?id=eq.{item['product_id']}", use_secret=False)
+        pid = item.get("product_id")
+        if not pid:
+            continue
+        prod = await sb_fetch(f"/products?id=eq.{pid}", use_secret=False)
         if prod:
             new_stock = prod[0]["stock"] + item["qty"]
-            await sb_fetch(f"/products?id=eq.{item['product_id']}", method="PATCH", body={"stock": new_stock})
+            await sb_fetch(f"/products?id=eq.{pid}", method="PATCH", body={"stock": new_stock})
 
     # 寄取消通知信給消費者
     await send_cancel_email(order)
