@@ -23,13 +23,14 @@ class ClassIn(BaseModel):
     image_urls:  Optional[list] = []
 
 class RegistrationIn(BaseModel):
-    class_id:    int
-    name:        str
-    phone:       str
-    email:       str
-    members:     Optional[int] = 1
-    course_type: Optional[str] = ""
-    note:        Optional[str] = ""
+    class_id:       int
+    name:           str
+    phone:          str
+    email:          str
+    members:        Optional[int] = 1
+    course_type:    Optional[str] = ""
+    preferred_date: Optional[str] = ""
+    note:           Optional[str] = ""
 
 class PaymentConfirmReg(BaseModel):
     last5_digits: str
@@ -66,15 +67,16 @@ async def register(reg: RegistrationIn):
 
     # 建立報名記錄
     data = await sb_fetch("/registrations", method="POST", body={
-        "class_id":    reg.class_id,
-        "class_title": cls["title"],
-        "name":        reg.name,
-        "phone":       reg.phone,
-        "email":       reg.email,
-        "members":     members,
-        "course_type": reg.course_type,
-        "note":        reg.note,
-        "total_amount": total,
+        "class_id":      reg.class_id,
+        "class_title":   cls["name"] if "name" in cls else cls.get("title",""),
+        "name":          reg.name,
+        "phone":         reg.phone,
+        "email":         reg.email,
+        "members":       members,
+        "course_type":   reg.course_type,
+        "preferred_date": reg.preferred_date,
+        "note":          reg.note,
+        "total_amount":  total,
     })
     reg_id = data[0]["id"]
 
@@ -240,6 +242,7 @@ async def send_payment_notify_reg(reg_id: int, reg: dict, last5: str):
         {reg['email']}<br>
         課程：{reg['class_title']}
         {f"<br>堂數：{reg['course_type']}" if reg.get('course_type') else ''}
+        {f"<br>希望日期：{reg['preferred_date']}" if reg.get('preferred_date') else ''}
         {f"<br>人數：{reg['members']}" if reg.get('members') else ''}
       </div>
       <a href="https://pottery-shop-alpha.vercel.app/admin.html"
