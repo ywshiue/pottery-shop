@@ -351,6 +351,18 @@ if(window.self !== window.top){
   <div class="grid" id="grid"><div class="loading">載入中⋯</div></div>
 </div>
 
+<!-- ── Course FAQ ──────────────────────────────────── -->
+<div class="faq-wrap" id="course-faq-section" style="display:none">
+  <div class="faq-title">常見問題</div>
+
+<div style="text-align:center;padding:16px 0 32px">
+  <button onclick="openCourseQModal()" style="background:transparent;border:none;cursor:pointer;font-family:var(--sans);font-size:13px;color:var(--g);letter-spacing:.5px;display:inline-flex;align-items:center;gap:6px;padding:10px 22px;border-radius:99px;border:1.5px solid var(--g);transition:all .2s" onmouseover="this.style.background='var(--gl)'" onmouseout="this.style.background='transparent'">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+    有其他疑問？點此提問
+  </button>
+</div>
+
+
 <!-- Course detail drawer (same structure as product drawer) -->
 <div class="drawer-overlay" id="d-overlay" onclick="if(event.target===this)closeDetail()">
   <div class="drawer" onclick="event.stopPropagation()">
@@ -432,6 +444,16 @@ if(window.self !== window.top){
             onchange="updateSum()">
         </div>
         <div style="font-size:11px;color:var(--m);margin-top:4px;letter-spacing:.2px">課程時間固定為 13:30 – 16:30，確認後我們將與您聯繫</div>
+      </div>
+
+      <!-- Workshop: date picker -->
+      <div class="fg" id="r-date-wrap" style="display:none">
+        <label class="lbl">希望上課日期 *</label>
+        <div style="position:relative">
+          <svg style="position:absolute;left:11px;top:50%;transform:translateY(-50%);pointer-events:none;color:var(--m)" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          <input type="date" id="r-date" style="box-sizing:border-box;width:100%;min-height:44px;padding:10px 12px 10px 34px;border:1px solid var(--b);border-radius:8px;font-size:14px;font-family:var(--sans);background:var(--w);color:var(--t);outline:none;display:block;-webkit-appearance:none;appearance:none">
+        </div>
+        <div style="font-size:11px;color:var(--m);margin-top:4px">課程時間固定為 13:30–16:30，選擇後我們將確認並聯繫您</div>
       </div>
 
       <div class="fg"><label class="lbl">備註</label><textarea id="r-note" placeholder="特殊需求或想說的話⋯"></textarea></div>
@@ -525,16 +547,6 @@ if(window.self !== window.top){
 
 <div id="toast"></div>
 
-<!-- ── Course FAQ ──────────────────────────────────── -->
-<div class="faq-wrap" id="course-faq-section" style="display:none">
-  <div class="faq-title">常見問題</div>
-
-<div style="text-align:center;padding:16px 0 32px">
-  <button onclick="openCourseQModal()" style="background:transparent;border:none;cursor:pointer;font-family:var(--sans);font-size:13px;color:var(--g);letter-spacing:.5px;display:inline-flex;align-items:center;gap:6px;padding:10px 22px;border-radius:99px;border:1.5px solid var(--g);transition:all .2s" onmouseover="this.style.background='var(--gl)'" onmouseout="this.style.background='transparent'">
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-    有其他疑問？點此提問
-  </button>
-</div>
 
   <div class="faq-item">
     <button class="faq-q" onclick="toggleCourseFaq(this)">
@@ -758,6 +770,9 @@ async function submitReg(){
   const phone=document.getElementById('r-phone').value.trim();
   const email=document.getElementById('r-email').value.trim();
   if(!name||!phone||!email){toast('請填寫所有必填欄位',false);return;}
+  const isWS2=currentCourse?.type==='手作陶體驗';
+  const preferredDate=document.getElementById('r-date')?.value||'';
+  if(isWS2&&!preferredDate){toast('請選擇希望上課的日期',false);return;}
   const isWS2=currentCourse.type==='手作陶體驗';
   const preferredDate=document.getElementById('r-date').value;
   if(isWS2&&!preferredDate){toast('請選擇希望上課的日期',false);return;}
@@ -769,7 +784,7 @@ async function submitReg(){
   try{
     const res=await fetch(`${API}/classes/register`,{
       method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({class_id:c.id,name,phone,email,members,
+      body:JSON.stringify({class_id:c.id,name,phone,email,members,preferred_date:isWS2?preferredDate+' 13:30–16:30':'',
         course_type:isWS?'':`四堂完整課程`,
         preferred_date:isWS?preferredDate+'  13:30–16:30':'',
         note:document.getElementById('r-note').value})

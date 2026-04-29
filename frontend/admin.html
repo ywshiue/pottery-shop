@@ -294,7 +294,7 @@ const API = 'https://pottery-shop.onrender.com';
         </div>
         <div class="f2" style="margin-bottom:12px">
           <div class="fg" style="margin:0"><label class="lbl">課程類型 *</label>
-            <select id="cls-type"><option value="手作陶體驗">手作陶體驗</option><option value="基礎手拉坯">基礎手拉坯</option></select>
+            <select id="cls-type" onchange="onClsTypeChange(this.value)"><option value="手作陶體驗">手作陶體驗</option><option value="基礎手拉坯">基礎手拉坯</option></select>
           </div>
           <div class="fg" style="margin:0"><label class="lbl">報名狀態</label>
             <select id="cls-active"><option value="true">開放報名</option><option value="false">暫停報名</option></select>
@@ -307,8 +307,17 @@ const API = 'https://pottery-shop.onrender.com';
           <div class="fg" style="margin:0"><label class="lbl">課程時長</label><input type="text" id="cls-duration" placeholder="約 3～3.5 小時"></div>
         </div>
         <div class="fg"><label class="lbl">地點</label><input type="text" id="cls-location" placeholder="高雄市茄萣區"></div>
-        <div class="fg"><label class="lbl">開課時段（可多行）</label>
-          <textarea id="cls-date" placeholder="6/15 (六) 14:00～17:30" style="min-height:72px"></textarea>
+        <!-- Workshop: free text date desc -->
+        <div class="fg" id="cls-date-text-wrap">
+          <label class="lbl">開課時段說明</label>
+          <textarea id="cls-date" placeholder="例：每週六 14:00～17:30（報名後確認日期）" style="min-height:72px"></textarea>
+        </div>
+        <!-- Throwing: structured date/time picker -->
+        <div id="cls-date-picker-wrap" style="display:none">
+          <label class="lbl">開課日期與時間</label>
+          <div id="cls-sessions-list" style="display:flex;flex-direction:column;gap:8px;margin-top:6px;margin-bottom:8px"></div>
+          <button type="button" class="btn bo btn-sm" onclick="addSession()" style="font-size:12px">＋ 新增堂次</button>
+          <input type="hidden" id="cls-sessions-json">
         </div>
         <div class="fg"><label class="lbl">費用說明</label><input type="text" id="cls-price-note" placeholder="含場地、材料、師資費用"></div>
         <div class="fg"><label class="lbl">課程介紹</label>
@@ -765,6 +774,7 @@ function resetClass(){
   ['cls-name','cls-price','cls-capacity','cls-duration','cls-location','cls-date','cls-price-note','cls-description','cls-notes'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
   document.getElementById('cls-id').value='';
   document.getElementById('cls-type').value='手作陶體驗';
+  sessions=[];onClsTypeChange('手作陶體驗');
   document.getElementById('cls-active').value='true';
   const t=document.getElementById('class-form-title');if(t)t.textContent='新增課程';
   clsImgFiles=[];clsPendingUrls=[];renderClsImgGrid();
@@ -776,6 +786,21 @@ function editClass(cls){
   document.getElementById('cls-active').value=String(cls.is_active);
   [{k:'name',f:'name'},{k:'price',f:'price'},{k:'capacity',f:'capacity'},{k:'duration',f:'duration'},{k:'location',f:'location'},{k:'price_note',f:'price-note'},{k:'description',f:'description'},{k:'notes',f:'notes'}].forEach(({k,f})=>{const el=document.getElementById('cls-'+f);if(el)el.value=cls[k]||'';});
   const dt=document.getElementById('cls-date');if(dt)dt.value=cls.date_desc||'';
+  // Init sessions for throwing
+  sessions=[];
+  if(cls.type==='基礎手拉坯'){
+    onClsTypeChange('基礎手拉坯');
+    // Parse existing date_desc into sessions
+    if(cls.date_desc){
+      cls.date_desc.split('\n').forEach(line=>{
+        const m=line.match(/(\S+)\s+(\S+)–(\S+)/);
+        if(m) sessions.push({id:Date.now()+Math.random(),date:m[1],start:m[2],end:m[3]});
+      });
+      renderSessions();
+    }
+  } else {
+    onClsTypeChange('手作陶體驗');
+  }
   clsImgFiles=[];clsPendingUrls=cls.image_urls?.length?[...cls.image_urls]:cls.image_url?[cls.image_url]:[];
   renderClsImgGrid();
   const t=document.getElementById('class-form-title');if(t)t.textContent='編輯課程';
