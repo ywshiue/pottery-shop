@@ -773,8 +773,7 @@ async function submitReg(){
   const isWS2=currentCourse?.type==='手作陶體驗';
   const preferredDate=document.getElementById('r-date')?.value||'';
   if(isWS2&&!preferredDate){toast('請選擇希望上課的日期',false);return;}
-  const isWS2=currentCourse.type==='手作陶體驗';
-  const preferredDate=document.getElementById('r-date').value;
+    const preferredDate=document.getElementById('r-date').value;
   if(isWS2&&!preferredDate){toast('請選擇希望上課的日期',false);return;}
   const c=currentCourse;
   const isWS=c.type==='手作陶體驗';
