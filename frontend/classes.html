@@ -21,6 +21,7 @@
 body{font-family:var(--sans);background:var(--bg);color:var(--t);font-size:14px;line-height:1.8;font-weight:300;letter-spacing:.4px}
 
 /* ── Topbar ─────────────────────────────────────────── */
+.in-iframe .topbar{display:none}
 .topbar{background:var(--w);border-bottom:1px solid var(--b);padding:0 24px 0 20px;height:64px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 1px 8px rgba(28,43,58,.05);overflow:visible}
 .logo-wrap{display:flex;align-items:center;text-decoration:none;overflow:visible}
 .nav-right{display:flex;align-items:center;gap:20px}
@@ -284,7 +285,12 @@ footer{background:var(--t);color:rgba(255,255,255,.7);padding:48px 32px 32px;mar
 </style>
 </head>
 <body>
-<script>const API='https://pottery-shop.onrender.com';</script>
+<script>
+const API='https://pottery-shop.onrender.com';
+if(window.self !== window.top){
+  document.documentElement.classList.add('in-iframe');
+}
+</script>
 
 <div class="topbar">
   <a class="logo-wrap" href="index.html" style="display:flex;align-items:center;gap:10px;text-decoration:none">
@@ -543,7 +549,7 @@ function render(){
         <div class="cc-name">${c.name}</div>
         ${c.date_desc?`<div class="cc-date">${c.date_desc.split('\n')[0]}</div>`:''}
         <div class="cc-row">
-          <div class="cc-price">NT$${c.price.toLocaleString()}</div>
+          <div class="cc-price">NT$${c.price.toLocaleString()} <span style="font-size:11px;font-weight:300;color:var(--m)">/ 人起</span></div>
           <div style="font-size:11px;color:var(--m)">${c.capacity}人</div>
         </div>
         <div class="cap-mini">
@@ -568,7 +574,7 @@ function openDetail(id){
 
   document.getElementById('d-cat').textContent=c.type.toUpperCase();
   document.getElementById('d-name').textContent=c.name;
-  document.getElementById('d-price').textContent=`NT$${c.price.toLocaleString()}`;
+  document.getElementById('d-price').textContent=`NT$${c.price.toLocaleString()} / 人起`;
   document.getElementById('d-date').textContent=c.date_desc||'';
   document.getElementById('d-date').style.display=c.date_desc?'block':'none';
 
