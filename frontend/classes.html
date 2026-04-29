@@ -289,6 +289,11 @@ footer{background:var(--t);color:rgba(255,255,255,.7);padding:48px 32px 32px;mar
 const API='https://pottery-shop.onrender.com';
 if(window.self !== window.top){
   document.documentElement.classList.add('in-iframe');
+  // Also directly hide topbar for reliability
+  document.addEventListener('DOMContentLoaded', function(){
+    const tb = document.querySelector('.topbar');
+    if(tb) tb.style.display = 'none';
+  });
 }
 </script>
 
