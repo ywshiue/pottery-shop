@@ -488,15 +488,15 @@ const API = 'https://pottery-shop.onrender.com';
     </div>
   </a>
   <div class="nav-right">
-    <a href="#" id="nav-works" class="nav-link active" onclick="switchSection('works');return false">作品</a>
-    <a href="#" class="nav-link" id="nav-courses" onclick="switchSection('courses');return false">課程</a>
+    <a href="#" class="nav-link active" id="nav-works" onclick="switchTab('works');return false">作品</a>
+    <a href="#" class="nav-link" id="nav-courses" onclick="switchTab('courses');return false">課程</a>
     <a href="#footer-info" class="nav-link">運費說明</a>
     <a href="https://www.instagram.com/ywshiue/" target="_blank" class="nav-link" style="display:flex;align-items:center" title="Instagram @ywshiue"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r=".8" fill="currentColor" stroke="none"/></svg></a>
   </div>
 </div>
 
 <!-- ── Main ──────────────────────────────────────────── -->
-<div id="section-works">
+<div id="works-section">
 <div class="wrap">
   <div class="section-header">
     <div class="section-title">作品選覽</div>
@@ -597,185 +597,14 @@ const API = 'https://pottery-shop.onrender.com';
   </button>
 </div>
 
-</div><!-- end section-works -->
 
-<!-- ── Course section ───────────────────────────────────
-<div id="section-courses" style="display:none">
-<div class="pg-header">
-  <div class="pg-title">課程</div>
-  <div class="pg-sub">手作陶體驗 · 基礎手拉坯 · 更多課程陸續開放</div>
+
+</div><!-- /works-section -->
+
+<!-- ── Courses section ───────────────────────────────────── -->
+<div id="courses-section" style="display:none;height:calc(100vh - 64px)">
+  <iframe id="courses-frame" src="" style="width:100%;height:100%;border:none" loading="lazy"></iframe>
 </div>
-
-<!-- Filter bar -->
-<div style="max-width:1280px;margin:0 auto">
-  <div class="fbar">
-    <button class="fc on" onclick="setCat(this,'')">全部課程</button>
-    <button class="fc" onclick="setCat(this,'手作陶體驗')">手作陶體驗</button>
-    <button class="fc" onclick="setCat(this,'基礎手拉坯')">基礎手拉坯</button>
-  </div>
-</div>
-
-<!-- Grid -->
-<div style="max-width:1280px;margin:0 auto;padding:0 20px 80px">
-  <div class="grid" id="course-grid"><div class="loading">載入中⋯</div></div>
-</div>
-
-<!-- Course detail drawer (same structure as product drawer) -->
-<div class="drawer-overlay" id="d-overlay" onclick="if(event.target===this)closeDetail()">
-  <div class="drawer" onclick="event.stopPropagation()">
-    <div class="drawer-content">
-      <!-- Left: image gallery -->
-      <div class="d-gallery" id="d-gallery" style="cursor:zoom-in">
-        <div class="d-slide-ph">◻</div>
-      </div>
-      <!-- Right: course info -->
-      <div class="d-info" id="d-info">
-        <div class="d-cat" id="d-cat">課程</div>
-        <div class="d-name" id="d-name"></div>
-        <div class="d-price-row">
-          <div class="d-price" id="d-price"></div>
-        </div>
-        <div class="d-hr"></div>
-        <div class="d-sec">開課時段</div>
-        <div class="d-date-txt" id="d-date"></div>
-        <div class="d-metas" id="d-metas"></div>
-        <div class="d-hr"></div>
-        <div class="d-sec">課程介紹</div>
-        <div class="d-desc-txt" id="d-desc"></div>
-        <div class="d-notes-box" id="d-notes" style="display:none"></div>
-        <div class="d-cap-wrap" id="d-cap"></div>
-        <button class="d-reg-btn" id="d-reg-btn" onclick="openReg()">立即報名</button>
-        <div class="d-sold-note" id="d-sold-note" style="display:none"></div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- Lightbox -->
-<div class="lb" id="lb" onclick="if(event.target===this)closeLb()">
-  <div class="lb-close" onclick="closeLb()">×</div>
-  <button class="lb-nav lb-prev" onclick="lbNav(-1)">&#8249;</button>
-  <img id="lb-img" src="" alt="">
-  <button class="lb-nav lb-next" onclick="lbNav(1)">&#8250;</button>
-</div>
-
-<!-- Registration modal (same as checkout modal) -->
-<div class="ov" id="reg-ov" onclick="if(event.target===this)closeReg()">
-  <div class="mo">
-    <div class="mo-handle"></div>
-
-    <!-- Step 1: form -->
-    <div id="reg-form">
-      <div style="font-family:var(--serif);font-size:20px;font-weight:400;color:var(--t);letter-spacing:1px;margin-bottom:4px" id="reg-title">課程報名</div>
-      <div style="font-size:12px;color:var(--m);margin-bottom:18px" id="reg-sub"></div>
-      <div class="f2">
-        <div class="fg" style="margin:0"><label class="lbl">姓名 *</label><input type="text" id="r-name" placeholder="王小明"></div>
-        <div class="fg" style="margin:0"><label class="lbl">電話 *</label><input type="tel" id="r-phone" placeholder="0912-345-678"></div>
-      </div>
-      <div class="fg" style="margin-top:12px"><label class="lbl">Email *</label><input type="email" id="r-email" placeholder="you@example.com"></div>
-      <!-- 體驗課：個人/包場 -->
-      <div id="r-bk-wrap" class="fg">
-        <label class="lbl">報名方式 *</label>
-        <div class="bk-opt sel" id="bk-p" onclick="selBk('personal')">
-          <input type="radio" name="bk" checked style="accent-color:var(--g);margin-top:2px;flex-shrink:0">
-          <div><div style="font-size:14px;font-weight:500;color:var(--t)">個人報名</div><div style="font-size:11px;color:var(--m);margin-top:1px">1 人參加</div></div>
-        </div>
-        <div class="bk-opt" id="bk-g" onclick="selBk('group')">
-          <input type="radio" name="bk" style="accent-color:var(--g);margin-top:2px;flex-shrink:0">
-          <div><div style="font-size:14px;font-weight:500;color:var(--t)">包場</div><div style="font-size:11px;color:var(--m);margin-top:1px">因空間關係最多 4 人，費用依人數計算</div></div>
-        </div>
-        <div id="bk-cnt" style="display:none;margin-top:6px">
-          <label class="lbl">包場人數</label>
-          <select id="r-members" onchange="updSum()" style="margin-top:4px">
-            <option value="2">2 人</option><option value="3">3 人</option><option value="4">4 人</option>
-          </select>
-        </div>
-      </div>
-      <!-- 體驗課：選日期 -->
-      <div class="fg" id="r-date-wrap" style="display:none">
-        <label class="lbl">希望上課日期 *</label>
-        <div style="position:relative">
-          <svg style="position:absolute;left:11px;top:50%;transform:translateY(-50%);pointer-events:none;color:var(--m)" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-          <input type="date" id="r-date"
-            style="box-sizing:border-box;width:100%;min-height:44px;padding:10px 12px 10px 34px;border:1px solid var(--b);border-radius:8px;font-size:14px;font-family:var(--sans);background:var(--w);color:var(--t);outline:none;display:block;-webkit-appearance:none;appearance:none"
-            onchange="updateSum()">
-        </div>
-        <div style="font-size:11px;color:var(--m);margin-top:4px;letter-spacing:.2px">課程時間固定為 13:30 – 16:30，確認後我們將與您聯繫</div>
-      </div>
-
-      <div class="fg"><label class="lbl">備註</label><textarea id="r-note" placeholder="特殊需求或想說的話⋯"></textarea></div>
-      <div class="reg-sum">
-        <div class="rs-title">費用確認</div>
-        <div class="rs-row"><span id="rs-name"></span><span id="rs-price"></span></div>
-        <div class="rs-total"><span>合計</span><span id="rs-total"></span></div>
-      </div>
-      <div style="background:var(--rl);border-radius:8px;padding:10px 12px;margin-bottom:14px;font-size:12px;color:var(--r)">
-        ⚠️ 本店僅支援<strong>線上銀行轉帳</strong>，不提供現金付款
-      </div>
-      <div style="display:flex;gap:8px">
-        <button class="btn bo" style="flex:1" onclick="closeReg()">取消</button>
-        <button class="btn bg" style="flex:2" id="r-submit" onclick="submitReg()">確認報名</button>
-      </div>
-    </div>
-
-    <!-- Step 2: bank info + last5 -->
-    <div id="reg-bank" style="display:none">
-      <div style="text-align:center;margin-bottom:18px">
-        <div class="done-icon" style="background:var(--gl)">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M5 12l5 5L19 7" stroke="#2C4A6E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </div>
-        <div style="font-family:var(--serif);font-size:19px;font-weight:400;color:var(--t)">報名已建立</div>
-        <div style="font-size:12px;color:var(--m);margin-top:4px">報名編號：<strong id="reg-id"></strong></div>
-      </div>
-      <div class="bank-box">
-        <div class="bank-lbl">請匯款至以下帳戶</div>
-        <div class="bank-r"><span class="k">銀行名稱</span><span class="v" id="rb-name">—</span></div>
-        <div class="bank-r"><span class="k">銀行代碼</span><span class="v" id="rb-code">—</span></div>
-        <div class="bank-r acct"><span class="k">帳號</span><span class="v" id="rb-acct">—</span></div>
-        <div class="bank-r amt"><span class="k">應匯金額</span><span class="v" id="rb-amt">—</span></div>
-      </div>
-      <div style="background:var(--rl);border-radius:8px;padding:10px 12px;margin-bottom:14px;font-size:12px;color:var(--r);line-height:1.8">
-        ⚠️ 請於 <strong>24 小時內完成匯款</strong><br>逾期將自動取消報名，恕不另行通知
-      </div>
-      <div class="l5-wrap">
-        <div style="font-size:13px;font-weight:600;color:var(--g)">匯款完成後，請填入帳號後五碼</div>
-        <div style="font-size:12px;color:var(--m);margin-top:4px;line-height:1.6">填入後按確認，我們收到才會安排課程</div>
-        <div class="l5-boxes">
-          <input type="text" maxlength="1" class="l5-box" oninput="l5in(this,0)" onkeydown="l5kd(event,0)" inputmode="numeric">
-          <input type="text" maxlength="1" class="l5-box" oninput="l5in(this,1)" onkeydown="l5kd(event,1)" inputmode="numeric">
-          <input type="text" maxlength="1" class="l5-box" oninput="l5in(this,2)" onkeydown="l5kd(event,2)" inputmode="numeric">
-          <input type="text" maxlength="1" class="l5-box" oninput="l5in(this,3)" onkeydown="l5kd(event,3)" inputmode="numeric">
-          <input type="text" maxlength="1" class="l5-box" oninput="l5in(this,4)" onkeydown="l5kd(event,4)" inputmode="numeric">
-        </div>
-        <input type="hidden" id="l5-val">
-      </div>
-      <button class="btn bg" style="width:100%;margin-bottom:8px;opacity:.4" id="pay-btn" onclick="submitPay()" disabled>我已完成匯款</button>
-      <button class="btn bo" style="width:100%;font-size:13px;color:var(--r);border-color:var(--r)" onclick="cancelReg()">取消報名</button>
-    </div>
-
-    <!-- Step 3a: paid done -->
-    <div id="reg-paid" style="display:none;text-align:center;padding:10px 0">
-      <div class="done-icon" style="background:var(--gl)">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M5 12l5 5L19 7" stroke="#2C4A6E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </div>
-      <div style="font-family:var(--serif);font-size:19px;color:var(--t);margin-bottom:8px">感謝您的報名</div>
-      <div style="font-size:13px;color:var(--m);line-height:1.8;margin-bottom:22px">我們確認收款後將以 Email 通知課程細節<br>如有疑問請透過 Instagram @ywshiue 聯繫</div>
-      <button class="btn bg" style="width:100%" onclick="closeReg()">關閉</button>
-    </div>
-
-    <!-- Step 3b: cancel done -->
-    <div id="reg-cancelled" style="display:none;text-align:center;padding:10px 0">
-      <div class="done-icon" style="background:var(--rl)">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M18 6L6 18M6 6l12 12" stroke="#8B6F47" stroke-width="2" stroke-linecap="round"/></svg>
-      </div>
-      <div style="font-family:var(--serif);font-size:19px;color:var(--t);margin-bottom:8px">報名已取消</div>
-      <div style="font-size:13px;color:var(--m);line-height:1.8;margin-bottom:22px">取消通知已寄至您的 Email</div>
-      <button class="btn bo" style="width:100%" onclick="closeReg()">關閉</button>
-    </div>
-
-  </div>
-</div>
-</div><!-- end section-courses -->
 
 <!-- ── 公開問答 ─────────────────────────────────────── -->
 <div class="faq-wrap" id="public-qa-wrap" style="padding-bottom:0;display:none">
@@ -1446,6 +1275,21 @@ async function submitPayment(){
     btn.disabled=false;btn.textContent='確認已匯款';
   }
 }
+function switchTab(name){
+  const isWorks=name==='works';
+  document.getElementById('works-section').style.display=isWorks?'block':'none';
+  document.getElementById('courses-section').style.display=isWorks?'none':'block';
+  document.getElementById('nav-works').classList.toggle('active',isWorks);
+  document.getElementById('nav-courses').classList.toggle('active',!isWorks);
+  if(!isWorks){
+    const fr=document.getElementById('courses-frame');
+    if(!fr.src||fr.src===window.location.href||fr.src===window.location.href+'#'){
+      fr.src='classes.html';
+    }
+  }
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
 load();
 
 async function submitQuestion(){
@@ -1525,304 +1369,6 @@ async function loadBankInfo(){
     const res = await fetch(`${API}/bank-info`);
     bankInfo = await res.json();
   }catch(e){}
-}
-let coursesLoaded=false;
-function switchSection(name){
-  const isWorks=name==='works';
-  document.getElementById('section-works').style.display=isWorks?'block':'none';
-  document.getElementById('section-courses').style.display=isWorks?'none':'block';
-  document.getElementById('nav-works').classList.toggle('active',isWorks);
-  document.getElementById('nav-courses').classList.toggle('active',!isWorks);
-  if(!isWorks&&!coursesLoaded){coursesLoaded=true;loadCourses();}
-  window.scrollTo({top:0,behavior:'smooth'});
-}
-function toast(msg,ok=true){const t=document.getElementById('toast');t.textContent=msg;t.style.background=ok?'#1C2B3A':'#8B6F47';t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2600);}
-
-let courses=[],cat='',currentCourse=null,currentRegId=null,bankInfo={},bkType='personal';
-let lbImgs=[],lbIdx=0;
-const dSlides={};
-
-// ── Init ──────────────────────────────────────────────────
-async function init(){
-  try{
-    bankInfo = await fetch(`${API}/bank-info`).then(r=>r.json());
-  }catch(e){}
-  loadCourses();
-}
-
-// ── Load courses ──────────────────────────────────────────
-async function loadCourses(){
-  const g=document.getElementById('course-grid');
-  g.innerHTML='<div class="loading">載入中⋯</div>';
-  try{
-    const url=cat?`${API}/classes?type=${encodeURIComponent(cat)}`:`${API}/classes`;
-    courses=await fetch(url).then(r=>r.json());
-    render();
-  }catch(e){g.innerHTML='<div class="loading" style="color:var(--r)">載入失敗，請重新整理頁面</div>';}
-}
-
-function setCat(btn,c){
-  document.querySelectorAll('.fc').forEach(x=>x.classList.remove('on'));
-  btn.classList.add('on'); cat=c; loadCourses();
-}
-
-function getImgs(c){ return c.image_urls?.filter(Boolean).length?c.image_urls.filter(Boolean):c.image_url?[c.image_url]:[]; }
-
-function render(){
-  const g=document.getElementById('course-grid');
-  if(!courses.length){g.innerHTML='<div class="loading">目前暫無課程</div>';return;}
-  g.innerHTML=courses.map(c=>{
-    const full=c.registered>=c.capacity;
-    const canReg=c.is_active&&!full;
-    const imgs=getImgs(c);
-    const pct=Math.min(100,Math.round(c.registered/c.capacity*100));
-    const rem=c.capacity-c.registered;
-    return`<div class="cc" onclick="openDetail(${c.id})">
-      <div class="cc-img">
-        ${imgs.length?`<img src="${imgs[0]}" loading="lazy" alt="${c.name}">`:'<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:var(--b);font-size:32px">◻</div>'}
-        ${(!canReg)?`<div class="cc-sold-ov"><span>${full?'SOLD OUT':'暫停報名'}</span></div>`:''}
-      </div>
-      <div class="cc-body">
-        <div class="cc-type">${c.type}</div>
-        <div class="cc-name">${c.name}</div>
-        ${c.date_desc?`<div class="cc-date">${c.date_desc.split('\n')[0]}</div>`:''}
-        <div class="cc-row">
-          <div class="cc-price">NT$${c.price.toLocaleString()} <span style="font-size:11px;font-weight:300;color:var(--m)">/ 人起</span></div>
-          <div style="font-size:11px;color:var(--m)">${c.capacity}人</div>
-        </div>
-        <div class="cap-mini">
-          <div class="cap-mini-bar"><div class="cap-mini-fill" style="width:${pct}%"></div></div>
-          <div class="cap-mini-txt">${full?'名額已滿':rem<=3?`剩 ${rem} 名`:`${c.registered}/${c.capacity}`}</div>
-        </div>
-      </div>
-    </div>`;
-  }).join('');
-}
-
-// ── Detail ────────────────────────────────────────────────
-function openDetail(id){
-  const c=courses.find(x=>x.id===id);
-  if(!c)return;
-  currentCourse=c;
-  const full=c.registered>=c.capacity;
-  const canReg=c.is_active&&!full;
-  const imgs=getImgs(c);
-  const pct=Math.min(100,Math.round(c.registered/c.capacity*100));
-  const rem=c.capacity-c.registered;
-
-  document.getElementById('d-cat').textContent=c.type.toUpperCase();
-  document.getElementById('d-name').textContent=c.name;
-  document.getElementById('d-price').textContent=`NT$${c.price.toLocaleString()} / 人起`;
-  document.getElementById('d-date').textContent=c.date_desc||'';
-  document.getElementById('d-date').style.display=c.date_desc?'block':'none';
-
-  const metas=[];
-  if(c.duration)metas.push(['時長',c.duration]);
-  if(c.location)metas.push(['地點',c.location]);
-  if(c.price_note)metas.push(['費用包含',c.price_note]);
-  document.getElementById('d-metas').innerHTML=metas.map(([k,v])=>
-    `<div class="d-meta-r"><span class="d-meta-k">${k}</span><span class="d-meta-v">${v}</span></div>`
-  ).join('');
-
-  document.getElementById('d-desc').textContent=c.description||'';
-  const notesEl=document.getElementById('d-notes');
-  notesEl.textContent=c.notes||'';notesEl.style.display=c.notes?'block':'none';
-
-  document.getElementById('d-cap').innerHTML=
-    `<div class="d-cap-bar"><div class="d-cap-fill" style="width:${pct}%"></div></div>
-     <div class="d-cap-txt">${full?'名額已滿':rem<=3?`剩餘 ${rem} 名`:`${c.registered}/${c.capacity} 人`}</div>`;
-
-  const btn=document.getElementById('d-reg-btn');
-  const note=document.getElementById('d-sold-note');
-  btn.disabled=!canReg;
-  btn.textContent=full?'名額已滿':!c.is_active?'暫停報名':'立即報名';
-  note.style.display=!canReg?'block':'none';
-  note.textContent=full?'此梯次已額滿，歡迎關注下期開課訊息':'此梯次暫停報名';
-
-  // gallery
-  buildGallery(imgs);
-  document.getElementById('d-overlay').classList.add('open');
-  document.body.style.overflow='hidden';
-}
-
-function closeDetail(){
-  clearInterval(dSlides.timer);
-  document.getElementById('d-overlay').classList.remove('open');
-  document.body.style.overflow='';
-}
-
-function buildGallery(imgs){
-  const el=document.getElementById('d-gallery');
-  if(!imgs.length){el.innerHTML='<div class="d-slide-ph">◻</div>';return;}
-  el.innerHTML=imgs.map((url,i)=>
-    `<div class="d-slide${i===0?' on':''}" onclick="openLb(${i})">
-      <img src="${url}" alt="" loading="lazy">
-    </div>`
-  ).join('')+
-  (imgs.length>1?`<div class="d-dots">${imgs.map((_,i)=>`<div class="d-dot${i===0?' on':''}" onclick="event.stopPropagation();goSlide(${i})"></div>`).join('')}</div>`:'');
-  lbImgs=imgs; lbIdx=0;
-  dSlides.cur=0;dSlides.tot=imgs.length;
-  clearInterval(dSlides.timer);
-  if(imgs.length>1) dSlides.timer=setInterval(()=>goSlide((dSlides.cur+1)%dSlides.tot),3000);
-}
-
-function goSlide(idx){
-  document.querySelectorAll('#d-gallery .d-slide').forEach((s,i)=>s.classList.toggle('on',i===idx));
-  document.querySelectorAll('#d-gallery .d-dot').forEach((d,i)=>d.classList.toggle('on',i===idx));
-  dSlides.cur=idx;lbIdx=idx;
-}
-
-// Lightbox
-function openLb(idx){lbIdx=idx;document.getElementById('lb-img').src=lbImgs[idx];document.getElementById('lb').style.display='flex';}
-function closeLb(){document.getElementById('lb').style.display='none';}
-function lbNav(d){lbIdx=(lbIdx+d+lbImgs.length)%lbImgs.length;document.getElementById('lb-img').src=lbImgs[lbIdx];}
-
-// ── Registration ──────────────────────────────────────────
-function openReg(){
-  const c=currentCourse;
-  document.getElementById('reg-title').textContent=c.name;
-  document.getElementById('reg-sub').textContent=c.date_desc?.split('\n')[0]||'';
-  ['r-name','r-phone','r-email','r-note'].forEach(id=>document.getElementById(id).value='');
-  document.getElementById('r-date').value='';
-  document.querySelectorAll('.l5-box').forEach(b=>{b.value='';b.style.borderColor='var(--b)';b.style.background='#fff';});
-  document.getElementById('l5-val').value='';
-  document.getElementById('pay-btn').disabled=true;document.getElementById('pay-btn').style.opacity='.4';
-  ['reg-form','reg-bank','reg-paid','reg-cancelled'].forEach((id,i)=>document.getElementById(id).style.display=i===0?'block':'none');
-  document.getElementById('r-bk-wrap').style.display=c.type==='手作陶體驗'?'block':'none';
-  selBk('personal');updSum();
-  document.getElementById('reg-ov').classList.add('open');
-}
-
-function closeReg(){document.getElementById('reg-ov').classList.remove('open');}
-
-function selBk(t){
-  bkType=t;
-  document.getElementById('bk-p').classList.toggle('sel',t==='personal');
-  document.getElementById('bk-g').classList.toggle('sel',t==='group');
-  document.getElementById('bk-p').querySelector('input').checked=t==='personal';
-  document.getElementById('bk-g').querySelector('input').checked=t==='group';
-  document.getElementById('bk-cnt').style.display=t==='group'?'block':'none';
-  updSum();
-}
-function getM(){return bkType==='group'?parseInt(document.getElementById('r-members').value)||2:1;}
-function updSum(){
-  const c=currentCourse;if(!c)return;
-  const isWS=c.type==='手作陶體驗';
-  const m=isWS?getM():1;
-  const total=c.price*m;
-  document.getElementById('rs-name').textContent=isWS?(bkType==='group'?`包場 × ${m} 人`:'個人報名'):'四堂完整課程';
-  document.getElementById('rs-price').textContent=`NT$${c.price.toLocaleString()}${m>1?' × '+m:''}`;
-  document.getElementById('rs-total').textContent=`NT$${total.toLocaleString()}`;
-}
-
-async function submitReg(){
-  const name=document.getElementById('r-name').value.trim();
-  const phone=document.getElementById('r-phone').value.trim();
-  const email=document.getElementById('r-email').value.trim();
-  if(!name||!phone||!email){toast('請填寫所有必填欄位',false);return;}
-  const isWS2=currentCourse.type==='手作陶體驗';
-  const preferredDate=document.getElementById('r-date').value;
-  if(isWS2&&!preferredDate){toast('請選擇希望上課的日期',false);return;}
-  const c=currentCourse;
-  const isWS=c.type==='手作陶體驗';
-  const members=isWS?getM():1;
-  const btn=document.getElementById('r-submit');
-  btn.disabled=true;btn.textContent='送出中⋯';
-  try{
-    const res=await fetch(`${API}/classes/register`,{
-      method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({class_id:c.id,name,phone,email,members,
-        course_type:isWS?'':`四堂完整課程`,
-        preferred_date:isWS?preferredDate+'  13:30–16:30':'',
-        note:document.getElementById('r-note').value})
-    });
-    const data=await res.json();
-    if(!res.ok)throw new Error(data.detail||'報名失敗');
-    currentRegId=data.reg_id;
-    document.getElementById('reg-id').textContent='#'+data.reg_id;
-    document.getElementById('rb-amt').textContent='NT$'+data.total.toLocaleString();
-    document.getElementById('rb-name').textContent=bankInfo.bank_name||'—';
-    document.getElementById('rb-code').textContent=bankInfo.bank_code||'—';
-    document.getElementById('rb-acct').textContent=bankInfo.bank_account||'—';
-    document.getElementById('reg-form').style.display='none';
-    document.getElementById('reg-bank').style.display='block';
-    loadCourses();
-  }catch(e){toast(e.message,false);}
-  finally{btn.disabled=false;btn.textContent='確認報名';}
-}
-
-function l5in(el,idx){
-  el.value=el.value.replace(/[^0-9]/g,'');
-  el.style.borderColor=el.value?'#2C4A6E':'var(--b)';
-  el.style.background=el.value?'#E8EEF5':'#fff';
-  if(el.value){const bs=document.querySelectorAll('.l5-box');if(idx<4)bs[idx+1].focus();}
-  const val=[...document.querySelectorAll('.l5-box')].map(b=>b.value).join('');
-  document.getElementById('l5-val').value=val;
-  const btn=document.getElementById('pay-btn');
-  btn.disabled=val.length!==5;btn.style.opacity=val.length===5?'1':'.4';
-}
-function l5kd(e,idx){
-  if(e.key==='Backspace'){
-    const bs=document.querySelectorAll('.l5-box');
-    if(!bs[idx].value&&idx>0){bs[idx-1].focus();bs[idx-1].value='';bs[idx-1].style.borderColor='var(--b)';bs[idx-1].style.background='#fff';
-    document.getElementById('l5-val').value=[...bs].map(b=>b.value).join('');
-    document.getElementById('pay-btn').disabled=true;document.getElementById('pay-btn').style.opacity='.4';}
-  }
-}
-async function submitPay(){
-  const last5=document.getElementById('l5-val').value;
-  if(last5.length!==5)return;
-  const btn=document.getElementById('pay-btn');btn.disabled=true;btn.textContent='送出中⋯';
-  try{
-    const res=await fetch(`${API}/classes/register/${currentRegId}/payment`,{
-      method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({last5_digits:last5})
-    });
-    if(!res.ok)throw new Error();
-    document.getElementById('reg-bank').style.display='none';
-    document.getElementById('reg-paid').style.display='block';
-  }catch(e){toast('送出失敗，請稍後再試',false);}
-  finally{btn.disabled=false;btn.textContent='我已完成匯款';}
-}
-async function cancelReg(){
-  if(!currentRegId||!confirm('確定要取消此報名？'))return;
-  try{
-    await fetch(`${API}/classes/register/${currentRegId}/cancel`,{method:'POST'});
-    document.getElementById('reg-bank').style.display='none';
-    document.getElementById('reg-cancelled').style.display='block';
-    loadCourses();
-  }catch(e){toast('取消失敗',false);}
-}
-
-load();
-loadBankInfo();
-loadPublicQA();
-// 每 30 秒自動更新商品庫存
-setInterval(()=>{
-  fetch(`${API}/products${cat?'?category='+encodeURIComponent(cat):''}`)
-    .then(r=>r.json())
-    .then(data=>{
-      products=data;
-      render();
-      // 同步更新購物車庫存上限
-      cart=cart.filter(c=>{
-        const p=products.find(x=>x.id===c.pid);
-        return p&&p.stock>0;
-      });
-      cart.forEach(c=>{
-        const p=products.find(x=>x.id===c.pid);
-        if(p&&c.qty>p.stock) c.qty=p.stock;
-      });
-      renderCart();
-    }).catch(()=>{});
-}, 30000);
-
-function fillBankInfo(){
-  const set=(id,val)=>{const el=document.getElementById(id);if(el)el.textContent=val||'—';};
-  set('bk-name',    bankInfo.bank_name);
-  set('bk-code',    bankInfo.bank_code);
-  set('bk-holder',  bankInfo.bank_holder);
-  set('bk-account', bankInfo.bank_account);
 }
 </script>
 </body>
