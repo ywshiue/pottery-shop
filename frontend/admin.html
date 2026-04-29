@@ -276,6 +276,80 @@ const API = 'https://pottery-shop.onrender.com';
       <div id="p-card-list"></div>
     </div>
 
+    <!-- ── 課程 TAB ──────────────────────────────────────── -->
+    <div id="p-classes" class="pane">
+
+      <!-- 新增/編輯課程 -->
+      <div class="card" style="margin-bottom:16px">
+        <div class="ttl" id="class-form-title">新增課程</div>
+        <input type="hidden" id="cls-id">
+        <div class="fg">
+          <label class="lbl">課程照片（最多 6 張）</label>
+          <div id="cls-img-grid" class="img-grid"></div>
+          <div class="img-upload-area" id="cls-img-upload">
+            <input type="file" accept="image/*" multiple id="cls-fi" onchange="clsAddFiles(this.files)">
+            <div class="img-add-hint">點擊新增照片</div>
+          </div>
+          <div style="font-size:10px;color:var(--m);margin-top:3px">第一張為封面主圖，點 × 刪除</div>
+        </div>
+        <div class="f2" style="margin-bottom:12px">
+          <div class="fg" style="margin:0"><label class="lbl">課程類型 *</label>
+            <select id="cls-type"><option value="手作陶體驗">手作陶體驗</option><option value="基礎手拉坯">基礎手拉坯</option></select>
+          </div>
+          <div class="fg" style="margin:0"><label class="lbl">報名狀態</label>
+            <select id="cls-active"><option value="true">開放報名</option><option value="false">暫停報名</option></select>
+          </div>
+        </div>
+        <div class="fg"><label class="lbl">課程名稱 *</label><input type="text" id="cls-name" placeholder="例：2026 六月手作陶體驗"></div>
+        <div class="fg"><label class="lbl">費用 (NT$) *</label><input type="number" id="cls-price" placeholder="2000" min="0"></div>
+        <div class="f2" style="margin-bottom:12px">
+          <div class="fg" style="margin:0"><label class="lbl">名額上限 *</label><input type="number" id="cls-capacity" placeholder="4" min="1"></div>
+          <div class="fg" style="margin:0"><label class="lbl">課程時長</label><input type="text" id="cls-duration" placeholder="約 3～3.5 小時"></div>
+        </div>
+        <div class="fg"><label class="lbl">地點</label><input type="text" id="cls-location" placeholder="高雄市茄萣區"></div>
+        <div class="fg"><label class="lbl">開課時段（可多行）</label>
+          <textarea id="cls-date" placeholder="6/15 (六) 14:00～17:30" style="min-height:72px"></textarea>
+        </div>
+        <div class="fg"><label class="lbl">費用說明</label><input type="text" id="cls-price-note" placeholder="含場地、材料、師資費用"></div>
+        <div class="fg"><label class="lbl">課程介紹</label>
+          <textarea id="cls-description" placeholder="詳細說明課程內容、適合對象⋯" style="min-height:100px"></textarea>
+        </div>
+        <div class="fg"><label class="lbl">注意事項</label>
+          <textarea id="cls-notes" placeholder="上課須知、取消規則⋯" style="min-height:80px"></textarea>
+        </div>
+        <div style="display:flex;gap:8px">
+          <button class="btn bg" id="cls-save-btn" onclick="saveClass()" style="padding:9px 18px;font-size:13px">儲存課程</button>
+          <button class="btn bo" onclick="resetClass()" style="padding:9px 18px;font-size:13px">清除</button>
+        </div>
+      </div>
+
+      <!-- 課程列表 -->
+      <div style="margin-bottom:10px;display:flex;gap:6px;flex-wrap:wrap">
+        <button class="o-ftab on" onclick="filterClasses(this,'all')">全部<span class="cnt" id="cls-cnt-all">0</span></button>
+        <button class="o-ftab" onclick="filterClasses(this,'workshop')">體驗課<span class="cnt" id="cls-cnt-workshop">0</span></button>
+        <button class="o-ftab" onclick="filterClasses(this,'throwing')">手拉坯<span class="cnt" id="cls-cnt-throwing">0</span></button>
+      </div>
+      <div id="cls-list"></div>
+
+      <!-- 報名記錄 -->
+      <div style="margin-top:24px;margin-bottom:10px;font-size:14px;font-weight:700;color:var(--t)">報名記錄</div>
+      <div class="o-filter-wrap">
+        <div class="o-filter-bar" style="display:flex;gap:6px;flex-wrap:wrap">
+          <button class="o-ftab on" onclick="filterRegs(this,'all')">全部<span class="cnt" id="rcnt-all">0</span></button>
+          <button class="o-ftab" onclick="filterRegs(this,'pending')">待確認<span class="cnt" id="rcnt-pending">0</span></button>
+          <button class="o-ftab" onclick="filterRegs(this,'paid')">已匯款<span class="cnt" id="rcnt-paid">0</span></button>
+          <button class="o-ftab" onclick="filterRegs(this,'confirmed')">已確認<span class="cnt" id="rcnt-confirmed">0</span></button>
+          <button class="o-ftab" onclick="filterRegs(this,'cancelled')">已取消<span class="cnt" id="rcnt-cancelled">0</span></button>
+        </div>
+      </div>
+      <div id="reg-list"></div>
+    </div>
+
+    <!-- ── Q&A TAB ──────────────────────────────────────── -->
+    <div id="p-questions" class="pane">
+      <div id="q-list"></div>
+    </div>
+
   </div>
 </div>
 
