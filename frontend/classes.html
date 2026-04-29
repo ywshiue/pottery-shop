@@ -482,15 +482,7 @@ if(window.self !== window.top){
       </div>
 
       <!-- Workshop: date picker -->
-      <div class="fg" id="r-date-wrap" style="display:none">
-        <label class="lbl">希望上課日期 *</label>
-        <div style="position:relative">
-          <svg style="position:absolute;left:11px;top:50%;transform:translateY(-50%);pointer-events:none;color:var(--m)" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-          <input type="date" id="r-date" style="box-sizing:border-box;width:100%;min-height:44px;padding:10px 12px 10px 34px;border:1px solid var(--b);border-radius:8px;font-size:14px;font-family:var(--sans);background:var(--w);color:var(--t);outline:none;display:block;-webkit-appearance:none;appearance:none">
-        </div>
-        <div style="font-size:11px;color:var(--m);margin-top:4px">課程時間固定為 13:30–16:30，選擇後我們將確認並聯繫您</div>
-      </div>
-
+      
       <div class="fg"><label class="lbl">備註</label><textarea id="r-note" placeholder="特殊需求或想說的話⋯"></textarea></div>
       <div class="reg-sum">
         <div class="rs-title">費用確認</div>
@@ -743,7 +735,17 @@ function openReg(){
   document.getElementById('l5-val').value='';
   document.getElementById('pay-btn').disabled=true;document.getElementById('pay-btn').style.opacity='.4';
   ['reg-form','reg-bank','reg-paid','reg-cancelled'].forEach((id,i)=>document.getElementById(id).style.display=i===0?'block':'none');
-  document.getElementById('r-bk-wrap').style.display=c.type==='手作陶體驗'?'block':'none';
+  const isWS=c.type==='手作陶體驗';
+  document.getElementById('r-bk-wrap').style.display=isWS?'block':'none';
+  // Show date field for workshop
+  const dw=document.getElementById('r-date-wrap');
+  if(dw) dw.style.display=isWS?'block':'none';
+  const de=document.getElementById('r-date');
+  if(de){
+    de.value='';
+    const tmr=new Date();tmr.setDate(tmr.getDate()+1);
+    de.min=tmr.toISOString().split('T')[0];
+  }
   selBk('personal');updSum();
   document.getElementById('reg-ov').classList.add('open');
 }
