@@ -282,6 +282,18 @@ footer{background:var(--t);color:rgba(255,255,255,.7);padding:48px 32px 32px;mar
 .l5-box{width:48px;height:56px;border:2px solid var(--b);border-radius:10px;font-size:22px;font-weight:600;text-align:center;font-family:var(--sans);background:#fff;color:var(--t);outline:none;transition:all .15s}
 .done-icon{width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 14px}
 
+/* ── Footer ─────────────────────────────────────────── */
+footer{background:var(--t);color:rgba(255,255,255,.7);padding:48px 32px 32px;margin-top:60px}
+.footer-inner{max-width:1280px;margin:0 auto;display:grid;grid-template-columns:1.2fr 1fr 1fr 1fr;gap:32px}
+.footer-logo{font-family:var(--serif);font-size:17px;font-weight:400;color:#fff;margin-bottom:8px;letter-spacing:2px}
+.footer-logo span{color:rgba(44,130,200,.8)}
+.footer-tagline{font-size:12px;letter-spacing:.5px;line-height:1.7}
+.footer-section-title{font-size:10px;letter-spacing:1.8px;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:14px;font-weight:600}
+.footer-list{list-style:none;display:flex;flex-direction:column;gap:8px}
+.footer-list li{font-size:13px;line-height:1.6;letter-spacing:.2px}
+.footer-list li strong{color:rgba(255,255,255,.9)}
+.footer-bottom{max-width:1280px;margin:32px auto 0;padding-top:20px;border-top:1px solid rgba(255,255,255,.08);font-size:11px;letter-spacing:.5px;color:rgba(255,255,255,.3);text-align:center}
+
 </style>
 </head>
 <body>
@@ -496,6 +508,15 @@ if(window.self !== window.top){
 </div>
 
 
+
+
+
+<div style="text-align:center;padding:16px 0 32px">
+  <button onclick="openCourseQModal()" style="background:transparent;border:none;cursor:pointer;font-family:var(--sans);font-size:13px;color:var(--g);letter-spacing:.5px;display:inline-flex;align-items:center;gap:6px;padding:10px 22px;border-radius:99px;border:1.5px solid var(--g);transition:all .2s" onmouseover="this.style.background='var(--gl)'" onmouseout="this.style.background='transparent'">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+    有其他疑問？點此提問
+  </button>
+</div>
 
 <!-- Q&A Modal for courses -->
 <div class="ov q-ov" id="cq-ov" onclick="if(event.target===this)closeCourseQModal()">
@@ -822,7 +843,96 @@ async function cancelReg(){
   }catch(e){toast('取消失敗',false);}
 }
 
+// ── FAQ ────────────────────────────────────────────────────
+function toggleCourseFaq(btn){
+  btn.closest('.faq-item').classList.toggle('open');
+}
+
+// ── Course Q&A Modal ───────────────────────────────────────
+function openCourseQModal(){
+  const ov=document.getElementById('cq-ov');
+  if(!ov)return;
+  ov.classList.add('open');
+  document.getElementById('cq-done').style.display='none';
+  document.getElementById('cq-email').value='';
+  document.getElementById('cq-text').value='';
+  document.body.style.overflow='hidden';
+}
+function closeCourseQModal(){
+  const ov=document.getElementById('cq-ov');
+  if(ov)ov.classList.remove('open');
+  document.body.style.overflow='';
+}
+async function submitCourseQ(){
+  const email=document.getElementById('cq-email').value.trim();
+  const question=document.getElementById('cq-text').value.trim();
+  if(!email||!question){toast('請填寫所有欄位',false);return;}
+  const btn=document.getElementById('cq-btn');
+  btn.disabled=true;btn.textContent='送出中...';
+  try{
+    const res=await fetch(`${API}/questions/`,{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({email,question})
+    });
+    if(!res.ok)throw new Error();
+    document.getElementById('cq-done').style.display='block';
+    document.getElementById('cq-email').value='';
+    document.getElementById('cq-text').value='';
+    setTimeout(()=>closeCourseQModal(),2500);
+  }catch(e){toast('送出失敗，請稍後再試',false);}
+  finally{btn.disabled=false;btn.textContent='送出問題';}
+}
+
 init();
 </script>
+
+<footer id="footer-info">
+  <div class="footer-inner">
+    <div>
+      <svg width="46" height="46" viewBox="-2 -2 124 124" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M62 7 C76 3 94 10 106 24 C120 40 124 62 116 80 C107 100 88 112 66 114 C44 116 24 104 14 86 C2 66 2 42 16 24 C30 8 46 3 62 7 Z" stroke="#E0DCD5" stroke-width="2.5" fill="none"/>
+  <path d="M62 17 C74 14 89 20 99 32 C111 46 114 65 107 81 C99 97 83 106 64 108 C45 110 28 101 20 87 C10 71 11 50 22 36 C34 20 49 16 62 17 Z" stroke="#7BA3C8" stroke-width="1.2" fill="none" opacity=".5"/>
+  <ellipse cx="48" cy="44" rx="16" ry="10" stroke="#E0DCD5" stroke-width="1.4" fill="none" opacity=".5" transform="rotate(-15 48 44)"/>
+  <ellipse cx="82" cy="72" rx="13" ry="8" stroke="#E0DCD5" stroke-width="1.2" fill="none" opacity=".4" transform="rotate(10 82 72)"/>
+  <ellipse cx="56" cy="86" rx="9" ry="6" stroke="#7BA3C8" stroke-width="1" fill="none" opacity=".4" transform="rotate(-5 56 86)"/>
+  <circle cx="92" cy="40" r="5" stroke="#E0DCD5" stroke-width="1.2" fill="none" opacity=".5"/>
+  <circle cx="34" cy="64" r="4" stroke="#7BA3C8" stroke-width="1" fill="none" opacity=".4"/>
+  <circle cx="76" cy="96" r="3" stroke="#E0DCD5" stroke-width=".9" fill="none" opacity=".35"/>
+  <line x1="40" y1="28" x2="56" y2="34" stroke="#7BA3C8" stroke-width=".8" stroke-linecap="round" opacity=".4"/>
+  <line x1="88" y1="56" x2="100" y2="64" stroke="#7BA3C8" stroke-width=".8" stroke-linecap="round" opacity=".35"/>
+  <line x1="28" y1="80" x2="40" y2="75" stroke="#E0DCD5" stroke-width=".7" stroke-linecap="round" opacity=".3"/>
+</svg>
+      <div style="font-family:'Shippori Mincho',serif;font-size:17px;font-weight:400;color:#fff;letter-spacing:2px;margin-bottom:4px">是陶。</div>
+      <div style="font-family:'Noto Sans TC',sans-serif;font-size:8px;font-weight:300;color:rgba(255,255,255,.4);letter-spacing:2.5px;text-transform:uppercase;margin-bottom:8px">It's Pottery</div>
+      <div class="footer-tagline">手作陶藝，每件作品皆為獨一無二的存在<br>以土為媒，傳遞日常中的美好</div>
+    </div>
+    <div>
+      <div class="footer-section-title">運費說明</div>
+      <ul class="footer-list">
+        <li><strong>運費 NT$160</strong>（全台灣本島）</li>
+        <li>離島地區運費另計，下單後聯繫確認</li>
+        <li>單筆訂單滿 NT$3,000 免運費</li>
+        <li>商品以氣泡紙及紙箱妥善包裝出貨</li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-section-title">付款方式</div>
+      <ul class="footer-list">
+        <li><strong>銀行轉帳</strong><br>下單後將提供匯款帳號，請於 24 小時內完成付款，逾期訂單將自動取消</li>
+        <li style="margin-top:8px"><strong>工作室取貨</strong><br>高雄市茄萣區，結帳選擇工作室取貨，另行確認時間，免運費</li>
+        <li style="margin-top:8px"><strong>出貨時間</strong><br>確認付款後 3–5 個工作天出貨，若有特殊情況將提前通知</li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-section-title">退換貨說明</div>
+      <ul class="footer-list">
+        <li><strong>商品破損</strong><br>收到商品後請於 48 小時內拍照回報，確認後安排補寄或退款</li>
+        <li style="margin-top:8px"><strong>不接受退換貨</strong><br>手作陶器每件均為獨一無二，非商品本身破裂毀損，恕不接受退換貨需求</li>
+        <li style="margin-top:8px"><strong>色差說明</strong><br>手工釉燒作品因拍攝光線略有色差，不列為瑕疵範圍</li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom" style="display:flex;align-items:center;justify-content:center;gap:20px">© 是陶。 All rights reserved <a href="https://www.instagram.com/ywshiue/" target="_blank" style="color:rgba(255,255,255,.5);text-decoration:none;display:flex;align-items:center;gap:5px;transition:color .15s" onmouseover="this.style.color='rgba(255,255,255,.9)'" onmouseout="this.style.color='rgba(255,255,255,.5)'"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r=".8" fill="currentColor" stroke="none"/></svg> @ywshiue</a></div>
+</footer>
 </body>
 </html>
