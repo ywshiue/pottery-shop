@@ -1283,8 +1283,9 @@ function switchTab(name){
   document.getElementById('nav-courses').classList.toggle('active',!isWorks);
   if(!isWorks){
     const fr=document.getElementById('courses-frame');
-    if(!fr.src||fr.src===window.location.href||fr.src===window.location.href+'#'){
+    if(!fr.dataset.loaded){
       fr.src='classes.html';
+      fr.dataset.loaded='1';
     }
   }
   window.scrollTo({top:0,behavior:'smooth'});
