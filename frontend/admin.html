@@ -891,6 +891,59 @@ async function updateRegStatus(id,status){
   }catch(e){toast('更新失敗',false);}
 }
 
+// ── Course type toggle ─────────────────────────────────────
+function onClsTypeChange(type){
+  const isThrowing=type==='基礎手拉坯';
+  const tw=document.getElementById('cls-date-text-wrap');
+  const pw=document.getElementById('cls-date-picker-wrap');
+  if(tw)tw.style.display=isThrowing?'none':'block';
+  if(pw)pw.style.display=isThrowing?'block':'none';
+}
+
+// ── Session management for throwing ───────────────────────
+let sessions=[];
+
+function addSession(){
+  sessions.push({id:Date.now(),date:'',start:'09:00',end:'12:00'});
+  renderSessions();
+}
+function removeSession(id){
+  sessions=sessions.filter(s=>s.id!==id);
+  renderSessions();
+}
+function updateSession(id,field,val){
+  const s=sessions.find(x=>x.id===id);
+  if(s){s[field]=val;renderSessions();}
+}
+function timeOptions(sel){
+  return ['08:00','09:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00']
+    .map(t=>`<option value="${t}"${t===sel?' selected':''}>${t}</option>`).join('');
+}
+function renderSessions(){
+  const list=document.getElementById('cls-sessions-list');
+  if(!list)return;
+  list.innerHTML=sessions.map(s=>`
+    <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">
+      <input type="date" value="${s.date}" onchange="updateSession(${s.id},'date',this.value)"
+        style="flex:1;min-width:130px;padding:8px 10px;border:1px solid var(--b);border-radius:7px;font-size:13px;font-family:inherit;background:var(--w);color:var(--t);outline:none">
+      <select onchange="updateSession(${s.id},'start',this.value)"
+        style="padding:8px 10px;border:1px solid var(--b);border-radius:7px;font-size:13px;font-family:inherit;background:var(--w);color:var(--t);outline:none">
+        ${timeOptions(s.start)}
+      </select>
+      <span style="font-size:12px;color:var(--m)">–</span>
+      <select onchange="updateSession(${s.id},'end',this.value)"
+        style="padding:8px 10px;border:1px solid var(--b);border-radius:7px;font-size:13px;font-family:inherit;background:var(--w);color:var(--t);outline:none">
+        ${timeOptions(s.end)}
+      </select>
+      <button class="btn br btn-sm" onclick="removeSession(${s.id})" style="padding:6px 10px">×</button>
+    </div>`).join('');
+  // Update date_desc hidden field
+  const desc=sessions.map(s=>`${s.date} ${s.start}–${s.end}`).filter(s=>s.trim()!=='–').join('\n');
+  const dt=document.getElementById('cls-date');
+  if(dt)dt.value=desc;
+}
+
+
 </script>
 </body>
 </html>
