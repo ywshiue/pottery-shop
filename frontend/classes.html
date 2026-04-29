@@ -500,6 +500,29 @@ if(window.self !== window.top){
   </div>
 </div>
 
+<div style="text-align:center;padding:16px 0 32px">
+  <button onclick="openCourseQModal()" style="background:transparent;border:none;cursor:pointer;font-family:var(--sans);font-size:13px;color:var(--g);letter-spacing:.5px;display:inline-flex;align-items:center;gap:6px;padding:10px 22px;border-radius:99px;border:1.5px solid var(--g);transition:all .2s" onmouseover="this.style.background='var(--gl)'" onmouseout="this.style.background='transparent'">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+    有其他疑問？點此提問
+  </button>
+</div>
+
+<!-- Q&A Modal for courses -->
+<div class="ov q-ov" id="cq-ov" onclick="if(event.target===this)closeCourseQModal()">
+  <div class="mo">
+    <div class="mo-handle"></div>
+    <div style="font-family:var(--serif);font-size:20px;font-weight:400;color:var(--t);margin-bottom:6px;letter-spacing:1.5px">有其他疑問？</div>
+    <div style="font-size:13px;color:var(--m);margin-bottom:20px;line-height:1.7">填寫問題後送出，回覆將寄至您的 Email，問答也會公開顯示</div>
+    <div class="fg"><label class="lbl">Email *</label><input type="email" id="cq-email" placeholder="you@example.com"></div>
+    <div class="fg" style="margin-bottom:18px"><label class="lbl">問題內容 *</label><textarea id="cq-text" placeholder="請描述您的問題..." style="min-height:96px"></textarea></div>
+    <div id="cq-done" style="display:none;background:var(--gl);border-radius:8px;padding:11px 14px;font-size:13px;color:var(--g);margin-bottom:14px">已送出，我們將盡快回覆並公開答案 ✓</div>
+    <div style="display:flex;gap:8px;justify-content:flex-end">
+      <button class="btn bo" onclick="closeCourseQModal()">取消</button>
+      <button class="btn bg" id="cq-btn" onclick="submitCourseQ()">送出問題</button>
+    </div>
+  </div>
+</div>
+
 <div id="toast"></div>
 
 <!-- ── Course FAQ ──────────────────────────────────── -->
