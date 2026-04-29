@@ -184,6 +184,19 @@ footer{background:var(--t);color:rgba(255,255,255,.7);padding:48px 32px 32px;mar
 .faq-a{font-size:13px;color:var(--m);line-height:1.8;padding:0 0 16px;display:none;letter-spacing:.2px}
 .faq-item.open .faq-icon{transform:rotate(45deg)}
 .faq-item.open .faq-a{display:block}
+/* Hide works-only elements when courses tab is active */
+body.tab-courses .faq-wrap,
+body.tab-courses .public-qa-wrap,
+body.tab-courses #public-qa-wrap,
+body.tab-courses #public-qa-spacer,
+body.tab-courses .q-modal-btn,
+body.tab-courses footer {
+  display: none !important;
+}
+body.tab-courses #q-ov {
+  display: none !important;
+}
+
 @media(max-width:760px){
   .layout{grid-template-columns:1fr}
   .cbox{display:none}
@@ -1281,6 +1294,8 @@ function switchTab(name){
   document.getElementById('courses-section').style.display=isWorks?'none':'block';
   document.getElementById('nav-works').classList.toggle('active',isWorks);
   document.getElementById('nav-courses').classList.toggle('active',!isWorks);
+  // Toggle body class to hide/show works-only elements via CSS
+  document.body.classList.toggle('tab-courses', !isWorks);
   if(!isWorks){
     const fr=document.getElementById('courses-frame');
     if(!fr.dataset.loaded){
