@@ -19,8 +19,9 @@ class ClassIn(BaseModel):
     description: Optional[str] = ""
     notes:       Optional[str] = ""
     is_active:   Optional[bool] = True
-    image_url:   Optional[str] = ""
+    image_url:   Optional[str] = None
     image_urls:  Optional[list] = []
+    subtitle:    Optional[str] = ""
 
 class RegistrationIn(BaseModel):
     class_id:       int
@@ -68,7 +69,7 @@ async def register(reg: RegistrationIn):
     # 建立報名記錄
     data = await sb_fetch("/registrations", method="POST", body={
         "class_id":      reg.class_id,
-        "class_title":   cls["name"] if "name" in cls else cls.get("title",""),
+        "class_title":   cls.get("name", cls.get("title","")), 
         "name":          reg.name,
         "phone":         reg.phone,
         "email":         reg.email,
@@ -142,14 +143,18 @@ async def admin_list_classes(authorization: str = Header(...)):
 async def create_class(cls: ClassIn, authorization: str = Header(...)):
     token = authorization.replace("Bearer ", "")
     await verify_admin_token(token)
-    data = await sb_fetch("/classes", method="POST", body=cls.model_dump())
+    body = {k: v for k, v in cls.model_dump().items() if v is not None}
+    if 'image_urls' not in body: body['image_urls'] = []
+    data = await sb_fetch("/classes", method="POST", body=body)
     return data[0]
 
 @router.patch("/admin/classes/{class_id}")
 async def update_class(class_id: int, cls: ClassIn, authorization: str = Header(...)):
     token = authorization.replace("Bearer ", "")
     await verify_admin_token(token)
-    await sb_fetch(f"/classes?id=eq.{class_id}", method="PATCH", body=cls.model_dump())
+    body = {k: v for k, v in cls.model_dump().items() if v is not None}
+    if 'image_urls' not in body: body['image_urls'] = []
+    await sb_fetch(f"/classes?id=eq.{class_id}", method="PATCH", body=body)
     return {"message": "已更新"}
 
 @router.delete("/admin/classes/{class_id}")
@@ -192,7 +197,7 @@ async def send_reg_confirm(reg_id: int, reg: RegistrationIn, cls: dict, total: i
       <div style="background:#fff;border-radius:10px;padding:16px 20px;margin-bottom:14px">
         <p style="font-size:14px;color:#1C2B3A;line-height:1.9;margin:0">
           親愛的 {reg.name}，<br><br>
-          我們已收到您報名 <strong>{cls['title']}</strong> 的申請。<br>
+          我們已收到您報名 <strong>{cls.get('name', cls.get('title',''))}</strong> 的申請。<br>
           請於 <strong>24 小時內完成匯款</strong>，逾期將自動取消報名。
         </p>
       </div>
@@ -222,7 +227,7 @@ async def send_reg_confirm(reg_id: int, reg: RegistrationIn, cls: dict, total: i
             await client.post("https://api.resend.com/emails",
                 headers={"Authorization": f"Bearer {api_key}", "Content-Type": "application/json"},
                 json={"from": "是陶。<onboarding@resend.dev>", "to": [reg.email],
-                      "subject": f"是陶。課程報名確認 #{reg_id}｜{cls['title']}",
+                      "subject": f"是陶。課程報名確認 #{reg_id}｜{cls.get('name', cls.get('title',''))}",
                       "html": html}, timeout=10)
     except Exception: pass
 
