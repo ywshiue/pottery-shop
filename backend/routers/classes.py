@@ -19,7 +19,7 @@ class ClassIn(BaseModel):
     description: Optional[str] = ""
     notes:       Optional[str] = ""
     is_active:   Optional[bool] = True
-    image_url:   Optional[str] = None
+    image_url:   Optional[str] = ""
     image_urls:  Optional[list] = []
     subtitle:    Optional[str] = ""
 
@@ -143,8 +143,8 @@ async def admin_list_classes(authorization: str = Header(...)):
 async def create_class(cls: ClassIn, authorization: str = Header(...)):
     token = authorization.replace("Bearer ", "")
     await verify_admin_token(token)
-    body = {k: v for k, v in cls.model_dump().items() if v is not None}
-    if 'image_urls' not in body: body['image_urls'] = []
+    body = cls.model_dump()
+    if not body.get('image_urls'): body['image_urls'] = []
     data = await sb_fetch("/classes", method="POST", body=body)
     return data[0]
 
@@ -152,8 +152,8 @@ async def create_class(cls: ClassIn, authorization: str = Header(...)):
 async def update_class(class_id: int, cls: ClassIn, authorization: str = Header(...)):
     token = authorization.replace("Bearer ", "")
     await verify_admin_token(token)
-    body = {k: v for k, v in cls.model_dump().items() if v is not None}
-    if 'image_urls' not in body: body['image_urls'] = []
+    body = cls.model_dump()
+    if not body.get('image_urls'): body['image_urls'] = []
     await sb_fetch(f"/classes?id=eq.{class_id}", method="PATCH", body=body)
     return {"message": "已更新"}
 
