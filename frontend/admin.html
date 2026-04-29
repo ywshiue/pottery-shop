@@ -199,6 +199,9 @@ const API = 'https://pottery-shop.onrender.com';
     <button class="top-tab" id="nav-products" onclick="tab('products')">
       <span class="tab-icon">◻</span>商品
     </button>
+    <button class="top-tab" id="nav-classes" onclick="tab('classes')">
+      <span class="tab-icon">◈</span>課程
+    </button>
     <button class="top-tab" id="nav-questions" onclick="tab('questions')">
       <span class="tab-icon">？</span>提問
     </button>
@@ -355,11 +358,12 @@ function doLogout(){TOKEN='';document.getElementById('admin-screen').style.displ
 
 // ── Tab ───────────────────────────────────────────────────
 function tab(name){
-  document.querySelectorAll('.top-tab').forEach((t,i)=>t.classList.toggle('on',['orders','products','questions'][i]===name));
+  document.querySelectorAll('.top-tab').forEach((t,i)=>t.classList.toggle('on',['orders','products','classes','questions'][i]===name));
   document.querySelectorAll('.pane').forEach(p=>p.classList.remove('on'));
   document.getElementById('p-'+name).classList.add('on');
   if(name==='orders')loadOrders();
   else if(name==='products')loadProducts();
+  else if(name==='classes')loadClassesAdmin();
   else if(name==='questions')loadQuestions();
 }
 
@@ -652,6 +656,142 @@ async function saveNote(){
     renderOrders();toast('備註已儲存');closeNote();
   }catch(e){toast('儲存失敗',false);}
 }
+
+// ── Classes Admin ─────────────────────────────────────────
+let allClasses=[], allRegs=[], clsFilter='all', regFilter='all';
+let clsImgFiles=[], clsPendingUrls=[];
+
+function clsAddFiles(files){
+  const rem=6-clsPendingUrls.length-clsImgFiles.length;
+  for(let i=0;i<Math.min(files.length,rem);i++) clsImgFiles.push(files[i]);
+  renderClsImgGrid();
+}
+function clsRemoveImg(idx){
+  if(idx<clsPendingUrls.length) clsPendingUrls.splice(idx,1);
+  else clsImgFiles.splice(idx-clsPendingUrls.length,1);
+  renderClsImgGrid();
+}
+function renderClsImgGrid(){
+  const grid=document.getElementById('cls-img-grid');if(!grid)return;
+  const all=clsPendingUrls.length+clsImgFiles.length;
+  grid.innerHTML=clsPendingUrls.map((url,i)=>`<div class="img-item"><img src="${url}">${i===0?'<div class="img-item-main">主圖</div>':''}<button class="img-item-del" onclick="clsRemoveImg(${i})">×</button></div>`).join('')+
+    clsImgFiles.map((f,i)=>{const idx=clsPendingUrls.length+i;return`<div class="img-item"><img src="${URL.createObjectURL(f)}">${idx===0?'<div class="img-item-main">主圖</div>':''}<button class="img-item-del" onclick="clsRemoveImg(${idx})">×</button></div>`;}).join('');
+  const ua=document.getElementById('cls-img-upload');if(ua)ua.style.display=all>=6?'none':'block';
+}
+async function clsUploadImgs(){
+  const up=[];
+  for(const f of clsImgFiles){
+    const fd=new FormData();fd.append('file',f);
+    const res=await fetch(`${API}/upload/`,{method:'POST',headers:{'Authorization':`Bearer ${TOKEN}`},body:fd});
+    const d=await res.json();if(!res.ok)throw new Error(d.detail||'上傳失敗');up.push(d.url);
+  }
+  return up;
+}
+function resetClass(){
+  ['cls-name','cls-price','cls-capacity','cls-duration','cls-location','cls-date','cls-price-note','cls-description','cls-notes'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  document.getElementById('cls-id').value='';
+  document.getElementById('cls-type').value='手作陶體驗';
+  document.getElementById('cls-active').value='true';
+  const t=document.getElementById('class-form-title');if(t)t.textContent='新增課程';
+  clsImgFiles=[];clsPendingUrls=[];renderClsImgGrid();
+  const fi=document.getElementById('cls-fi');if(fi)fi.value='';
+}
+function editClass(cls){
+  document.getElementById('cls-id').value=cls.id;
+  document.getElementById('cls-type').value=cls.type||'手作陶體驗';
+  document.getElementById('cls-active').value=String(cls.is_active);
+  [{k:'name',f:'name'},{k:'price',f:'price'},{k:'capacity',f:'capacity'},{k:'duration',f:'duration'},{k:'location',f:'location'},{k:'price_note',f:'price-note'},{k:'description',f:'description'},{k:'notes',f:'notes'}].forEach(({k,f})=>{const el=document.getElementById('cls-'+f);if(el)el.value=cls[k]||'';});
+  const dt=document.getElementById('cls-date');if(dt)dt.value=cls.date_desc||'';
+  clsImgFiles=[];clsPendingUrls=cls.image_urls?.length?[...cls.image_urls]:cls.image_url?[cls.image_url]:[];
+  renderClsImgGrid();
+  const t=document.getElementById('class-form-title');if(t)t.textContent='編輯課程';
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+async function saveClass(){
+  const name=document.getElementById('cls-name').value.trim();
+  const price=parseInt(document.getElementById('cls-price').value);
+  const cap=parseInt(document.getElementById('cls-capacity').value);
+  if(!name||!price||!cap){toast('請填寫必填欄位',false);return;}
+  const btn=document.getElementById('cls-save-btn');btn.disabled=true;btn.textContent='儲存中...';
+  try{
+    const newUrls=await clsUploadImgs();
+    const allUrls=[...clsPendingUrls,...newUrls];
+    const body={type:document.getElementById('cls-type').value,name,price,capacity:cap,
+      date_desc:document.getElementById('cls-date').value,duration:document.getElementById('cls-duration').value,
+      location:document.getElementById('cls-location').value,price_note:document.getElementById('cls-price-note').value,
+      description:document.getElementById('cls-description').value,notes:document.getElementById('cls-notes').value,
+      is_active:document.getElementById('cls-active').value==='true',image_url:allUrls[0]||null,image_urls:allUrls};
+    const eid=document.getElementById('cls-id').value;
+    if(eid){await api(`/classes/admin/classes/${eid}`,{method:'PATCH',body:JSON.stringify(body)});toast('課程已更新！');}
+    else{await api('/classes/admin/classes',{method:'POST',body:JSON.stringify(body)});toast('課程已新增！');}
+    resetClass();loadClassesAdmin();
+  }catch(e){toast('錯誤：'+e.message,false);}
+  finally{btn.disabled=false;btn.textContent='儲存課程';}
+}
+async function deleteClass(id){
+  if(!confirm('確定刪除此課程？'))return;
+  try{await api(`/classes/admin/classes/${id}`,{method:'DELETE'});toast('已刪除');loadClassesAdmin();}
+  catch(e){toast('失敗',false);}
+}
+async function loadClassesAdmin(){
+  try{
+    [allClasses,allRegs]=await Promise.all([api('/classes/admin/classes'),api('/classes/admin/registrations')]);
+    renderClasses();renderRegs();
+    ['all','workshop','throwing'].forEach(k=>{const el=document.getElementById('cls-cnt-'+k);if(el)el.textContent=k==='all'?allClasses.length:allClasses.filter(c=>c.type===(k==='workshop'?'手作陶體驗':'基礎手拉坯')).length;});
+    ['all','pending','paid','confirmed','cancelled'].forEach(s=>{const el=document.getElementById('rcnt-'+s);if(el)el.textContent=s==='all'?allRegs.length:allRegs.filter(r=>r.status===s).length;});
+  }catch(e){toast('載入課程失敗',false);}
+}
+function filterClasses(btn,f){document.querySelectorAll('#p-classes .o-ftab:not(.o-filter-bar .o-ftab)').forEach(t=>t.classList.remove('on'));btn.classList.add('on');clsFilter=f;renderClasses();}
+function filterRegs(btn,f){document.querySelectorAll('#p-classes .o-filter-bar .o-ftab').forEach(t=>t.classList.remove('on'));btn.classList.add('on');regFilter=f;renderRegs();}
+function renderClasses(){
+  const filtered=clsFilter==='all'?allClasses:allClasses.filter(c=>c.type===(clsFilter==='workshop'?'手作陶體驗':'基礎手拉坯'));
+  const list=document.getElementById('cls-list');if(!list)return;
+  if(!filtered.length){list.innerHTML='<div style="text-align:center;color:var(--m);padding:30px;font-size:13px">尚無課程</div>';return;}
+  list.innerHTML=filtered.map(cls=>{
+    const imgs=cls.image_urls?.length?cls.image_urls:cls.image_url?[cls.image_url]:[];
+    const full=cls.registered>=cls.capacity;
+    const sc=!cls.is_active?'ba':full?'br2':'bg2';
+    const sl=!cls.is_active?'暫停':full?'已滿':cls.registered+'/'+cls.capacity;
+    return`<div class="p-card">
+      ${imgs.length?`<img class="p-card-img" src="${imgs[0]}">`:`<div class="p-card-img" style="display:flex;align-items:center;justify-content:center;color:var(--b)">◻</div>`}
+      <div class="p-card-info">
+        <div class="p-card-name">${cls.name} <span class="bdg ${sc}">${sl}</span></div>
+        <div class="p-card-meta">${cls.type}${cls.date_desc?' · '+cls.date_desc.split('\n')[0]:''}</div>
+        <div class="p-card-price">NT$${cls.price.toLocaleString()} / ${cls.capacity}人</div>
+        <div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap">
+          <button class="btn bo btn-sm" onclick='editClass(${JSON.stringify(cls)})'>編輯</button>
+          <button class="btn br btn-sm" onclick="deleteClass(${cls.id})">刪除</button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+const RSL={pending:'待確認',paid:'已匯款',confirmed:'已確認',cancelled:'已取消'};
+const RSC={pending:'ba',paid:'bg2',confirmed:'bg2',cancelled:'br2'};
+function renderRegs(){
+  const filtered=regFilter==='all'?allRegs:allRegs.filter(r=>r.status===regFilter);
+  const list=document.getElementById('reg-list');if(!list)return;
+  if(!filtered.length){list.innerHTML='<div style="text-align:center;color:var(--m);padding:30px;font-size:13px">此分類尚無報名</div>';return;}
+  list.innerHTML=filtered.map(r=>`
+    <div class="o-card">
+      <div class="o-card-top"><div><div class="o-id" style="font-size:13px">#${r.id} ${r.name}</div>
+        <div class="o-date">${r.class_title}${r.course_type?' · '+r.course_type:''}${r.members>1?' · '+r.members+'人':''}</div></div>
+        <span class="bdg ${RSC[r.status]||'ba'}">${RSL[r.status]||r.status}</span>
+      </div>
+      <div class="o-contact">📞 ${r.phone} · ✉️ ${r.email}</div>
+      <div style="font-weight:600;color:var(--g);margin:6px 0 8px">NT$${r.total_amount.toLocaleString()}</div>
+      ${r.payment_last5?`<div style="font-size:12px;color:var(--g);background:var(--gl);padding:6px 10px;border-radius:7px;margin-bottom:8px">後五碼：${r.payment_last5}</div>`:''}
+      <select style="padding:5px 8px;border:1px solid var(--b);border-radius:7px;font-size:12px;font-family:inherit;background:var(--w);color:var(--t)" onchange="updateRegStatus(${r.id},this.value)">
+        ${['pending','paid','confirmed','cancelled'].map(s=>`<option value="${s}"${s===r.status?' selected':''}>${RSL[s]}</option>`).join('')}
+      </select>
+    </div>`).join('');
+}
+async function updateRegStatus(id,status){
+  try{await api(`/classes/admin/registrations/${id}`,{method:'PATCH',body:JSON.stringify({status})});
+    const r=allRegs.find(x=>x.id===id);if(r)r.status=status;renderRegs();toast('狀態已更新');
+  }catch(e){toast('更新失敗',false);}
+}
+
 </script>
 </body>
 </html>

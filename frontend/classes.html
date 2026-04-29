@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>是陶。課程</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="dns-prefetch" href="https://pottery-shop.onrender.com">
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;500;600&family=Noto+Sans+TC:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --g:#2C4A6E;--gl:#E8EEF5;
+  --t:#1C2B3A;--m:#6B7280;
+  --b:#D4CFC9;--bg:#E0DCD5;--w:#F5F2EE;
+  --r:#8B6F47;--rl:#F5EDE0;
+  --serif:'Shippori Mincho','Noto Serif TC',serif;
+  --sans:'Noto Sans TC',sans-serif;
+}
+body{font-family:var(--sans);background:var(--bg);color:var(--t);font-size:14px;line-height:1.8;font-weight:300;letter-spacing:.4px}
+
+/* ── Topbar ─────────────────────────────────────────── */
+.topbar{background:var(--w);border-bottom:1px solid var(--b);padding:0 24px 0 20px;height:64px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 1px 8px rgba(28,43,58,.05);overflow:visible}
+.logo-wrap{display:flex;align-items:center;text-decoration:none;overflow:visible}
+.nav-right{display:flex;align-items:center;gap:20px}
+.nav-link{font-family:var(--sans);font-size:12px;color:var(--m);text-decoration:none;letter-spacing:1px;transition:color .15s;font-weight:300}
+.nav-link:hover{color:var(--t)}
+
+/* ── Filter ─────────────────────────────────────────── */
+.wrap{max-width:1280px;margin:0 auto;padding:32px 24px 80px}
+.section-header{margin-bottom:28px}
+.section-title{font-family:var(--serif);font-size:20px;font-weight:400;color:var(--t);margin-bottom:12px;letter-spacing:2px}
+.fbar{display:flex;flex-wrap:wrap;gap:8px}
+.fc{padding:6px 18px;border-radius:99px;border:1px solid var(--b);font-size:12px;letter-spacing:.5px;cursor:pointer;background:transparent;color:var(--m);transition:all .2s;font-family:var(--sans);font-weight:300;flex-shrink:0;white-space:nowrap}
+.fc.on{background:var(--g);color:#fff;border-color:var(--g);letter-spacing:.8px;flex-shrink:0}
+
+/* ── Layout ─────────────────────────────────────────── */
+.layout{display:grid;grid-template-columns:1fr 320px;gap:24px;align-items:start}
+
+/* ── Product Grid ───────────────────────────────────── */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:20px}
+.pc{background:var(--w);border:1px solid var(--b);border-radius:14px;overflow:hidden;transition:all .25s;cursor:pointer}
+.pc:hover{transform:translateY(-3px);box-shadow:0 8px 28px rgba(28,43,58,.1);border-color:transparent}
+.pimg{width:100%;aspect-ratio:1/1;background:var(--bg);position:relative;overflow:hidden}
+.pimg img{width:100%;height:100%;object-fit:cover;transition:transform .4s}
+.pc:hover .pimg img{transform:scale(1.05)}
+.pimg-count{position:absolute;bottom:10px;right:10px;background:rgba(28,43,58,.55);color:#fff;font-size:10px;letter-spacing:.3px;padding:3px 8px;border-radius:99px;backdrop-filter:blur(4px)}
+.smask{position:absolute;inset:0;background:rgba(28,43,58,.45);display:flex;align-items:center;justify-content:center}
+.smask-text{color:#fff;font-size:12px;letter-spacing:1.5px;font-weight:500}
+.pbody{padding:10px 13px}
+.pcat{font-family:var(--sans);font-size:10px;letter-spacing:1.5px;color:var(--m);text-transform:uppercase;margin-bottom:3px;font-weight:300}
+.pname{font-family:var(--serif);font-size:14px;font-weight:400;margin-bottom:2px;color:var(--t);transition:color .15s;letter-spacing:.8px}
+.pc:hover .pname{color:var(--g)}
+.psize{font-size:11px;color:var(--m);margin-bottom:5px;letter-spacing:.3px}
+.pprice{font-size:15px;font-weight:600;color:var(--g)}
+.pview{font-family:var(--sans);font-size:10px;color:var(--m);margin-top:4px;letter-spacing:.8px;display:flex;align-items:center;gap:4px;opacity:0;transition:opacity .2s;font-weight:300}
+.pc:hover .pview{opacity:1}
+
+/* ── Cart (Desktop) ─────────────────────────────────── */
+.cbox{background:var(--w);border:1px solid var(--b);border-radius:14px;padding:22px;position:sticky;top:80px}
+.chdr{font-family:var(--serif);font-size:15px;font-weight:400;display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;color:var(--t);letter-spacing:1.5px}
+.ccnt{background:var(--g);color:#fff;border-radius:99px;font-size:10px;font-weight:700;padding:2px 9px;letter-spacing:.3px}
+.cempty{text-align:center;padding:32px 0;color:var(--m);font-size:13px;letter-spacing:.3px}
+.ci{display:flex;gap:12px;padding:12px 0;border-bottom:1px solid var(--b);align-items:flex-start}
+.cimg{width:48px;height:48px;border-radius:8px;background:var(--bg);flex-shrink:0;overflow:hidden}
+.cimg img{width:100%;height:100%;object-fit:cover}
+.cn{font-size:13px;font-weight:600;color:var(--t);margin-bottom:2px}
+.csz{font-size:11px;color:var(--m);letter-spacing:.3px}
+.cp{font-size:13px;font-weight:600;color:var(--g);flex-shrink:0}
+.qr{display:flex;align-items:center;gap:6px;margin-top:6px}
+.qb{width:24px;height:24px;border-radius:6px;border:1px solid var(--b);background:transparent;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;color:var(--t);transition:all .15s}
+.qb:hover{border-color:var(--g);color:var(--g)}
+.totbl{margin-top:14px;padding-top:14px;border-top:1px solid var(--b)}
+.tr{display:flex;justify-content:space-between;font-size:13px;color:var(--m);margin-bottom:6px;letter-spacing:.3px}
+.tr.grand{font-weight:600;font-size:15px;color:var(--t);margin-top:10px}
+.cbtn{width:100%;margin-top:14px;padding:13px;background:var(--g);color:#fff;border:none;border-radius:10px;font-size:13px;font-weight:400;cursor:pointer;font-family:var(--serif);letter-spacing:2px;transition:background .15s}
+.cbtn:hover{background:#1e3450}
+
+/* ── Mobile cart btn ────────────────────────────────── */
+.m-cart-btn{display:none;position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--g);color:#fff;border:none;border-radius:99px;padding:14px 32px;font-size:14px;font-weight:600;font-family:var(--sans);cursor:pointer;z-index:90;box-shadow:0 6px 20px rgba(44,74,110,.35);letter-spacing:.5px;white-space:nowrap}
+.m-cart-overlay{position:fixed;inset:0;background:rgba(28,43,58,.5);z-index:150;display:none}
+.m-cart-overlay.open{display:block}
+.m-cart{position:fixed;bottom:0;left:0;right:0;background:var(--w);border-radius:20px 20px 0 0;padding:22px 22px 74px;z-index:160;max-height:80vh;overflow-y:auto;overflow-x:hidden;transform:translateY(100%);transition:transform .3s cubic-bezier(.32,.72,0,1);-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
+.m-cart.open{transform:translateY(0)}
+.m-cart-handle{width:36px;height:4px;background:var(--b);border-radius:2px;margin:0 auto 18px}
+
+/* ── Product Detail Modal ───────────────────────────── */
+.drawer-overlay{position:fixed;inset:0;background:rgba(28,43,58,.6);z-index:200;display:none;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(3px);overflow:hidden}
+.drawer-overlay.open{display:flex}
+.drawer{background:var(--w);border-radius:18px;width:100%;max-width:820px;max-height:88vh;overflow:clip;display:flex;flex-direction:column;box-shadow:0 24px 64px rgba(28,43,58,.2)}
+.drawer-close{padding:16px 20px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--b);flex-shrink:0}
+.drawer-close-btn{background:transparent;border:none;font-size:20px;cursor:pointer;color:var(--m);line-height:1;width:32px;height:32px;display:flex;align-items:center;justify-content:center;border-radius:50%;transition:background .15s}
+.drawer-close-btn:hover{background:var(--bg)}
+.drawer-cat{font-size:10px;letter-spacing:1.5px;color:var(--m);text-transform:uppercase}
+.drawer-content{padding:24px 24px 74px;flex:1;overflow-y:auto;overflow-x:hidden;display:grid;grid-template-columns:1fr 1fr;gap:24px;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;min-height:0}
+@media(max-width:640px){.drawer-content{grid-template-columns:1fr}.drawer{max-height:92vh;border-radius:20px 20px 0 0;margin-top:auto}}
+
+/* Drawer image gallery */
+.d-main-img{width:100%;aspect-ratio:4/5;object-fit:cover;border-radius:12px;margin-bottom:12px;background:var(--bg)}
+.d-main-placeholder{width:100%;aspect-ratio:4/5;background:var(--bg);border-radius:12px;margin-bottom:12px;display:flex;align-items:center;justify-content:center;color:var(--b);font-size:48px}
+.d-thumbs{display:flex;gap:8px;margin-bottom:20px;overflow-x:auto;padding-bottom:4px;overflow-y:visible}
+.d-thumb{width:64px;height:64px;border-radius:8px;object-fit:cover;cursor:pointer;border:2px solid transparent;flex-shrink:0;opacity:.6;transition:all .15s}
+.d-thumb.on{border-color:var(--g);opacity:1}
+
+.d-name{font-family:var(--serif);font-size:22px;font-weight:400;color:var(--t);margin-bottom:6px;line-height:1.3;letter-spacing:1.5px}
+.d-price{font-size:20px;font-weight:600;color:var(--g);margin-bottom:6px}
+.d-size{font-size:12px;color:var(--m);letter-spacing:.5px;margin-bottom:14px}
+.d-divider{border:none;border-top:1px solid var(--b);margin:16px 0}
+.d-section-title{font-size:10px;letter-spacing:1.5px;color:var(--m);text-transform:uppercase;margin-bottom:8px}
+.d-desc{font-size:14px;color:var(--t);line-height:1.8;white-space:pre-wrap}
+.d-add-btn{width:100%;padding:14px;background:var(--g);color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;font-family:var(--sans);letter-spacing:.8px;transition:background .15s;margin-top:20px;flex-shrink:0}
+.d-add-btn:hover{background:#1e3450}
+.d-add-btn:disabled{background:var(--b);color:var(--m);cursor:not-allowed}
+.d-stock{font-size:12px;color:var(--m);text-align:center;margin-top:8px;letter-spacing:.3px;padding-bottom:8px}
+
+/* ── Lightbox ───────────────────────────────────────── */
+.lb{position:fixed;inset:0;background:rgba(10,15,20,.94);z-index:500;display:none;flex-direction:column;align-items:center;justify-content:center}
+.lb.open{display:flex}
+.lb-img{max-width:90vw;max-height:74vh;object-fit:contain;border-radius:8px}
+.lb-thumbs{display:flex;gap:8px;margin-top:16px;overflow-x:auto;padding:4px 20px;max-width:90vw}
+.lb-thumb{width:52px;height:52px;border-radius:6px;object-fit:cover;cursor:pointer;opacity:.5;border:2px solid transparent;flex-shrink:0;transition:all .15s}
+.lb-thumb.on{opacity:1;border-color:#fff}
+.lb-close{position:absolute;top:20px;right:22px;background:transparent;border:none;color:#fff;font-size:22px;cursor:pointer;opacity:.7;transition:opacity .15s}
+.lb-close:hover{opacity:1}
+.lb-nav{position:absolute;top:50%;transform:translateY(-50%);background:rgba(255,255,255,.12);border:none;color:#fff;width:44px;height:44px;border-radius:50%;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .15s}
+.lb-nav:hover{background:rgba(255,255,255,.25)}
+.lb-prev{left:18px}.lb-right{right:18px}
+.lb-info{color:rgba(255,255,255,.6);font-size:12px;margin-top:10px;letter-spacing:.5px}
+
+/* ── Checkout Modal ─────────────────────────────────── */
+.ov{position:fixed;inset:0;background:rgba(28,43,58,.6);z-index:300;display:none;align-items:flex-end;justify-content:center;backdrop-filter:blur(3px);overflow:hidden}
+.ov.open{display:flex}
+.mo{background:var(--w);border-radius:20px 20px 0 0;padding:28px 28px 74px;width:100%;max-width:520px;max-height:92vh;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
+.mo-handle{width:36px;height:4px;background:var(--b);border-radius:2px;margin:0 auto 20px}
+.mtitle{font-family:var(--serif);font-size:18px;font-weight:400;margin-bottom:4px;color:var(--t);letter-spacing:1.5px}
+.msub{font-size:13px;color:var(--m);margin-bottom:22px;letter-spacing:.3px}
+.fg{display:flex;flex-direction:column;gap:5px;margin-bottom:14px}
+.lbl{font-size:10px;font-weight:700;color:var(--m);text-transform:uppercase;letter-spacing:.8px}
+input[type=text],input[type=email],input[type=tel],input[type=date],textarea{padding:11px 14px;border:1px solid var(--b);border-radius:9px;font-size:14px;font-family:var(--sans);background:var(--w);color:var(--t);outline:none;transition:border-color .15s;width:100%;box-sizing:border-box}
+input:focus,textarea:focus{border-color:var(--g)}
+textarea{resize:vertical;min-height:76px}
+.f2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px}
+.po{display:flex;align-items:center;gap:12px;padding:13px;border:1.5px solid var(--b);border-radius:10px;cursor:pointer;margin-bottom:8px;transition:all .15s}
+.po:hover{background:var(--bg)}.po.sel{border-color:var(--g);background:var(--gl)}
+.pl{font-size:14px;font-weight:600;color:var(--t);letter-spacing:.2px}.ps{font-size:11px;color:var(--m);margin-top:2px;letter-spacing:.3px}
+.ordsum{background:var(--bg);padding:14px;border-radius:10px;font-size:13px;margin-top:16px;border:1px solid var(--b)}
+.ordsum-row{display:flex;justify-content:space-between;color:var(--m);margin-bottom:5px}
+.ordsum-note{font-size:11px;color:var(--m);margin-top:10px;line-height:1.6;letter-spacing:.2px;padding-top:8px;border-top:1px solid var(--b)}
+.mftr{display:flex;gap:10px;margin-top:16px;justify-content:flex-end}
+.btn{display:inline-flex;align-items:center;padding:10px 22px;border-radius:9px;font-size:14px;font-weight:600;font-family:var(--sans);cursor:pointer;transition:all .15s;border:none;letter-spacing:.3px}
+.bg{background:var(--g);color:#fff}.bg:hover{background:#1e3450}.bg:disabled{opacity:.4;cursor:not-allowed}
+.bo{background:transparent;border:1px solid var(--b);color:var(--m)}.bo:hover{background:var(--bg)}
+.sbox{text-align:center;padding:32px 0}
+.s-icon{width:56px;height:56px;background:var(--gl);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 16px}
+
+/* ── Footer ─────────────────────────────────────────── */
+footer{background:var(--t);color:rgba(255,255,255,.7);padding:48px 32px 32px;margin-top:60px}
+.footer-inner{max-width:1280px;margin:0 auto;display:grid;grid-template-columns:1.2fr 1fr 1fr 1fr;gap:32px}
+.footer-logo{font-family:var(--serif);font-size:17px;font-weight:400;color:#fff;margin-bottom:8px;letter-spacing:2px}
+.footer-logo span{color:rgba(44,130,200,.8)}
+.footer-tagline{font-size:12px;letter-spacing:.5px;line-height:1.7}
+.footer-section-title{font-size:10px;letter-spacing:1.8px;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:14px;font-weight:600}
+.footer-list{list-style:none;display:flex;flex-direction:column;gap:8px}
+.footer-list li{font-size:13px;line-height:1.6;letter-spacing:.2px}
+.footer-list li strong{color:rgba(255,255,255,.9)}
+.footer-bottom{max-width:1280px;margin:32px auto 0;padding-top:20px;border-top:1px solid rgba(255,255,255,.08);font-size:11px;letter-spacing:.5px;color:rgba(255,255,255,.3);text-align:center}
+
+/* ── Toast ──────────────────────────────────────────── */
+#toast{position:fixed;bottom:88px;right:20px;background:var(--t);color:#fff;padding:11px 18px;border-radius:10px;font-size:13px;font-weight:500;z-index:999;opacity:0;transform:translateY(12px);transition:all .25s;pointer-events:none;max-width:calc(100vw - 40px);letter-spacing:.3px}
+#toast.show{opacity:1;transform:translateY(0)}
+.loading{text-align:center;padding:60px;color:var(--m);font-size:14px;letter-spacing:.5px}
+
+/* ── Responsive ─────────────────────────────────────── */
+
+/* ── FAQ ──────────────────────────────────────────────── */
+.faq-wrap{max-width:1280px;margin:0 auto;padding:0 24px 48px}
+.faq-title{font-family:var(--serif);font-size:20px;font-weight:400;color:var(--t);margin-bottom:20px;letter-spacing:2px}
+.faq-item{border-bottom:1px solid var(--b)}
+.faq-q{width:100%;background:transparent;border:none;padding:16px 0;display:flex;justify-content:space-between;align-items:center;cursor:pointer;font-family:var(--sans);font-size:14px;font-weight:500;color:var(--t);text-align:left;gap:16px;transition:color .15s}
+.faq-q:hover{color:var(--g)}
+.faq-icon{font-size:18px;color:var(--m);flex-shrink:0;transition:transform .25s;line-height:1}
+.faq-a{font-size:13px;color:var(--m);line-height:1.8;padding:0 0 16px;display:none;letter-spacing:.2px}
+.faq-item.open .faq-icon{transform:rotate(45deg)}
+.faq-item.open .faq-a{display:block}
+@media(max-width:760px){
+  .layout{grid-template-columns:1fr}
+  .cbox{display:none}
+  .m-cart-btn{display:block}
+  .grid{grid-template-columns:repeat(2,1fr);gap:12px}
+  .wrap{padding:20px 16px 100px}
+  .topbar{padding:0 16px;height:56px;overflow:visible}
+  .f2{grid-template-columns:1fr}
+  .mo{border-radius:20px 20px 0 0;max-width:100%;padding-bottom:74px}
+  .footer-inner{grid-template-columns:1fr 1fr}
+  footer{padding:36px 20px 24px}
+  #toast{bottom:100px}
+  .drawer{width:100vw}
+}
+@media(min-width:761px){
+  .ov{align-items:center}
+  .mo{border-radius:16px;max-width:480px;max-height:88vh;padding-bottom:74px}
+  .mo-handle{display:none}
+  #toast{bottom:24px}
+}
+
+
+/* ── Course-specific additions ──────────────────────────── */
+/* Page header */
+.pg-header{padding:28px 24px 8px;max-width:1280px;margin:0 auto}
+.pg-title{font-family:var(--serif);font-size:20px;font-weight:400;color:var(--t);letter-spacing:2px;margin-bottom:4px}
+.pg-sub{font-size:12px;color:var(--m);letter-spacing:.3px}
+
+/* Course card – extends .prod pattern */
+.cc{background:var(--w);border:1px solid var(--b);border-radius:14px;overflow:hidden;cursor:pointer;transition:all .25s;position:relative}
+.cc:hover{transform:translateY(-3px);box-shadow:0 8px 28px rgba(28,43,58,.1);border-color:transparent}
+.cc-img{width:100%;aspect-ratio:1;background:var(--bg);overflow:hidden;position:relative}
+.cc-img img{width:100%;height:100%;object-fit:cover;transition:transform .4s}
+.cc:hover .cc-img img{transform:scale(1.04)}
+.cc-sold-ov{position:absolute;inset:0;background:rgba(28,43,58,.42);display:flex;align-items:center;justify-content:center;pointer-events:none}
+.cc-sold-ov span{font-size:10px;letter-spacing:2.5px;color:#fff;border:1px solid rgba(255,255,255,.45);padding:4px 12px;border-radius:99px}
+.cc-body{padding:14px 16px 16px}
+.cc-type{font-size:9px;letter-spacing:1.8px;color:var(--m);text-transform:uppercase;margin-bottom:4px}
+.cc-name{font-family:var(--serif);font-size:15px;font-weight:500;color:var(--t);margin-bottom:3px;letter-spacing:.3px;line-height:1.35}
+.cc-date{font-size:11px;color:var(--m);margin-bottom:7px;line-height:1.55;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.cc-row{display:flex;justify-content:space-between;align-items:flex-end}
+.cc-price{font-size:15px;font-weight:600;color:var(--g)}
+.cap-mini{margin-top:8px}
+.cap-mini-bar{height:2px;background:var(--b);border-radius:2px;overflow:hidden;margin-bottom:3px}
+.cap-mini-fill{height:100%;background:var(--g);border-radius:2px}
+.cap-mini-txt{font-size:9px;color:var(--m);letter-spacing:.3px}
+
+/* Detail drawer – shares .drawer .drawer-overlay with index */
+.d-gallery{position:relative;overflow:hidden;background:var(--t)}
+.d-slide{position:absolute;inset:0;opacity:0;transition:opacity .65s}
+.d-slide.on{opacity:1;z-index:1}
+.d-slide img{width:100%;height:100%;object-fit:cover;opacity:.88}
+.d-slide-ph{width:100%;height:100%;background:linear-gradient(135deg,#1C2B3A,#2C4A6E);display:flex;align-items:center;justify-content:center;color:rgba(224,220,213,.15);font-size:28px}
+.d-dots{position:absolute;bottom:12px;left:50%;transform:translateX(-50%);display:flex;gap:5px;z-index:2}
+.d-dot{width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,.3);cursor:pointer;transition:all .25s}
+.d-dot.on{background:#fff;width:14px;border-radius:3px}
+.d-info{padding:22px 24px;overflow-y:auto;overflow-x:hidden;display:flex;flex-direction:column;-webkit-overflow-scrolling:touch}
+.d-cat{font-size:9px;letter-spacing:2px;color:var(--m);text-transform:uppercase;margin-bottom:7px}
+.d-name{font-family:var(--serif);font-size:21px;font-weight:500;color:var(--t);letter-spacing:.5px;margin-bottom:4px;line-height:1.3}
+.d-price-row{display:flex;align-items:baseline;gap:8px;margin-bottom:14px}
+.d-price{font-size:19px;font-weight:600;color:var(--g)}
+.d-price del{font-size:12px;font-weight:300;color:var(--m)}
+.d-hr{height:1px;background:var(--b);margin:12px 0}
+.d-sec{font-size:9px;letter-spacing:2px;color:var(--m);text-transform:uppercase;margin-bottom:7px}
+.d-date-txt{font-size:13px;color:var(--t);line-height:1.8;white-space:pre-line;margin-bottom:10px}
+.d-metas{display:flex;flex-direction:column;gap:6px;margin-bottom:12px}
+.d-meta-r{display:flex;gap:12px;font-size:12px}
+.d-meta-k{color:var(--m);min-width:52px;flex-shrink:0;letter-spacing:.2px}
+.d-meta-v{color:var(--t);line-height:1.6}
+.d-desc-txt{font-size:13px;color:var(--m);line-height:1.95;white-space:pre-wrap;margin-bottom:12px}
+.d-notes-box{font-size:12px;color:var(--m);line-height:1.9;white-space:pre-wrap;background:var(--bg);border-radius:9px;padding:12px 14px;margin-bottom:14px}
+.d-cap-wrap{margin-bottom:14px}
+.d-cap-bar{height:4px;background:var(--b);border-radius:2px;overflow:hidden;margin:5px 0 4px}
+.d-cap-fill{height:100%;background:var(--g);border-radius:2px}
+.d-cap-txt{font-size:10px;color:var(--m);letter-spacing:.3px}
+.d-reg-btn{width:100%;padding:13px;background:var(--g);color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:500;cursor:pointer;font-family:var(--sans);letter-spacing:.5px;transition:background .15s;margin-top:auto}
+.d-reg-btn:hover{background:#1e3450}
+.d-reg-btn:disabled{background:var(--b);color:var(--m);cursor:not-allowed}
+.d-sold-note{text-align:center;font-size:11px;color:var(--r);letter-spacing:.3px;margin-top:8px}
+
+/* Reg modal additions */
+.bk-opt{display:flex;align-items:flex-start;gap:10px;padding:10px 12px;border:1.5px solid var(--b);border-radius:8px;cursor:pointer;margin-bottom:7px;transition:all .15s}
+.bk-opt.sel{border-color:var(--g);background:var(--gl)}
+.reg-sum{background:var(--gl);border:1px solid #B8D0E8;border-radius:10px;padding:14px;margin-bottom:14px}
+.rs-title{font-size:9px;letter-spacing:1.5px;color:var(--g);font-weight:600;margin-bottom:8px;text-transform:uppercase}
+.rs-row{display:flex;justify-content:space-between;font-size:13px;color:var(--m);margin-bottom:4px}
+.rs-total{font-weight:600;color:var(--t);font-size:14px;border-top:1px solid #B8D0E8;padding-top:8px;margin-top:6px;display:flex;justify-content:space-between}
+.bank-box{background:var(--gl);border:1px solid #B8D0E8;border-radius:12px;padding:15px;margin-bottom:12px}
+.bank-lbl{font-size:9px;letter-spacing:1.5px;color:var(--g);font-weight:600;margin-bottom:10px;text-transform:uppercase}
+.bank-r{display:flex;justify-content:space-between;font-size:13px;margin-bottom:6px}
+.bank-r .k{color:var(--m)}.bank-r .v{font-weight:500;color:var(--t)}
+.bank-r.acct .v{font-weight:700;color:var(--g);font-size:15px;letter-spacing:2px}
+.bank-r.amt .v{font-weight:700;color:var(--g);font-size:15px}
+.l5-wrap{border:2px solid var(--g);border-radius:12px;padding:15px;background:var(--gl);margin-bottom:14px}
+.l5-boxes{display:flex;gap:8px;justify-content:center;margin-top:10px}
+.l5-box{width:48px;height:56px;border:2px solid var(--b);border-radius:10px;font-size:22px;font-weight:600;text-align:center;font-family:var(--sans);background:#fff;color:var(--t);outline:none;transition:all .15s}
+.done-icon{width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 14px}
+
+</style>
+</head>
+<body>
+<script>const API='https://pottery-shop.onrender.com';</script>
+
+<div class="topbar">
+  <a class="logo-wrap" href="index.html" style="display:flex;align-items:center;gap:10px;text-decoration:none">
+    <svg width="46" height="46" viewBox="-2 -2 124 124" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M62 7 C76 3 94 10 106 24 C120 40 124 62 116 80 C107 100 88 112 66 114 C44 116 24 104 14 86 C2 66 2 42 16 24 C30 8 46 3 62 7 Z" stroke="#2C4A6E" stroke-width="2.5" fill="none"/>
+  <path d="M62 17 C74 14 89 20 99 32 C111 46 114 65 107 81 C99 97 83 106 64 108 C45 110 28 101 20 87 C10 71 11 50 22 36 C34 20 49 16 62 17 Z" stroke="#7BA3C8" stroke-width="1.2" fill="none" opacity=".5"/>
+  <ellipse cx="48" cy="44" rx="16" ry="10" stroke="#2C4A6E" stroke-width="1.4" fill="none" opacity=".5" transform="rotate(-15 48 44)"/>
+  <ellipse cx="82" cy="72" rx="13" ry="8" stroke="#2C4A6E" stroke-width="1.2" fill="none" opacity=".4" transform="rotate(10 82 72)"/>
+  <ellipse cx="56" cy="86" rx="9" ry="6" stroke="#7BA3C8" stroke-width="1" fill="none" opacity=".4" transform="rotate(-5 56 86)"/>
+  <circle cx="92" cy="40" r="5" stroke="#2C4A6E" stroke-width="1.2" fill="none" opacity=".5"/>
+  <circle cx="34" cy="64" r="4" stroke="#7BA3C8" stroke-width="1" fill="none" opacity=".4"/>
+  <circle cx="76" cy="96" r="3" stroke="#2C4A6E" stroke-width=".9" fill="none" opacity=".35"/>
+  <line x1="40" y1="28" x2="56" y2="34" stroke="#7BA3C8" stroke-width=".8" stroke-linecap="round" opacity=".4"/>
+  <line x1="88" y1="56" x2="100" y2="64" stroke="#7BA3C8" stroke-width=".8" stroke-linecap="round" opacity=".35"/>
+  <line x1="28" y1="80" x2="40" y2="75" stroke="#2C4A6E" stroke-width=".7" stroke-linecap="round" opacity=".3"/>
+</svg>
+    <div style="display:flex;flex-direction:column;gap:3px">
+      <div style="font-family:'Shippori Mincho',serif;font-size:18px;font-weight:500;color:#1C2B3A;letter-spacing:3px;line-height:1">是陶。</div>
+      <div style="font-family:'Noto Sans TC',sans-serif;font-size:8px;font-weight:300;color:#6B7280;letter-spacing:2.5px;text-transform:uppercase;line-height:1">It's Pottery</div>
+    </div>
+  </a>
+  <div class="nav-right">
+    <a href="classes.html" class="nav-link active">課程</a>
+    <a href="#footer-info" class="nav-link">運費說明</a>
+    <a href="https://www.instagram.com/ywshiue/" target="_blank" class="nav-link" style="display:flex;align-items:center" title="Instagram @ywshiue"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r=".8" fill="currentColor" stroke="none"/></svg></a>
+  </div>
+</div>
+
+<!-- Page header -->
+<div class="pg-header">
+  <div class="pg-title">課程</div>
+  <div class="pg-sub">手作陶體驗 · 基礎手拉坯 · 更多課程陸續開放</div>
+</div>
+
+<!-- Filter bar -->
+<div style="max-width:1280px;margin:0 auto">
+  <div class="fbar">
+    <button class="fc on" onclick="setCat(this,'')">全部課程</button>
+    <button class="fc" onclick="setCat(this,'手作陶體驗')">手作陶體驗</button>
+    <button class="fc" onclick="setCat(this,'基礎手拉坯')">基礎手拉坯</button>
+  </div>
+</div>
+
+<!-- Grid -->
+<div style="max-width:1280px;margin:0 auto;padding:0 20px 80px">
+  <div class="grid" id="grid"><div class="loading">載入中⋯</div></div>
+</div>
+
+<!-- Course detail drawer (same structure as product drawer) -->
+<div class="drawer-overlay" id="d-overlay" onclick="if(event.target===this)closeDetail()">
+  <div class="drawer" onclick="event.stopPropagation()">
+    <div class="drawer-content">
+      <!-- Left: image gallery -->
+      <div class="d-gallery" id="d-gallery" style="cursor:zoom-in">
+        <div class="d-slide-ph">◻</div>
+      </div>
+      <!-- Right: course info -->
+      <div class="d-info" id="d-info">
+        <div class="d-cat" id="d-cat">課程</div>
+        <div class="d-name" id="d-name"></div>
+        <div class="d-price-row">
+          <div class="d-price" id="d-price"></div>
+        </div>
+        <div class="d-hr"></div>
+        <div class="d-sec">開課時段</div>
+        <div class="d-date-txt" id="d-date"></div>
+        <div class="d-metas" id="d-metas"></div>
+        <div class="d-hr"></div>
+        <div class="d-sec">課程介紹</div>
+        <div class="d-desc-txt" id="d-desc"></div>
+        <div class="d-notes-box" id="d-notes" style="display:none"></div>
+        <div class="d-cap-wrap" id="d-cap"></div>
+        <button class="d-reg-btn" id="d-reg-btn" onclick="openReg()">立即報名</button>
+        <div class="d-sold-note" id="d-sold-note" style="display:none"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Lightbox -->
+<div class="lb" id="lb" onclick="if(event.target===this)closeLb()">
+  <div class="lb-close" onclick="closeLb()">×</div>
+  <button class="lb-nav lb-prev" onclick="lbNav(-1)">&#8249;</button>
+  <img id="lb-img" src="" alt="">
+  <button class="lb-nav lb-next" onclick="lbNav(1)">&#8250;</button>
+</div>
+
+<!-- Registration modal (same as checkout modal) -->
+<div class="ov" id="reg-ov" onclick="if(event.target===this)closeReg()">
+  <div class="mo">
+    <div class="mo-handle"></div>
+
+    <!-- Step 1: form -->
+    <div id="reg-form">
+      <div style="font-family:var(--serif);font-size:20px;font-weight:400;color:var(--t);letter-spacing:1px;margin-bottom:4px" id="reg-title">課程報名</div>
+      <div style="font-size:12px;color:var(--m);margin-bottom:18px" id="reg-sub"></div>
+      <div class="f2">
+        <div class="fg" style="margin:0"><label class="lbl">姓名 *</label><input type="text" id="r-name" placeholder="王小明"></div>
+        <div class="fg" style="margin:0"><label class="lbl">電話 *</label><input type="tel" id="r-phone" placeholder="0912-345-678"></div>
+      </div>
+      <div class="fg" style="margin-top:12px"><label class="lbl">Email *</label><input type="email" id="r-email" placeholder="you@example.com"></div>
+      <!-- 體驗課：個人/包場 -->
+      <div id="r-bk-wrap" class="fg">
+        <label class="lbl">報名方式 *</label>
+        <div class="bk-opt sel" id="bk-p" onclick="selBk('personal')">
+          <input type="radio" name="bk" checked style="accent-color:var(--g);margin-top:2px;flex-shrink:0">
+          <div><div style="font-size:14px;font-weight:500;color:var(--t)">個人報名</div><div style="font-size:11px;color:var(--m);margin-top:1px">1 人參加</div></div>
+        </div>
+        <div class="bk-opt" id="bk-g" onclick="selBk('group')">
+          <input type="radio" name="bk" style="accent-color:var(--g);margin-top:2px;flex-shrink:0">
+          <div><div style="font-size:14px;font-weight:500;color:var(--t)">包場</div><div style="font-size:11px;color:var(--m);margin-top:1px">因空間關係最多 4 人，費用依人數計算</div></div>
+        </div>
+        <div id="bk-cnt" style="display:none;margin-top:6px">
+          <label class="lbl">包場人數</label>
+          <select id="r-members" onchange="updSum()" style="margin-top:4px">
+            <option value="2">2 人</option><option value="3">3 人</option><option value="4">4 人</option>
+          </select>
+        </div>
+      </div>
+      <div class="fg"><label class="lbl">備註</label><textarea id="r-note" placeholder="特殊需求或想說的話⋯"></textarea></div>
+      <div class="reg-sum">
+        <div class="rs-title">費用確認</div>
+        <div class="rs-row"><span id="rs-name"></span><span id="rs-price"></span></div>
+        <div class="rs-total"><span>合計</span><span id="rs-total"></span></div>
+      </div>
+      <div style="background:var(--rl);border-radius:8px;padding:10px 12px;margin-bottom:14px;font-size:12px;color:var(--r)">
+        ⚠️ 本店僅支援<strong>線上銀行轉帳</strong>，不提供現金付款
+      </div>
+      <div style="display:flex;gap:8px">
+        <button class="btn bo" style="flex:1" onclick="closeReg()">取消</button>
+        <button class="btn bg" style="flex:2" id="r-submit" onclick="submitReg()">確認報名</button>
+      </div>
+    </div>
+
+    <!-- Step 2: bank info + last5 -->
+    <div id="reg-bank" style="display:none">
+      <div style="text-align:center;margin-bottom:18px">
+        <div class="done-icon" style="background:var(--gl)">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M5 12l5 5L19 7" stroke="#2C4A6E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div style="font-family:var(--serif);font-size:19px;font-weight:400;color:var(--t)">報名已建立</div>
+        <div style="font-size:12px;color:var(--m);margin-top:4px">報名編號：<strong id="reg-id"></strong></div>
+      </div>
+      <div class="bank-box">
+        <div class="bank-lbl">請匯款至以下帳戶</div>
+        <div class="bank-r"><span class="k">銀行名稱</span><span class="v" id="rb-name">—</span></div>
+        <div class="bank-r"><span class="k">銀行代碼</span><span class="v" id="rb-code">—</span></div>
+        <div class="bank-r acct"><span class="k">帳號</span><span class="v" id="rb-acct">—</span></div>
+        <div class="bank-r amt"><span class="k">應匯金額</span><span class="v" id="rb-amt">—</span></div>
+      </div>
+      <div style="background:var(--rl);border-radius:8px;padding:10px 12px;margin-bottom:14px;font-size:12px;color:var(--r);line-height:1.8">
+        ⚠️ 請於 <strong>24 小時內完成匯款</strong><br>逾期將自動取消報名，恕不另行通知
+      </div>
+      <div class="l5-wrap">
+        <div style="font-size:13px;font-weight:600;color:var(--g)">匯款完成後，請填入帳號後五碼</div>
+        <div style="font-size:12px;color:var(--m);margin-top:4px;line-height:1.6">填入後按確認，我們收到才會安排課程</div>
+        <div class="l5-boxes">
+          <input type="text" maxlength="1" class="l5-box" oninput="l5in(this,0)" onkeydown="l5kd(event,0)" inputmode="numeric">
+          <input type="text" maxlength="1" class="l5-box" oninput="l5in(this,1)" onkeydown="l5kd(event,1)" inputmode="numeric">
+          <input type="text" maxlength="1" class="l5-box" oninput="l5in(this,2)" onkeydown="l5kd(event,2)" inputmode="numeric">
+          <input type="text" maxlength="1" class="l5-box" oninput="l5in(this,3)" onkeydown="l5kd(event,3)" inputmode="numeric">
+          <input type="text" maxlength="1" class="l5-box" oninput="l5in(this,4)" onkeydown="l5kd(event,4)" inputmode="numeric">
+        </div>
+        <input type="hidden" id="l5-val">
+      </div>
+      <button class="btn bg" style="width:100%;margin-bottom:8px;opacity:.4" id="pay-btn" onclick="submitPay()" disabled>我已完成匯款</button>
+      <button class="btn bo" style="width:100%;font-size:13px;color:var(--r);border-color:var(--r)" onclick="cancelReg()">取消報名</button>
+    </div>
+
+    <!-- Step 3a: paid done -->
+    <div id="reg-paid" style="display:none;text-align:center;padding:10px 0">
+      <div class="done-icon" style="background:var(--gl)">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M5 12l5 5L19 7" stroke="#2C4A6E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <div style="font-family:var(--serif);font-size:19px;color:var(--t);margin-bottom:8px">感謝您的報名</div>
+      <div style="font-size:13px;color:var(--m);line-height:1.8;margin-bottom:22px">我們確認收款後將以 Email 通知課程細節<br>如有疑問請透過 Instagram @ywshiue 聯繫</div>
+      <button class="btn bg" style="width:100%" onclick="closeReg()">關閉</button>
+    </div>
+
+    <!-- Step 3b: cancel done -->
+    <div id="reg-cancelled" style="display:none;text-align:center;padding:10px 0">
+      <div class="done-icon" style="background:var(--rl)">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M18 6L6 18M6 6l12 12" stroke="#8B6F47" stroke-width="2" stroke-linecap="round"/></svg>
+      </div>
+      <div style="font-family:var(--serif);font-size:19px;color:var(--t);margin-bottom:8px">報名已取消</div>
+      <div style="font-size:13px;color:var(--m);line-height:1.8;margin-bottom:22px">取消通知已寄至您的 Email</div>
+      <button class="btn bo" style="width:100%" onclick="closeReg()">關閉</button>
+    </div>
+
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+function toast(msg,ok=true){const t=document.getElementById('toast');t.textContent=msg;t.style.background=ok?'#1C2B3A':'#8B6F47';t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2600);}
+
+let courses=[],cat='',currentCourse=null,currentRegId=null,bankInfo={},bkType='personal';
+let lbImgs=[],lbIdx=0;
+const dSlides={};
+
+// ── Init ──────────────────────────────────────────────────
+async function init(){
+  try{
+    bankInfo = await fetch(`${API}/bank-info`).then(r=>r.json());
+  }catch(e){}
+  load();
+}
+
+// ── Load courses ──────────────────────────────────────────
+async function load(){
+  const g=document.getElementById('grid');
+  g.innerHTML='<div class="loading">載入中⋯</div>';
+  try{
+    const url=cat?`${API}/classes?type=${encodeURIComponent(cat)}`:`${API}/classes`;
+    courses=await fetch(url).then(r=>r.json());
+    render();
+  }catch(e){g.innerHTML='<div class="loading" style="color:var(--r)">載入失敗，請重新整理頁面</div>';}
+}
+
+function setCat(btn,c){
+  document.querySelectorAll('.fc').forEach(x=>x.classList.remove('on'));
+  btn.classList.add('on'); cat=c; load();
+}
+
+function getImgs(c){ return c.image_urls?.filter(Boolean).length?c.image_urls.filter(Boolean):c.image_url?[c.image_url]:[]; }
+
+function render(){
+  const g=document.getElementById('grid');
+  if(!courses.length){g.innerHTML='<div class="loading">目前暫無課程</div>';return;}
+  g.innerHTML=courses.map(c=>{
+    const full=c.registered>=c.capacity;
+    const canReg=c.is_active&&!full;
+    const imgs=getImgs(c);
+    const pct=Math.min(100,Math.round(c.registered/c.capacity*100));
+    const rem=c.capacity-c.registered;
+    return`<div class="cc" onclick="openDetail(${c.id})">
+      <div class="cc-img">
+        ${imgs.length?`<img src="${imgs[0]}" loading="lazy" alt="${c.name}">`:'<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:var(--b);font-size:32px">◻</div>'}
+        ${(!canReg)?`<div class="cc-sold-ov"><span>${full?'SOLD OUT':'暫停報名'}</span></div>`:''}
+      </div>
+      <div class="cc-body">
+        <div class="cc-type">${c.type}</div>
+        <div class="cc-name">${c.name}</div>
+        ${c.date_desc?`<div class="cc-date">${c.date_desc.split('\n')[0]}</div>`:''}
+        <div class="cc-row">
+          <div class="cc-price">NT$${c.price.toLocaleString()}</div>
+          <div style="font-size:11px;color:var(--m)">${c.capacity}人</div>
+        </div>
+        <div class="cap-mini">
+          <div class="cap-mini-bar"><div class="cap-mini-fill" style="width:${pct}%"></div></div>
+          <div class="cap-mini-txt">${full?'名額已滿':rem<=3?`剩 ${rem} 名`:`${c.registered}/${c.capacity}`}</div>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ── Detail ────────────────────────────────────────────────
+function openDetail(id){
+  const c=courses.find(x=>x.id===id);
+  if(!c)return;
+  currentCourse=c;
+  const full=c.registered>=c.capacity;
+  const canReg=c.is_active&&!full;
+  const imgs=getImgs(c);
+  const pct=Math.min(100,Math.round(c.registered/c.capacity*100));
+  const rem=c.capacity-c.registered;
+
+  document.getElementById('d-cat').textContent=c.type.toUpperCase();
+  document.getElementById('d-name').textContent=c.name;
+  document.getElementById('d-price').textContent=`NT$${c.price.toLocaleString()}`;
+  document.getElementById('d-date').textContent=c.date_desc||'';
+  document.getElementById('d-date').style.display=c.date_desc?'block':'none';
+
+  const metas=[];
+  if(c.duration)metas.push(['時長',c.duration]);
+  if(c.location)metas.push(['地點',c.location]);
+  if(c.price_note)metas.push(['費用包含',c.price_note]);
+  document.getElementById('d-metas').innerHTML=metas.map(([k,v])=>
+    `<div class="d-meta-r"><span class="d-meta-k">${k}</span><span class="d-meta-v">${v}</span></div>`
+  ).join('');
+
+  document.getElementById('d-desc').textContent=c.description||'';
+  const notesEl=document.getElementById('d-notes');
+  notesEl.textContent=c.notes||'';notesEl.style.display=c.notes?'block':'none';
+
+  document.getElementById('d-cap').innerHTML=
+    `<div class="d-cap-bar"><div class="d-cap-fill" style="width:${pct}%"></div></div>
+     <div class="d-cap-txt">${full?'名額已滿':rem<=3?`剩餘 ${rem} 名`:`${c.registered}/${c.capacity} 人`}</div>`;
+
+  const btn=document.getElementById('d-reg-btn');
+  const note=document.getElementById('d-sold-note');
+  btn.disabled=!canReg;
+  btn.textContent=full?'名額已滿':!c.is_active?'暫停報名':'立即報名';
+  note.style.display=!canReg?'block':'none';
+  note.textContent=full?'此梯次已額滿，歡迎關注下期開課訊息':'此梯次暫停報名';
+
+  // gallery
+  buildGallery(imgs);
+  document.getElementById('d-overlay').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+
+function closeDetail(){
+  clearInterval(dSlides.timer);
+  document.getElementById('d-overlay').classList.remove('open');
+  document.body.style.overflow='';
+}
+
+function buildGallery(imgs){
+  const el=document.getElementById('d-gallery');
+  if(!imgs.length){el.innerHTML='<div class="d-slide-ph">◻</div>';return;}
+  el.innerHTML=imgs.map((url,i)=>
+    `<div class="d-slide${i===0?' on':''}" onclick="openLb(${i})">
+      <img src="${url}" alt="" loading="lazy">
+    </div>`
+  ).join('')+
+  (imgs.length>1?`<div class="d-dots">${imgs.map((_,i)=>`<div class="d-dot${i===0?' on':''}" onclick="event.stopPropagation();goSlide(${i})"></div>`).join('')}</div>`:'');
+  lbImgs=imgs; lbIdx=0;
+  dSlides.cur=0;dSlides.tot=imgs.length;
+  clearInterval(dSlides.timer);
+  if(imgs.length>1) dSlides.timer=setInterval(()=>goSlide((dSlides.cur+1)%dSlides.tot),3000);
+}
+
+function goSlide(idx){
+  document.querySelectorAll('#d-gallery .d-slide').forEach((s,i)=>s.classList.toggle('on',i===idx));
+  document.querySelectorAll('#d-gallery .d-dot').forEach((d,i)=>d.classList.toggle('on',i===idx));
+  dSlides.cur=idx;lbIdx=idx;
+}
+
+// Lightbox
+function openLb(idx){lbIdx=idx;document.getElementById('lb-img').src=lbImgs[idx];document.getElementById('lb').style.display='flex';}
+function closeLb(){document.getElementById('lb').style.display='none';}
+function lbNav(d){lbIdx=(lbIdx+d+lbImgs.length)%lbImgs.length;document.getElementById('lb-img').src=lbImgs[lbIdx];}
+
+// ── Registration ──────────────────────────────────────────
+function openReg(){
+  const c=currentCourse;
+  document.getElementById('reg-title').textContent=c.name;
+  document.getElementById('reg-sub').textContent=c.date_desc?.split('\n')[0]||'';
+  ['r-name','r-phone','r-email','r-note'].forEach(id=>document.getElementById(id).value='');
+  document.querySelectorAll('.l5-box').forEach(b=>{b.value='';b.style.borderColor='var(--b)';b.style.background='#fff';});
+  document.getElementById('l5-val').value='';
+  document.getElementById('pay-btn').disabled=true;document.getElementById('pay-btn').style.opacity='.4';
+  ['reg-form','reg-bank','reg-paid','reg-cancelled'].forEach((id,i)=>document.getElementById(id).style.display=i===0?'block':'none');
+  document.getElementById('r-bk-wrap').style.display=c.type==='手作陶體驗'?'block':'none';
+  selBk('personal');updSum();
+  document.getElementById('reg-ov').classList.add('open');
+}
+
+function closeReg(){document.getElementById('reg-ov').classList.remove('open');}
+
+function selBk(t){
+  bkType=t;
+  document.getElementById('bk-p').classList.toggle('sel',t==='personal');
+  document.getElementById('bk-g').classList.toggle('sel',t==='group');
+  document.getElementById('bk-p').querySelector('input').checked=t==='personal';
+  document.getElementById('bk-g').querySelector('input').checked=t==='group';
+  document.getElementById('bk-cnt').style.display=t==='group'?'block':'none';
+  updSum();
+}
+function getM(){return bkType==='group'?parseInt(document.getElementById('r-members').value)||2:1;}
+function updSum(){
+  const c=currentCourse;if(!c)return;
+  const isWS=c.type==='手作陶體驗';
+  const m=isWS?getM():1;
+  const total=c.price*m;
+  document.getElementById('rs-name').textContent=isWS?(bkType==='group'?`包場 × ${m} 人`:'個人報名'):'四堂完整課程';
+  document.getElementById('rs-price').textContent=`NT$${c.price.toLocaleString()}${m>1?' × '+m:''}`;
+  document.getElementById('rs-total').textContent=`NT$${total.toLocaleString()}`;
+}
+
+async function submitReg(){
+  const name=document.getElementById('r-name').value.trim();
+  const phone=document.getElementById('r-phone').value.trim();
+  const email=document.getElementById('r-email').value.trim();
+  if(!name||!phone||!email){toast('請填寫所有必填欄位',false);return;}
+  const c=currentCourse;
+  const isWS=c.type==='手作陶體驗';
+  const members=isWS?getM():1;
+  const btn=document.getElementById('r-submit');
+  btn.disabled=true;btn.textContent='送出中⋯';
+  try{
+    const res=await fetch(`${API}/classes/register`,{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({class_id:c.id,name,phone,email,members,
+        course_type:isWS?'':`四堂完整課程`,
+        note:document.getElementById('r-note').value})
+    });
+    const data=await res.json();
+    if(!res.ok)throw new Error(data.detail||'報名失敗');
+    currentRegId=data.reg_id;
+    document.getElementById('reg-id').textContent='#'+data.reg_id;
+    document.getElementById('rb-amt').textContent='NT$'+data.total.toLocaleString();
+    document.getElementById('rb-name').textContent=bankInfo.bank_name||'—';
+    document.getElementById('rb-code').textContent=bankInfo.bank_code||'—';
+    document.getElementById('rb-acct').textContent=bankInfo.bank_account||'—';
+    document.getElementById('reg-form').style.display='none';
+    document.getElementById('reg-bank').style.display='block';
+    load();
+  }catch(e){toast(e.message,false);}
+  finally{btn.disabled=false;btn.textContent='確認報名';}
+}
+
+function l5in(el,idx){
+  el.value=el.value.replace(/[^0-9]/g,'');
+  el.style.borderColor=el.value?'#2C4A6E':'var(--b)';
+  el.style.background=el.value?'#E8EEF5':'#fff';
+  if(el.value){const bs=document.querySelectorAll('.l5-box');if(idx<4)bs[idx+1].focus();}
+  const val=[...document.querySelectorAll('.l5-box')].map(b=>b.value).join('');
+  document.getElementById('l5-val').value=val;
+  const btn=document.getElementById('pay-btn');
+  btn.disabled=val.length!==5;btn.style.opacity=val.length===5?'1':'.4';
+}
+function l5kd(e,idx){
+  if(e.key==='Backspace'){
+    const bs=document.querySelectorAll('.l5-box');
+    if(!bs[idx].value&&idx>0){bs[idx-1].focus();bs[idx-1].value='';bs[idx-1].style.borderColor='var(--b)';bs[idx-1].style.background='#fff';
+    document.getElementById('l5-val').value=[...bs].map(b=>b.value).join('');
+    document.getElementById('pay-btn').disabled=true;document.getElementById('pay-btn').style.opacity='.4';}
+  }
+}
+async function submitPay(){
+  const last5=document.getElementById('l5-val').value;
+  if(last5.length!==5)return;
+  const btn=document.getElementById('pay-btn');btn.disabled=true;btn.textContent='送出中⋯';
+  try{
+    const res=await fetch(`${API}/classes/register/${currentRegId}/payment`,{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({last5_digits:last5})
+    });
+    if(!res.ok)throw new Error();
+    document.getElementById('reg-bank').style.display='none';
+    document.getElementById('reg-paid').style.display='block';
+  }catch(e){toast('送出失敗，請稍後再試',false);}
+  finally{btn.disabled=false;btn.textContent='我已完成匯款';}
+}
+async function cancelReg(){
+  if(!currentRegId||!confirm('確定要取消此報名？'))return;
+  try{
+    await fetch(`${API}/classes/register/${currentRegId}/cancel`,{method:'POST'});
+    document.getElementById('reg-bank').style.display='none';
+    document.getElementById('reg-cancelled').style.display='block';
+    load();
+  }catch(e){toast('取消失敗',false);}
+}
+
+init();
+</script>
+</body>
+</html>
