@@ -1274,11 +1274,12 @@ function shareItem(){
   const p=currentProduct;
   if(!p)return;
   const url=`${location.origin}${location.pathname}?product=${p.id}`;
-  navigator.clipboard.writeText(url).then(()=>{
-    toast('連結已複製');
-  }).catch(()=>{
-    prompt('複製此連結：',url);
-  });
+  const data={title:'是陶。'+p.name,text:p.name+' — 是陶。It\'s Pottery',url};
+  if(navigator.share){
+    navigator.share(data).catch(()=>{});
+  } else {
+    navigator.clipboard.writeText(url).then(()=>toast('連結已複製')).catch(()=>prompt('複製此連結：',url));
+  }
 }
 
 load();

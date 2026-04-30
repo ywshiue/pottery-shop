@@ -600,11 +600,12 @@ function shareItem(){
   const c=currentCourse;
   if(!c)return;
   const url=`${location.origin}${location.pathname}?course=${c.id}`;
-  navigator.clipboard.writeText(url).then(()=>{
-    toast('連結已複製');
-  }).catch(()=>{
-    prompt('複製此連結：',url);
-  });
+  const data={title:'是陶。'+c.name,text:c.name+' — 是陶。It\'s Pottery',url};
+  if(navigator.share){
+    navigator.share(data).catch(()=>{});
+  } else {
+    navigator.clipboard.writeText(url).then(()=>toast('連結已複製')).catch(()=>prompt('複製此連結：',url));
+  }
 }
 
 async function init(){
