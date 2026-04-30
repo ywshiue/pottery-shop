@@ -506,6 +506,9 @@ const API = 'https://pottery-shop.onrender.com';
       <button class="fc" onclick="setCat(this,'器皿')">器皿</button>
       <button class="fc" onclick="setCat(this,'其他')">其他</button>
     </div>
+    <div class="fbar" id="series-fbar" style="margin-top:6px">
+      <button class="fc on" id="fc-series-all" onclick="setSeries(this,'')">所有系列</button>
+    </div>
   </div>
 
   <div class="layout">
@@ -921,7 +924,11 @@ let drawerImgIdx=0;
 // ── Load ──────────────────────────────────────────────────
 async function load(){
   try{
-    const url=cat?`${API}/products?category=${encodeURIComponent(cat)}`:`${API}/products`;
+    let url=`${API}/products`;
+    const params=[];
+    if(cat)params.push(`category=${encodeURIComponent(cat)}`);
+    if(series)params.push(`series_name=${encodeURIComponent(series)}`);
+    if(params.length)url+='?'+params.join('&');
     const res=await fetch(url);
     if(!res.ok)throw new Error('載入失敗');
     products=await res.json();render();
@@ -1270,20 +1277,41 @@ async function submitPayment(){
   }
 }
 
+async function loadSeries(){
+  try{
+    const data=await fetch(`${API}/products/series`).then(r=>r.json());
+    const fbar=document.getElementById('series-fbar');
+    if(!fbar||!data.length)return;
+    data.forEach(s=>{
+      const btn=document.createElement('button');
+      btn.className='fc';
+      btn.textContent=s.name;
+      btn.onclick=()=>setSeries(btn,s.name);
+      fbar.appendChild(btn);
+    });
+  }catch(e){}
+}
+
 function shareItem(){
   const p=currentProduct;
-  if(!p)return;
-  const url=`${location.origin}${location.pathname}?product=${p.id}`;
-  const data={title:'是陶。'+p.name,text:p.name+' — 是陶。It\'s Pottery',url};
-  if(navigator.share){
-    navigator.share(data).catch(()=>{});
-  } else {
-    navigator.clipboard.writeText(url).then(()=>toast('連結已複製')).catch(()=>prompt('複製此連結：',url));
-  }
+  const url=p?`${location.origin}${location.pathname}?product=${p.id}`:location.href;
+  const title=p?'是陶。'+p.name:'是陶。It\'s Pottery';
+  const text=p?p.name+' — 是陶。It\'s Pottery':'是陶。It\'s Pottery';
+  try{
+    if(navigator.share){
+      navigator.share({title,text,url}).catch(()=>{});
+    } else {
+      navigator.clipboard.writeText(url).then(()=>toast('連結已複製')).catch(()=>{
+        const ta=document.createElement('textarea');ta.value=url;document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);toast('連結已複製');
+      });
+    }
+  }catch(e){toast('連結已複製');}
 }
 
 load();
 loadBankInfo();
+loadSeries();
+
 
 // Open product from URL param
 const _urlP=new URLSearchParams(location.search).get('product');

@@ -416,6 +416,20 @@ const API = 'https://pottery-shop.onrender.com';
   </div>
 </div>
 
+<!-- Series Modal -->
+<div class="ov" id="series-ov" onclick="if(event.target===this)closeAddSeries()" style="display:none">
+  <div class="mo" style="max-height:60vh">
+    <div class="mo-handle"></div>
+    <div style="font-size:16px;font-weight:600;color:var(--t);margin-bottom:16px">系列管理</div>
+    <div style="display:flex;gap:8px;margin-bottom:16px">
+      <input type="text" id="new-series-name" placeholder="輸入系列名稱，例：宇宙藍隕石系列" style="flex:1">
+      <button class="btn bg btn-sm" onclick="addSeries()" style="flex-shrink:0">新增</button>
+    </div>
+    <div id="series-list" style="display:flex;flex-direction:column;gap:6px;max-height:200px;overflow-y:auto"></div>
+    <button class="btn bo" style="width:100%;margin-top:16px" onclick="closeAddSeries()">關閉</button>
+  </div>
+</div>
+
 <div id="toast"></div>
 <script>
 let TOKEN='';
