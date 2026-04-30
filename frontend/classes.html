@@ -429,13 +429,12 @@ const API='https://pottery-shop.onrender.com';
         <div class="d-desc-txt" id="d-desc"></div>
         <div class="d-notes-box" id="d-notes" style="display:none"></div>
         <div class="d-cap-wrap" id="d-cap"></div>
-        <div style="display:flex;gap:8px;margin-top:0">
-      <button class="d-reg-btn" id="d-reg-btn" onclick="openReg()" style="flex:1">立即報名</button>
-      <button onclick="shareItem()" style="width:46px;height:46px;flex-shrink:0;background:transparent;border:1px solid var(--b);border-radius:10px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s" onmouseover="this.style.borderColor='var(--g)'" onmouseout="this.style.borderColor='var(--b)'" title="分享課程">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6B7280" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
-      </button>
-    </div>
+        <button class="d-reg-btn" id="d-reg-btn" onclick="openReg()">立即報名</button>
         <div class="d-sold-note" id="d-sold-note" style="display:none"></div>
+        <button onclick="shareItem()" style="display:flex;align-items:center;gap:6px;background:transparent;border:none;cursor:pointer;font-family:var(--sans);font-size:12px;color:var(--m);padding:0;margin-top:10px;transition:opacity .15s" onmouseover="this.style.opacity='.7'" onmouseout="this.style.opacity='1'" title="分享">
+  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+  分享此課程
+</button>
       </div>
     </div>
   </div>
