@@ -552,7 +552,13 @@ async function save(){
 }
 function reset(){
   ['fname','fprice','fstock','fdesc','flen','fwid','fhgt'].forEach(id=>document.getElementById(id).value='');
-  document.getElementById('fseries').value='';
+  // Repopulate series select from allSeries (in case options were cleared)
+  const _fser=document.getElementById('fseries');
+  if(_fser){
+    _fser.innerHTML='<option value="">不屬於任何系列</option>';
+    allSeries.forEach(s=>{const o=document.createElement('option');o.value=s.name;o.textContent=s.name;_fser.appendChild(o);});
+    _fser.value='';
+  }
   document.getElementById('eid').value='';document.getElementById('fcat').value='花器';
   imgFiles=[];pendingUrls=[];renderImgGrid();
   document.getElementById('fi').value='';
