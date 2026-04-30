@@ -807,8 +807,8 @@ function editClass(cls){
   const dt=document.getElementById('cls-date');if(dt)dt.value=cls.date_desc||'';
   // Init sessions for throwing
   sessions=[];
-  if(cls.type==='基礎手拉坯'){
-    onClsTypeChange('基礎手拉坯');
+  if(cls.type==='專業課程'){
+    onClsTypeChange('專業課程');
     // Parse existing date_desc into sessions
     if(cls.date_desc){
       cls.date_desc.split('\n').forEach(line=>{
@@ -818,7 +818,7 @@ function editClass(cls){
       renderSessions();
     }
   } else {
-    onClsTypeChange('手作陶體驗');
+    onClsTypeChange(cls.type||'單次體驗');
   }
   clsImgFiles=[];clsPendingUrls=cls.image_urls?.length?[...cls.image_urls]:cls.image_url?[cls.image_url]:[];
   renderClsImgGrid();

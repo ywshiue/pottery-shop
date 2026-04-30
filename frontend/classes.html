@@ -403,6 +403,24 @@ const API='https://pottery-shop.onrender.com';
           <div class="d-price" id="d-price"></div>
         </div>
         <div class="d-hr"></div>
+        <!-- Instructor toggle -->
+        <div id="d-instructor-btn-wrap" style="display:none;margin-bottom:12px">
+          <button onclick="toggleInstructor()" style="display:inline-flex;align-items:center;gap:7px;background:var(--bg);border:1px solid var(--b);border-radius:99px;padding:7px 14px;cursor:pointer;font-family:var(--sans);font-size:12px;color:var(--m);transition:all .15s" onmouseover="this.style.borderColor='var(--g)';this.style.color='var(--g)'" onmouseout="this.style.borderColor='var(--b)';this.style.color='var(--m)'">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+            <span id="d-instructor-btn-text">關於講師</span>
+          </button>
+        </div>
+        <div id="d-instructor" style="display:none;background:var(--bg);border-radius:10px;padding:14px;margin-bottom:14px">
+          <div style="display:flex;gap:12px;align-items:flex-start">
+            <img id="d-instructor-photo" src="" style="width:52px;height:52px;border-radius:50%;object-fit:cover;flex-shrink:0;display:none">
+            <div style="flex:1">
+              <div id="d-instructor-name" style="font-size:14px;font-weight:500;color:var(--t);margin-bottom:4px"></div>
+              <div id="d-instructor-bio" style="font-size:12px;color:var(--m);line-height:1.8"></div>
+            </div>
+          </div>
+        </div>
+        <div id="d-instructor-divider" style="display:none;border:none;border-top:1px solid var(--b);margin:0 0 16px"></div>
+        <div id="d-instructor-section"></div>
         <div class="d-sec">開課時段</div>
         <div class="d-date-txt" id="d-date"></div>
         <div class="d-metas" id="d-metas"></div>
@@ -666,10 +684,14 @@ function openDetail(id){
   const instrDiv=document.getElementById('d-instructor');
   const instrDivider=document.getElementById('d-instructor-divider');
   const hasInstr=c.instructor_name||c.instructor_bio||c.instructor_photo;
-  if(instrSection)instrSection.style.display=hasInstr?'block':'none';
+  // Show toggle button instead of always-visible section
+  const instrBtnWrap=document.getElementById('d-instructor-btn-wrap');
+  if(instrBtnWrap)instrBtnWrap.style.display=hasInstr?'block':'none';
+  if(instrSection)instrSection.style.display='none'; // hide label, use button
   if(instrDivider)instrDivider.style.display=hasInstr?'block':'none';
   if(instrDiv){
-    instrDiv.style.display=hasInstr?'flex':'none';
+    instrDiv.style.display='none'; // start collapsed
+    document.getElementById('d-instructor-btn-text').textContent='關於講師';
     const ph=document.getElementById('d-instructor-photo');
     if(ph){ph.src=c.instructor_photo||'';ph.style.display=c.instructor_photo?'block':'none';}
     const nm=document.getElementById('d-instructor-name');
@@ -857,6 +879,15 @@ async function cancelReg(){
 }
 
 // ── FAQ ────────────────────────────────────────────────────
+function toggleInstructor(){
+  const div=document.getElementById('d-instructor');
+  const btn=document.getElementById('d-instructor-btn-text');
+  if(!div)return;
+  const isOpen=div.style.display!=='none';
+  div.style.display=isOpen?'none':'flex';
+  if(btn)btn.textContent=isOpen?'關於講師':'收起介紹';
+}
+
 function toggleCourseFaq(btn){
   btn.closest('.faq-item').classList.toggle('open');
 }
