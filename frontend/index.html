@@ -417,7 +417,7 @@ footer{background:var(--t);color:rgba(255,255,255,.7);padding:48px 32px 32px;mar
 .d-dots{position:absolute;bottom:12px;left:50%;transform:translateX(-50%);display:flex;gap:5px;z-index:2}
 .d-dot{width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,.3);cursor:pointer;transition:all .25s}
 .d-dot.on{background:#fff;width:14px;border-radius:3px}
-.d-info{padding:27px 29px;overflow-y:auto;overflow-x:hidden;display:flex;flex-direction:column;-webkit-overflow-scrolling:touch}
+.d-info{padding:32px 34px;overflow-y:auto;overflow-x:hidden;display:flex;flex-direction:column;-webkit-overflow-scrolling:touch}
 .d-cat{font-size:9px;letter-spacing:2px;color:var(--m);text-transform:uppercase;margin-bottom:7px}
 .d-name{font-family:var(--serif);font-size:21px;font-weight:500;color:var(--t);letter-spacing:.5px;margin-bottom:4px;line-height:1.3}
 .d-price-row{display:flex;align-items:baseline;gap:8px;margin-bottom:14px}
@@ -980,7 +980,7 @@ function openDrawer(pid){
   const imgs=getImgs(p);
   const so=p.stock===0;
 
-  document.getElementById('d-cat').textContent=p.category.toUpperCase();
+  document.getElementById('d-cat').textContent=p.category.toUpperCase()+(p.series_name?' · '+p.series_name:'');
   document.getElementById('d-name').textContent=p.name;
   document.getElementById('d-price').textContent=`NT$${p.price.toLocaleString()}`;
   document.getElementById('d-size').textContent=(p.sizes||'').trim()?`尺寸：${p.sizes}`:'';
