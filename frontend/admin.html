@@ -982,6 +982,30 @@ function renderSessions(){
   if(dt)dt.value=desc;
 }
 
+async function uploadInstructorPhoto(file){
+  if(!file)return;
+  const hint=document.getElementById('cls-instructor-photo-hint');
+  if(hint)hint.textContent='上傳中⋯';
+  try{
+    const fd=new FormData();
+    fd.append('file',file);
+    const res=await fetch(`${API}/upload/`,{
+      method:'POST',
+      headers:{'Authorization':`Bearer ${TOKEN}`},
+      body:fd
+    });
+    const data=await res.json();
+    if(!res.ok)throw new Error(data.detail||'上傳失敗');
+    document.getElementById('cls-instructor-photo-url').value=data.url;
+    document.getElementById('cls-instructor-photo-preview').innerHTML=
+      `<img src="${data.url}" style="width:72px;height:72px;object-fit:cover;border-radius:50%;margin-top:8px;display:block">`;
+    if(hint)hint.textContent='點擊更換照片';
+    toast('照片已上傳');
+  }catch(e){
+    toast('上傳失敗：'+e.message,false);
+    if(hint)hint.textContent='點擊上傳講師照片';
+  }
+}
 
 </script>
 </body>
