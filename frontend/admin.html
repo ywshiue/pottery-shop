@@ -469,6 +469,7 @@ async function doLogin(){
     document.getElementById('admin-screen').style.display='block';
     document.getElementById('user-email').textContent=data.email;
     loadOrders(); // 預設顯示訂單
+    loadSeriesOptions();
   }catch(e){errEl.textContent=e.message;errEl.style.display='block';}
   finally{btn.disabled=false;btn.textContent='登入';}
 }
@@ -480,7 +481,7 @@ function tab(name){
   document.querySelectorAll('.pane').forEach(p=>p.classList.remove('on'));
   document.getElementById('p-'+name).classList.add('on');
   if(name==='orders')loadOrders();
-  else if(name==='products')loadProducts();
+  else if(name==='products'){loadProducts();loadSeriesOptions();}
   else if(name==='classes')loadClassesAdmin();
   else if(name==='questions')loadQuestions();
 }
