@@ -596,6 +596,17 @@ let lbImgs=[],lbIdx=0;
 const dSlides={};
 
 // ── Init ──────────────────────────────────────────────────
+function shareItem(){
+  const c=currentCourse;
+  if(!c)return;
+  const url=`${location.origin}${location.pathname}?course=${c.id}`;
+  navigator.clipboard.writeText(url).then(()=>{
+    toast('連結已複製');
+  }).catch(()=>{
+    prompt('複製此連結：',url);
+  });
+}
+
 async function init(){
   try{
     bankInfo = await fetch(`${API}/bank-info`).then(r=>r.json());
@@ -641,7 +652,7 @@ function render(){
         <div class="cc-name">${c.name}</div>
 
         <div class="cc-row">
-          <div class="cc-price">NT$${c.price.toLocaleString()} <span style="font-size:11px;font-weight:300;color:var(--m)">/ 人</span></div>
+          <div class="cc-price">NT$${c.price.toLocaleString()} <span style="font-size:11px;font-weight:300;color:var(--m)">/ 人起</span></div>
           <div style="font-size:11px;color:var(--m)">${c.capacity}人</div>
         </div>
         <div class="cap-mini">
@@ -666,7 +677,7 @@ function openDetail(id){
 
   document.getElementById('d-cat').textContent=c.type.toUpperCase();
   document.getElementById('d-name').textContent=c.name;
-  document.getElementById('d-price').textContent=`NT$${c.price.toLocaleString()} / 人`;
+  document.getElementById('d-price').textContent=`NT$${c.price.toLocaleString()} / 人起`;
   document.getElementById('d-date').textContent=c.date_desc||'';
   document.getElementById('d-date').style.display=c.date_desc?'block':'none';
 
@@ -928,6 +939,9 @@ async function submitCourseQ(){
 }
 
 init();
+
+const _urlC=new URLSearchParams(location.search).get('course');
+if(_urlC) setTimeout(()=>{const c=courses.find(x=>String(x.id)===_urlC);if(c)openDetail(c.id);},600);
 </script>
 
 <footer id="footer-info">

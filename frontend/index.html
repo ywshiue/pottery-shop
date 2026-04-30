@@ -678,6 +678,7 @@ const API = 'https://pottery-shop.onrender.com';
   <div class="drawer" id="drawer" onclick="event.stopPropagation()">
     <div class="drawer-close">
       <div class="drawer-cat" id="d-cat"></div>
+      <button class="drawer-close-btn" onclick="shareItem()" title="分享連結" id="share-btn"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg></button>
       <button class="drawer-close-btn" onclick="closeDrawer()">×</button>
     </div>
     <div class="drawer-content">
@@ -1269,8 +1270,24 @@ async function submitPayment(){
   }
 }
 
+function shareItem(){
+  const p=currentProduct;
+  if(!p)return;
+  const url=`${location.origin}${location.pathname}?product=${p.id}`;
+  navigator.clipboard.writeText(url).then(()=>{
+    toast('連結已複製');
+  }).catch(()=>{
+    prompt('複製此連結：',url);
+  });
+}
+
 load();
 loadBankInfo();
+
+// Open product from URL param
+const _urlP=new URLSearchParams(location.search).get('product');
+if(_urlP) setTimeout(()=>{const p=products.find(x=>String(x.id)===_urlP);if(p)openDrawer(p.id);},600);
+
 loadPublicQA();
 
 async function submitQuestion(){
