@@ -426,7 +426,7 @@ const API = 'https://pottery-shop.onrender.com';
 </div>
 
 <!-- Series Modal -->
-<div class="ov" id="series-ov" onclick="if(event.target===this)closeAddSeries()" style="display:none">
+<div class="ov" id="series-ov" onclick="if(event.target===this)closeAddSeries()">
   <div class="mo" style="max-height:60vh">
     <div class="mo-handle"></div>
     <div style="font-size:16px;font-weight:600;color:var(--t);margin-bottom:16px">系列管理</div>
@@ -1052,12 +1052,12 @@ async function loadSeriesOptions(){
 }
 
 function openAddSeries(){
-  document.getElementById('series-ov').style.display='flex';
+  document.getElementById('series-ov').classList.add('open');
   document.body.style.overflow='hidden';
   renderSeriesList();
 }
 function closeAddSeries(){
-  document.getElementById('series-ov').style.display='none';
+  document.getElementById('series-ov').classList.remove('open');
   document.body.style.overflow='';
   loadSeriesOptions();
 }

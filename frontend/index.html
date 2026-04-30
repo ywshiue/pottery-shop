@@ -698,7 +698,12 @@ const API = 'https://pottery-shop.onrender.com';
         <hr class="d-divider">
         <div class="d-section-title">商品說明</div>
         <div class="d-desc" id="d-desc" style="flex:1"></div>
-        <button class="d-add-btn" id="d-add-btn" onclick="addFromDrawer()">加入購物車</button>
+        <div style="display:flex;gap:8px;margin-top:20px">
+          <button class="d-add-btn" id="d-add-btn" onclick="addFromDrawer()" style="flex:1;margin-top:0">加入購物車</button>
+          <button onclick="shareItem()" style="width:46px;height:46px;flex-shrink:0;background:transparent;border:1px solid var(--b);border-radius:10px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s" onmouseover="this.style.borderColor='var(--g)'" onmouseout="this.style.borderColor='var(--b)'" title="分享商品">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6B7280" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+          </button>
+        </div>
         <div class="d-stock" id="d-stock"></div>
       </div>
     </div>
@@ -1293,8 +1298,8 @@ async function loadSeries(){
 }
 
 function shareItem(){
-  const p=currentProduct;
-  const url=p?`${location.origin}${location.pathname}?product=${p.id}`:location.href;
+  const p=drawerProduct;
+  const url=`${location.origin}${location.pathname}?product=${p?p.id:''}`;
   const title=p?'是陶。'+p.name:'是陶。It\'s Pottery';
   const text=p?p.name+' — 是陶。It\'s Pottery':'是陶。It\'s Pottery';
   try{

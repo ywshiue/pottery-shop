@@ -429,7 +429,12 @@ const API='https://pottery-shop.onrender.com';
         <div class="d-desc-txt" id="d-desc"></div>
         <div class="d-notes-box" id="d-notes" style="display:none"></div>
         <div class="d-cap-wrap" id="d-cap"></div>
-        <button class="d-reg-btn" id="d-reg-btn" onclick="openReg()">立即報名</button>
+        <div style="display:flex;gap:8px;margin-top:0">
+      <button class="d-reg-btn" id="d-reg-btn" onclick="openReg()" style="flex:1">立即報名</button>
+      <button onclick="shareItem()" style="width:46px;height:46px;flex-shrink:0;background:transparent;border:1px solid var(--b);border-radius:10px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s" onmouseover="this.style.borderColor='var(--g)'" onmouseout="this.style.borderColor='var(--b)'" title="分享課程">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6B7280" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+      </button>
+    </div>
         <div class="d-sold-note" id="d-sold-note" style="display:none"></div>
       </div>
     </div>
@@ -598,14 +603,18 @@ const dSlides={};
 // ── Init ──────────────────────────────────────────────────
 function shareItem(){
   const c=currentCourse;
-  if(!c)return;
-  const url=`${location.origin}${location.pathname}?course=${c.id}`;
-  const data={title:'是陶。'+c.name,text:c.name+' — 是陶。It\'s Pottery',url};
-  if(navigator.share){
-    navigator.share(data).catch(()=>{});
-  } else {
-    navigator.clipboard.writeText(url).then(()=>toast('連結已複製')).catch(()=>prompt('複製此連結：',url));
-  }
+  const url=`${location.origin}${location.pathname}?course=${c?c.id:''}`;
+  const title=c?'是陶。'+c.name:'是陶。課程';
+  const text=c?c.name+' — 是陶。It\'s Pottery':'是陶。It\'s Pottery';
+  try{
+    if(navigator.share){
+      navigator.share({title,text,url}).catch(()=>{});
+    } else {
+      navigator.clipboard.writeText(url).then(()=>toast('連結已複製')).catch(()=>{
+        const ta=document.createElement('textarea');ta.value=url;document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);toast('連結已複製');
+      });
+    }
+  }catch(e){toast('連結已複製');}
 }
 
 async function init(){
