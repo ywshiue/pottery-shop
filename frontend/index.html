@@ -914,7 +914,7 @@ const API = 'https://pottery-shop.onrender.com';
 <script>
 function toast(msg,ok=true){const t=document.getElementById('toast');t.textContent=msg;t.style.background=ok?'#1C2B3A':'#8B6F47';t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2600);}
 
-let products=[],cart=[],cat='',pay='銀行轉帳';
+let products=[],cart=[],cat='',series='',pay='銀行轉帳';
 let currentPage=1;
 const PAGE_SIZE=10;
 let lbImgs=[],lbIdx=0;
@@ -927,7 +927,7 @@ async function load(){
     let url=`${API}/products`;
     const params=[];
     if(cat)params.push(`category=${encodeURIComponent(cat)}`);
-    if(series)params.push(`series_name=${encodeURIComponent(series)}`);
+    if(typeof series!=='undefined'&&series)params.push(`series_name=${encodeURIComponent(series)}`);
     if(params.length)url+='?'+params.join('&');
     const res=await fetch(url);
     if(!res.ok)throw new Error('載入失敗');
