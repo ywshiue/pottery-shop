@@ -1059,7 +1059,17 @@ function openAddSeries(){
 function closeAddSeries(){
   document.getElementById('series-ov').classList.remove('open');
   document.body.style.overflow='';
-  loadSeriesOptions();
+  // Refresh select from current allSeries (no need to re-fetch)
+  const sel=document.getElementById('fseries');
+  if(sel){
+    const cur=sel.value;
+    sel.innerHTML='<option value="">不屬於任何系列</option>';
+    allSeries.forEach(s=>{
+      const opt=document.createElement('option');
+      opt.value=s.name;opt.textContent=s.name;sel.appendChild(opt);
+    });
+    if(cur)sel.value=cur;
+  }
 }
 function renderSeriesList(){
   const list=document.getElementById('series-list');

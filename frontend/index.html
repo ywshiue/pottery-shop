@@ -417,7 +417,7 @@ footer{background:var(--t);color:rgba(255,255,255,.7);padding:48px 32px 32px;mar
 .d-dots{position:absolute;bottom:12px;left:50%;transform:translateX(-50%);display:flex;gap:5px;z-index:2}
 .d-dot{width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,.3);cursor:pointer;transition:all .25s}
 .d-dot.on{background:#fff;width:14px;border-radius:3px}
-.d-info{padding:22px 24px;overflow-y:auto;overflow-x:hidden;display:flex;flex-direction:column;-webkit-overflow-scrolling:touch}
+.d-info{padding:27px 29px;overflow-y:auto;overflow-x:hidden;display:flex;flex-direction:column;-webkit-overflow-scrolling:touch}
 .d-cat{font-size:9px;letter-spacing:2px;color:var(--m);text-transform:uppercase;margin-bottom:7px}
 .d-name{font-family:var(--serif);font-size:21px;font-weight:500;color:var(--t);letter-spacing:.5px;margin-bottom:4px;line-height:1.3}
 .d-price-row{display:flex;align-items:baseline;gap:8px;margin-bottom:14px}
@@ -681,7 +681,7 @@ const API = 'https://pottery-shop.onrender.com';
   <div class="drawer" id="drawer" onclick="event.stopPropagation()">
     <div class="drawer-close">
       <div class="drawer-cat" id="d-cat"></div>
-      <button class="drawer-close-btn" onclick="shareItem()" title="分享連結" id="share-btn"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg></button>
+      
       <button class="drawer-close-btn" onclick="closeDrawer()">×</button>
     </div>
     <div class="drawer-content">
@@ -700,15 +700,10 @@ const API = 'https://pottery-shop.onrender.com';
         <div class="d-desc" id="d-desc" style="flex:1"></div>
         <div style="display:flex;gap:8px;margin-top:20px">
           <button class="d-add-btn" id="d-add-btn" onclick="addFromDrawer()" style="flex:1;margin-top:0">加入購物車</button>
-          <button onclick="shareItem()" style="width:46px;height:46px;flex-shrink:0;background:transparent;border:1px solid var(--b);border-radius:10px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s" onmouseover="this.style.borderColor='var(--g)'" onmouseout="this.style.borderColor='var(--b)'" title="分享商品">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6B7280" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
-          </button>
+          
         </div>
         <div class="d-stock" id="d-stock"></div>
-        <button onclick="shareItem()" style="display:flex;align-items:center;gap:6px;background:transparent;border:none;cursor:pointer;font-family:var(--sans);font-size:12px;color:var(--m);padding:0;margin-top:10px;transition:opacity .15s" onmouseover="this.style.opacity='.7'" onmouseout="this.style.opacity='1'" title="分享">
-  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
-  分享此商品
-</button>
+        
       </div>
     </div>
   </div>
