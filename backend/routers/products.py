@@ -12,17 +12,20 @@ class ProductIn(BaseModel):
     stock: int
     sizes: Optional[str] = ""
     description: Optional[str] = ""
-    image_url: Optional[str] = None       # 主圖（第一張，向下相容）
-    image_urls: Optional[List[str]] = []  # 多張圖片
+    image_url: Optional[str] = None
+    image_urls: Optional[List[str]] = []
+    series_id: Optional[int] = None
+    series_name: Optional[str] = "" 
 
 # ── 公開：任何人可以讀 ─────────────────────────────────────
 @router.get("/")
-async def list_products(category: Optional[str] = None):
+async def list_products(category: Optional[str] = None, series_name: Optional[str] = None):
+    q = "/products?is_archived=eq.false&order=created_at.desc"
     if category:
-        data = await sb_fetch(f"/products?category=eq.{category}&order=created_at.desc", use_secret=False)
-    else:
-        data = await sb_fetch("/products?order=created_at.desc", use_secret=False)
-    return data
+        q += f"&category=eq.{category}"
+    if series_name:
+        q += f"&series_name=eq.{series_name}"
+    return await sb_fetch(q, use_secret=False)
 
 @router.get("/{product_id}")
 async def get_product(product_id: int):
@@ -67,3 +70,29 @@ async def permanent_delete(product_id: int, authorization: str = Header(...)):
     await verify_admin_token(token)
     await sb_fetch(f"/products?id=eq.{product_id}", method="DELETE")
     return {"message": "已永久刪除"}
+
+
+# ── 系列 ──────────────────────────────────────────────────
+@router.get("/series")
+async def list_series():
+    return await sb_fetch("/series?order=name.asc", use_secret=False)
+
+class SeriesIn(BaseModel):
+    name: str
+
+@router.post("/series")
+async def create_series(body: SeriesIn, authorization: str = Header(...)):
+    token = authorization.replace("Bearer ", "")
+    await verify_admin_token(token)
+    existing = await sb_fetch(f"/series?name=eq.{body.name}", use_secret=False)
+    if existing:
+        return existing[0]
+    data = await sb_fetch("/series", method="POST", body={"name": body.name})
+    return data[0]
+
+@router.delete("/series/{series_id}")
+async def delete_series(series_id: int, authorization: str = Header(...)):
+    token = authorization.replace("Bearer ", "")
+    await verify_admin_token(token)
+    await sb_fetch(f"/series?id=eq.{series_id}", method="DELETE")
+    return {"message": "已刪除"}
