@@ -20,7 +20,7 @@ class ProductIn(BaseModel):
 # ── 公開：任何人可以讀 ─────────────────────────────────────
 @router.get("/")
 async def list_products(category: Optional[str] = None, series_name: Optional[str] = None):
-    q = "/products?is_archived=eq.false&order=created_at.desc"
+    q = "/products?order=created_at.desc"
     if category:
         q += f"&category=eq.{category}"
     if series_name:
