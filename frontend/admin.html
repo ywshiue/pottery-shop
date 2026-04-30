@@ -532,7 +532,7 @@ async function save(){
   try{
     const newUrls=await uploadAllNewImgs();
     const allUrls=[...pendingUrls,...newUrls];
-    const body={name,price,stock,sizes:getSizes(),category:document.getElementById('fcat').value,description:document.getElementById('fdesc').value,image_url:allUrls[0]||null,image_urls:allUrls};
+    const body={name,price,stock,sizes:getSizes(),category:document.getElementById('fcat').value,series_name:document.getElementById('fseries').value||'',description:document.getElementById('fdesc').value,image_url:allUrls[0]||null,image_urls:allUrls};
     const eid=document.getElementById('eid').value;
     if(eid){await api(`/products/${eid}`,{method:'PATCH',body:JSON.stringify(body)});toast('商品已更新！');}
     else{await api('/products/',{method:'POST',body:JSON.stringify(body)});toast('商品已新增！');}
@@ -542,6 +542,7 @@ async function save(){
 }
 function reset(){
   ['fname','fprice','fstock','fdesc','flen','fwid','fhgt'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('fseries').value='';
   document.getElementById('eid').value='';document.getElementById('fcat').value='花器';
   imgFiles=[];pendingUrls=[];renderImgGrid();
   document.getElementById('fi').value='';
@@ -552,6 +553,7 @@ function editP(p){
   document.getElementById('eid').value=p.id;
   document.getElementById('fname').value=p.name;
   document.getElementById('fcat').value=p.category;
+  document.getElementById('fseries').value=p.series_name||'';
   document.getElementById('fprice').value=p.price;
   document.getElementById('fstock').value=p.stock;
   document.getElementById('fdesc').value=p.description||'';
@@ -1019,6 +1021,64 @@ async function uploadInstructorPhoto(file){
     toast('上傳失敗：'+e.message,false);
     if(hint)hint.textContent='點擊上傳講師照片';
   }
+}
+
+// ── Series management ──────────────────────────────────────
+let allSeries=[];
+
+async function loadSeriesOptions(){
+  try{
+    const data=await fetch(`${API}/products/series`).then(r=>r.json());
+    allSeries=Array.isArray(data)?data:[];
+    const sel=document.getElementById('fseries');
+    if(!sel)return;
+    const cur=sel.value;
+    sel.innerHTML='<option value="">不屬於任何系列</option>';
+    allSeries.forEach(s=>{
+      const opt=document.createElement('option');
+      opt.value=s.name;opt.textContent=s.name;sel.appendChild(opt);
+    });
+    if(cur)sel.value=cur;
+  }catch(e){console.log('series load error',e);}
+}
+
+function openAddSeries(){
+  document.getElementById('series-ov').style.display='flex';
+  document.body.style.overflow='hidden';
+  renderSeriesList();
+}
+function closeAddSeries(){
+  document.getElementById('series-ov').style.display='none';
+  document.body.style.overflow='';
+  loadSeriesOptions();
+}
+function renderSeriesList(){
+  const list=document.getElementById('series-list');
+  if(!list)return;
+  if(!allSeries.length){list.innerHTML='<div style="font-size:13px;color:var(--m);padding:8px">尚無系列</div>';return;}
+  list.innerHTML=allSeries.map(s=>`
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 10px;background:var(--bg);border-radius:7px">
+      <span style="font-size:13px;color:var(--t)">${s.name}</span>
+      <button class="btn br btn-sm" onclick="deleteSeries(${s.id},'${s.name.replace(/'/g,"\\'")}')">刪除</button>
+    </div>`).join('');
+}
+async function addSeries(){
+  const name=document.getElementById('new-series-name').value.trim();
+  if(!name){toast('請輸入系列名稱',false);return;}
+  try{
+    const data=await api('/products/series',{method:'POST',body:JSON.stringify({name})});
+    if(!allSeries.find(s=>s.id===data.id))allSeries.push(data);
+    document.getElementById('new-series-name').value='';
+    renderSeriesList();toast('系列已新增');
+  }catch(e){toast('新增失敗',false);}
+}
+async function deleteSeries(id,name){
+  if(!confirm('確定刪除「'+name+'」系列？'))return;
+  try{
+    await api(`/products/series/${id}`,{method:'DELETE'});
+    allSeries=allSeries.filter(s=>s.id!==id);
+    renderSeriesList();toast('已刪除');
+  }catch(e){toast('刪除失敗',false);}
 }
 
 </script>

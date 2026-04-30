@@ -1298,8 +1298,14 @@ function shareItem(){
   const title=p?'是陶。'+p.name:'是陶。It\'s Pottery';
   const text=p?p.name+' — 是陶。It\'s Pottery':'是陶。It\'s Pottery';
   try{
-    if(navigator.share){
-      navigator.share({title,text,url}).catch(()=>{});
+    if(navigator.share&&navigator.canShare&&navigator.canShare({title,text,url})){
+      navigator.share({title,text,url}).catch(()=>{
+        navigator.clipboard.writeText(url).then(()=>toast('連結已複製')).catch(()=>{});
+      });
+    } else if(navigator.share){
+      navigator.share({title,text,url}).catch(()=>{
+        navigator.clipboard.writeText(url).then(()=>toast('連結已複製')).catch(()=>{});
+      });
     } else {
       navigator.clipboard.writeText(url).then(()=>toast('連結已複製')).catch(()=>{
         const ta=document.createElement('textarea');ta.value=url;document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);toast('連結已複製');
