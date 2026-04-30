@@ -294,7 +294,7 @@ const API = 'https://pottery-shop.onrender.com';
         </div>
         <div class="f2" style="margin-bottom:12px">
           <div class="fg" style="margin:0"><label class="lbl">課程類型 *</label>
-            <input type="text" id="cls-type" placeholder="例：手作陶體驗、基礎手拉坯、兒童陶藝" oninput="onClsTypeChange(this.value)">
+            <select id="cls-type" onchange="onClsTypeChange(this.value)"><option value="單次體驗">單次體驗</option><option value="專業課程">專業課程</option></select>
           </div>
           <div class="fg" style="margin:0"><label class="lbl">報名狀態</label>
             <select id="cls-active"><option value="true">開放報名</option><option value="false">暫停報名</option></select>
@@ -927,7 +927,7 @@ async function updateRegStatus(id,status){
 
 // ── Course type toggle ─────────────────────────────────────
 function onClsTypeChange(type){
-  const isThrowing=type.includes('手拉坯');
+  const isThrowing=type==='專業課程';
   const tw=document.getElementById('cls-date-text-wrap');
   const pw=document.getElementById('cls-date-picker-wrap');
   if(tw)tw.style.display=isThrowing?'none':'block';
