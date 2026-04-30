@@ -19,9 +19,12 @@ class ClassIn(BaseModel):
     description: Optional[str] = ""
     notes:       Optional[str] = ""
     is_active:   Optional[bool] = True
-    image_url:   Optional[str] = ""
-    image_urls:  Optional[list] = []
-    subtitle:    Optional[str] = ""
+    image_url:        Optional[str] = ""
+    image_urls:       Optional[list] = []
+    subtitle:         Optional[str] = ""
+    instructor_name:  Optional[str] = ""
+    instructor_bio:   Optional[str] = ""
+    instructor_photo: Optional[str] = ""
 
 class RegistrationIn(BaseModel):
     class_id:       int
@@ -42,9 +45,10 @@ class RegStatusUpdate(BaseModel):
 # ── 公開：讀取課程 ────────────────────────────────────────
 @router.get("/")
 async def list_classes(type: Optional[str] = None):
-    q = "/classes?is_active=eq.true&order=created_at.asc"
+    # Return ALL classes (active and inactive) so frontend can show "暫停報名"
+    q = "/classes?order=created_at.asc"
     if type:
-        q = f"/classes?is_active=eq.true&type=eq.{type}&order=created_at.asc"
+        q = f"/classes?type=eq.{type}&order=created_at.asc"
     return await sb_fetch(q, use_secret=False)
 
 # ── 公開：報名 ────────────────────────────────────────────
@@ -178,6 +182,13 @@ async def update_reg(reg_id: int, body: RegStatusUpdate, authorization: str = He
     await sb_fetch(f"/registrations?id=eq.{reg_id}", method="PATCH",
                    body={"status": body.status})
     return {"message": "已更新"}
+
+@router.delete("/admin/registrations/{reg_id}")
+async def delete_reg(reg_id: int, authorization: str = Header(...)):
+    token = authorization.replace("Bearer ", "")
+    await verify_admin_token(token)
+    await sb_fetch(f"/registrations?id=eq.{reg_id}", method="DELETE")
+    return {"message": "已刪除"}
 
 # ── 寄信 ─────────────────────────────────────────────────
 BANK_INFO = lambda: {
