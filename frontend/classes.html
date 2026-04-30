@@ -578,7 +578,7 @@ let lbImgs=[],lbIdx=0;
 const dSlides={};
 
 // ── Init ──────────────────────────────────────────────────
-async function init(){
+async async function init(){
   try{
     bankInfo = await fetch(`${API}/bank-info`).then(r=>r.json());
   }catch(e){}

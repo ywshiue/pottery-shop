@@ -1273,6 +1273,8 @@ async function submitPayment(){
 }
 
 load();
+loadBankInfo();
+loadPublicQA();
 
 async function submitQuestion(){
   const email=document.getElementById('q-email').value.trim();
