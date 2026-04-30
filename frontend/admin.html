@@ -250,6 +250,15 @@ const API = 'https://pottery-shop.onrender.com';
           </div>
           <div class="fg" style="margin:0"><label class="lbl">庫存 *</label><input type="number" id="fstock" placeholder="1" min="0"></div>
         </div>
+        <div class="fg">
+          <label class="lbl">系列</label>
+          <div style="display:flex;gap:6px">
+            <select id="fseries" style="flex:1;padding:9px 12px;border:1px solid var(--b);border-radius:8px;font-size:14px;font-family:inherit;background:var(--w);color:var(--t);outline:none">
+              <option value="">不屬於任何系列</option>
+            </select>
+            <button type="button" class="btn bo" onclick="openAddSeries()" style="flex-shrink:0;font-size:12px;padding:8px 12px;white-space:nowrap">＋ 新增系列</button>
+          </div>
+        </div>
         <div class="fg"><label class="lbl">售價（NT$）*</label><input type="number" id="fprice" placeholder="1200" min="1"></div>
         <div class="fg">
           <label class="lbl">尺寸（cm）</label>
