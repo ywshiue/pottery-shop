@@ -488,12 +488,19 @@ fetch('https://pottery-shop.onrender.com/').catch(()=>{});
       <!-- 體驗課：選日期 -->
       <div class="fg" id="r-date-wrap" style="display:none">
         <label class="lbl">希望上課日期 *</label>
-        <div style="position:relative">
-          <svg style="position:absolute;left:11px;top:50%;transform:translateY(-50%);pointer-events:none;color:var(--m)" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-          <input type="date" id="r-date"
-            style="box-sizing:border-box;width:100%;min-height:44px;padding:10px 12px 10px 34px;border:1px solid var(--b);border-radius:8px;font-size:14px;font-family:var(--sans);background:var(--w);color:var(--t);outline:none;display:block;-webkit-appearance:none;appearance:none"
-            onchange="updateSum()">
+        <input type="date" id="r-date"
+          style="box-sizing:border-box;width:100%;min-height:44px;padding:10px 12px;border:1px solid var(--b);border-radius:8px;font-size:14px;font-family:var(--sans);background:var(--w);color:var(--t);outline:none;display:block;-webkit-appearance:none;appearance:none"
+          onchange="onDateChange()">
+        <div id="r-date-error" style="font-size:11px;color:var(--r);margin-top:4px;display:none">此日期無法上課，請選擇週二、週四、週六</div>
+        <div id="r-time-wrap" style="display:none;margin-top:10px">
+          <label class="lbl">上課時段 *</label>
+          <select id="r-time" style="margin-top:4px;padding:10px 12px;border:1px solid var(--b);border-radius:8px;font-size:14px;font-family:var(--sans);background:var(--w);color:var(--t);outline:none;width:100%;box-sizing:border-box">
+            <option value="09:00–12:00">上午時段　09:00 – 12:00</option>
+            <option value="13:30–16:30">下午時段　13:30 – 16:30</option>
+          </select>
         </div>
+        <div style="font-size:11px;color:var(--m);margin-top:6px">可上課日：週二、週四、週六</div>
+      </div>
         <div style="font-size:11px;color:var(--m);margin-top:4px;letter-spacing:.2px">課程時間固定為 13:30 – 16:30，確認後我們將與您聯繫</div>
       </div>
 
@@ -854,6 +861,11 @@ async function submitReg(){
   const isWS2=currentCourse?.type==='手作陶體驗';
   const preferredDate=document.getElementById('r-date')?.value||'';
   if(isWS2&&!preferredDate){toast('請選擇希望上課的日期',false);return;}
+  if(isWS2&&preferredDate){
+    const _day=new Date(preferredDate+'T12:00:00').getDay();
+    if([0,1,3,5].includes(_day)){toast('請選擇可上課日期（週二、四、六）',false);return;}
+  }
+  const preferredTime=isWS2?(document.getElementById('r-time')?.value||'13:30–16:30'):'';
   const c=currentCourse;
   const isWS=c.type==='手作陶體驗';
   const members=isWS?getM():1;
@@ -862,7 +874,7 @@ async function submitReg(){
   try{
     const res=await fetch(`${API}/classes/register`,{
       method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({class_id:c.id,name,phone,email,members,preferred_date:isWS2?preferredDate+' 13:30–16:30':'',
+      body:JSON.stringify({class_id:c.id,name,phone,email,members,preferred_date:isWS2?preferredDate+' '+preferredTime:'',
         course_type:isWS?'':`四堂完整課程`,
         preferred_date:isWS?preferredDate+'  13:30–16:30':'',
         note:document.getElementById('r-note').value})
@@ -926,6 +938,25 @@ async function cancelReg(){
 }
 
 // ── FAQ ────────────────────────────────────────────────────
+function onDateChange(){
+  const val=document.getElementById('r-date').value;
+  const errEl=document.getElementById('r-date-error');
+  const timeWrap=document.getElementById('r-time-wrap');
+  if(!val){errEl.style.display='none';timeWrap.style.display='none';return;}
+  const day=new Date(val+'T12:00:00').getDay(); // 0=日,1=一...6=六
+  const blocked=[0,1,3,5]; // 日一三五
+  if(blocked.includes(day)){
+    errEl.style.display='block';
+    timeWrap.style.display='none';
+    document.getElementById('r-date').style.borderColor='var(--r)';
+  } else {
+    errEl.style.display='none';
+    timeWrap.style.display='block';
+    document.getElementById('r-date').style.borderColor='var(--g)';
+  }
+  updSum();
+}
+
 function toggleInstructor(){
   const div=document.getElementById('d-instructor');
   const btn=document.getElementById('d-instructor-btn-text');
