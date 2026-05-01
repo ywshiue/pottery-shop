@@ -25,6 +25,7 @@ class ClassIn(BaseModel):
     instructor_name:  Optional[str] = ""
     instructor_bio:   Optional[str] = ""
     instructor_photo: Optional[str] = ""
+    age_limit:        Optional[str] = ""
 
 class RegistrationIn(BaseModel):
     class_id:       int
