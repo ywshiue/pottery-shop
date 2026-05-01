@@ -659,7 +659,18 @@ function calNav(dir){
 }
 
 function calRender(){
-  const BLOCKED_DAYS=[0,1,3,5]; // 日一三五
+  // Parse allowed days from course date_desc
+  // Format: 可上課：週二、週四、週六｜時段：09:00–12:00、13:30–16:30
+  const dayMap={'日':0,'一':1,'二':2,'三':3,'四':4,'五':5,'六':6};
+  let ALLOWED_DAYS=[2,4,6]; // default
+  let ALLOWED_SLOTS=['09:00–12:00','13:30–16:30'];
+  if(currentCourse?.date_desc){
+    const wdM=currentCourse.date_desc.match(/可上課：週([^｜]+)/);
+    if(wdM) ALLOWED_DAYS=wdM[1].split('、').map(d=>dayMap[d]).filter(x=>x!==undefined);
+    const tsM=currentCourse.date_desc.match(/時段：([^｜]+)/);
+    if(tsM) ALLOWED_SLOTS=tsM[1].split('、');
+  }
+  const BLOCKED_DAYS=[0,1,2,3,4,5,6].filter(d=>!ALLOWED_DAYS.includes(d));
   const title=document.getElementById('cal-title');
   const grid=document.getElementById('cal-grid');
   if(!title||!grid) return;
@@ -715,10 +726,16 @@ function updateTimeOptions(dateStr){
     }
     return;
   }
-  const showMorning=status!=='afternoon_only'&&status!=='fully_booked';
-  const showAfternoon=status!=='morning_only'&&status!=='fully_booked';
-  if(showMorning){const o=document.createElement('option');o.value='09:00–12:00';o.textContent='上午時段　09:00 – 12:00';sel.appendChild(o);}
-  if(showAfternoon){const o=document.createElement('option');o.value='13:30–16:30';o.textContent='下午時段　13:30 – 16:30';sel.appendChild(o);}
+  // Get allowed slots from course
+  const courseSlots=(()=>{
+    if(!currentCourse?.date_desc) return ['09:00–12:00','13:30–16:30'];
+    const m=currentCourse.date_desc.match(/時段：([^｜]+)/);
+    return m?m[1].split('、'):['09:00–12:00','13:30–16:30'];
+  })();
+  const showMorning=courseSlots.includes('09:00–12:00')&&status!=='afternoon_only'&&status!=='fully_booked';
+  const showAfternoon=courseSlots.includes('13:30–16:30')&&status!=='morning_only'&&status!=='fully_booked';
+  if(showMorning){const o=document.createElement('option');const amSlot=courseSlots.find(s=>parseInt(s)<12);o.value=amSlot||'09:00–12:00';o.textContent='上午時段　'+(amSlot||'09:00–12:00').replace('–',' – ');sel.appendChild(o);}
+  if(showAfternoon){const o=document.createElement('option');const pmSlot=courseSlots.find(s=>parseInt(s)>=12);o.value=pmSlot||'13:30–16:30';o.textContent='下午時段　'+(pmSlot||'13:30–16:30').replace('–',' – ');sel.appendChild(o);}
   if(!sel.options.length){const o=document.createElement('option');o.value='';o.textContent='此日期已額滿';o.disabled=true;sel.appendChild(o);}
 }
 
@@ -845,7 +862,7 @@ function openDetail(id){
 
   document.getElementById('d-cat').textContent=c.type.toUpperCase();
   document.getElementById('d-name').textContent=c.name;
-  document.getElementById('d-price').textContent=`NT$${c.price.toLocaleString()} / 人`;
+  document.getElementById('d-price').textContent=`NT$${c.price.toLocaleString()} / 人起`;
   // Format date_desc sessions
   const _dateEl=document.getElementById('d-date');
   if(_dateEl){
