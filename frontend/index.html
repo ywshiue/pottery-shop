@@ -192,7 +192,6 @@ footer{background:var(--t);color:rgba(255,255,255,.7);padding:48px 32px 32px;mar
   .topbar{padding:0 16px;height:56px;overflow:visible}
   .f2{grid-template-columns:1fr}
   .mo{border-radius:20px 20px 0 0;max-width:100%;padding-bottom:74px}
-  .footer-inner{grid-template-columns:1fr 1fr}
   footer{padding:36px 20px 24px}
   #toast{bottom:100px}
   .drawer{width:100vw}
@@ -351,9 +350,7 @@ textarea{resize:vertical;min-height:76px}
 .faq-item.open .faq-icon{transform:rotate(45deg)}
 .faq-item.open .faq-a{display:block}
 @media(max-width:760px){
-  .layout{grid-template-columns:1fr  .footer-inner{grid-template-columns:1fr 1fr;gap:20px}
-  footer{padding:36px 20px 24px}
-}
+  .layout{grid-template-columns:1fr}
   .cbox{display:none}
   .m-cart-btn{display:block}
   .grid{grid-template-columns:repeat(2,1fr);gap:12px}
@@ -361,7 +358,6 @@ textarea{resize:vertical;min-height:76px}
   
   .f2{grid-template-columns:1fr}
   .mo{border-radius:20px 20px 0 0;max-width:100%;padding-bottom:74px}
-  .footer-inner{grid-template-columns:1fr 1fr}
   footer{padding:36px 20px 24px}
   
   .drawer{width:100vw}
@@ -447,6 +443,8 @@ textarea{resize:vertical;min-height:76px}
 .l5-boxes{display:flex;gap:8px;justify-content:center;margin-top:10px}
 .l5-box{width:48px;height:56px;border:2px solid var(--b);border-radius:10px;font-size:22px;font-weight:600;text-align:center;font-family:var(--sans);background:#fff;color:var(--t);outline:none;transition:all .15s}
 .done-icon{width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 14px}
+
+@media(max-width:600px){.footer-inner{grid-template-columns:1fr 1fr!important;gap:16px}footer{padding:36px 16px 24px}}
 </style>
 </head>
 <body>
