@@ -124,7 +124,10 @@ async def get_booked_dates(class_id: int):
     - 下午有人預約 → 包場不能選這天
     回傳 { date: status } status = fully_booked | morning_only | afternoon_only | morning_full
     """
-    MAX_PER_SLOT = 4
+    # Get class capacity as per-slot limit
+    cls_info = await sb_fetch(f"/classes?id=eq.{class_id}&select=capacity", use_secret=False)
+    MAX_PER_SLOT = cls_info[0]["capacity"] if cls_info else 4
+
     regs = await sb_fetch(
         f"/registrations?class_id=eq.{class_id}&status=neq.cancelled&select=preferred_date,members,course_type",
         use_secret=False
@@ -184,11 +187,6 @@ async def get_booked_dates(class_id: int):
                 result[date] = "fully_booked"
             else:
                 result[date] = "afternoon_only"
-
-    # Also attach remaining counts for frontend display
-    # Fetch class capacity
-    cls_data = await sb_fetch(f"/classes?id=eq.{class_id}&select=capacity", use_secret=False)
-    capacity = cls_data[0]["capacity"] if cls_data else 4
 
     # Add slot counts to result
     for date, s in slots.items():
