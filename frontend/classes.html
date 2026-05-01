@@ -42,7 +42,7 @@ body{font-family:var(--sans);background:var(--bg);color:var(--t);font-size:14px;
 .layout{display:grid;grid-template-columns:1fr 320px;gap:24px;align-items:start}
 
 /* ── Product Grid ───────────────────────────────────── */
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:20px}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
 .pc{background:var(--w);border:1px solid var(--b);border-radius:14px;overflow:hidden;transition:all .25s;cursor:pointer}
 .pc:hover{transform:translateY(-3px);box-shadow:0 8px 28px rgba(28,43,58,.1);border-color:transparent}
 .pimg{width:100%;aspect-ratio:1/1;background:var(--bg);position:relative;overflow:hidden}
@@ -287,6 +287,8 @@ footer{background:var(--t);color:rgba(255,255,255,.7);padding:48px 32px 32px;mar
 }
 
 @media(max-width:600px){.footer-inner{grid-template-columns:1fr 1fr!important;gap:16px}footer{padding:36px 16px 24px}}
+
+@media(min-width:1024px){.grid{grid-template-columns:repeat(4,1fr)}}
 </style>
 </head>
 <body>
