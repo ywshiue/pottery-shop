@@ -1013,8 +1013,17 @@ function switchView(showId){
     const el=document.getElementById(id);
     if(el) el.style.display=id===showId?'block':'none';
   });
+  // Force scroll to top with multiple methods
   const mo=document.querySelector('#reg-ov .mo');
-  if(mo) mo.scrollTop=0;
+  if(mo){
+    mo.scrollTop=0;
+    mo.scrollTo({top:0,behavior:'instant'});
+  }
+  // Also scroll the overlay itself
+  const ov=document.getElementById('reg-ov');
+  if(ov) ov.scrollTop=0;
+  // Force reflow
+  window.scrollTo(0,0);
 }
 
 async function submitReg(){
