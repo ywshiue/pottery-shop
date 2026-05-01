@@ -127,9 +127,9 @@ body{font-family:var(--sans);background:var(--bg);color:var(--t);font-size:14px;
 .lb-info{color:rgba(255,255,255,.6);font-size:12px;margin-top:10px;letter-spacing:.5px}
 
 /* ── Checkout Modal ─────────────────────────────────── */
-.ov{position:fixed;inset:0;background:rgba(28,43,58,.55);z-index:300;display:none;align-items:flex-end;justify-content:center}
+.ov{position:fixed;inset:0;background:rgba(28,43,58,.55);z-index:300;display:none;flex-direction:column;align-items:stretch;justify-content:flex-end;overflow:hidden}
 .ov.open{display:flex}
-.mo{background:var(--w);border-radius:20px 20px 0 0;padding:24px 20px 40px;width:100%;max-height:88vh;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
+.mo{background:var(--w);border-radius:20px 20px 0 0;padding:24px 20px 48px;width:100%;max-width:100%;max-height:88vh;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;flex-shrink:0}
 .mo-handle{width:36px;height:4px;background:var(--b);border-radius:2px;margin:0 auto 20px}
 .mtitle{font-family:var(--serif);font-size:18px;font-weight:400;margin-bottom:4px;color:var(--t);letter-spacing:1.5px}
 .msub{font-size:13px;color:var(--m);margin-bottom:22px;letter-spacing:.3px}
@@ -189,16 +189,15 @@ footer{background:var(--t);color:rgba(255,255,255,.7);padding:48px 32px 32px;mar
   .wrap{padding:20px 16px 100px}
   .topbar{padding:0 16px;height:56px;overflow:visible}
   .f2{grid-template-columns:1fr}
-  .mo{border-radius:20px 20px 0 0;max-width:100%;padding-bottom:74px}
+  
   .footer-inner{grid-template-columns:1fr 1fr}
   footer{padding:36px 20px 24px}
   #toast{bottom:100px}
   .drawer{width:100vw}
 }
 @media(min-width:761px){
-  .ov{align-items:center}
-  .mo{border-radius:16px;max-width:480px;max-height:88vh;padding-bottom:74px}
-  .mo-handle{display:none}
+
+  
   #toast{bottom:24px}
 }
 
@@ -287,7 +286,7 @@ footer{background:var(--t);color:rgba(255,255,255,.7);padding:48px 32px 32px;mar
 .footer-bottom{max-width:1280px;margin:32px auto 0;padding-top:20px;border-top:1px solid rgba(255,255,255,.08);font-size:11px;letter-spacing:.5px;color:rgba(255,255,255,.3);text-align:center}
 
 
-@media(max-width:520px){.mo{padding:20px 16px 40px;border-radius:16px 16px 0 0;max-height:90vh}}
+@media(max-width:520px){}
 </style>
 </head>
 <body>
