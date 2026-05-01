@@ -127,9 +127,9 @@ body{font-family:var(--sans);background:var(--bg);color:var(--t);font-size:14px;
 .lb-info{color:rgba(255,255,255,.6);font-size:12px;margin-top:10px;letter-spacing:.5px}
 
 /* ── Checkout Modal ─────────────────────────────────── */
-.ov{position:fixed;inset:0;background:rgba(28,43,58,.6);z-index:300;display:none;flex-direction:column;align-items:stretch;justify-content:flex-end;backdrop-filter:blur(3px);overflow:hidden}
+.ov{position:fixed;inset:0;background:rgba(28,43,58,.55);z-index:300;display:none;align-items:flex-end;justify-content:center}
 .ov.open{display:flex}
-.mo{background:var(--w);border-radius:20px 20px 0 0;padding:24px 20px 48px;width:100%;max-height:88vh;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;flex-shrink:0}
+.mo{background:var(--w);border-radius:20px 20px 0 0;padding:24px 20px 40px;width:100%;max-height:88vh;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
 .mo-handle{width:36px;height:4px;background:var(--b);border-radius:2px;margin:0 auto 20px}
 .mtitle{font-family:var(--serif);font-size:18px;font-weight:400;margin-bottom:4px;color:var(--t);letter-spacing:1.5px}
 .msub{font-size:13px;color:var(--m);margin-bottom:22px;letter-spacing:.3px}
@@ -682,9 +682,9 @@ function calRender(){
     const isPast=date<tmr;
     const isDayBlocked=BLOCKED_DAYS.includes(dow);
     const slot=bookedSlots[ds]||{};
-    const status=slot.status||slot||'';
+    const status=(typeof slot==='object'?slot.status:slot)||'';
     const isFullyBooked=status==='fully_booked';
-    const isGroupBlocked=typeof bkType!=='undefined'&&bkType==='group'&&status!=='';
+    const isGroupBlocked=bkType==='group'&&typeof status==='string'&&status!=='';
     const isDisabled=isPast||isDayBlocked||isFullyBooked||isGroupBlocked;
     const isSelected=ds===selectedVal;
 
@@ -704,7 +704,7 @@ function calSelect(ds){
   document.getElementById('cal-popup').style.display='none';
   document.getElementById('r-time-wrap').style.display='block';
   const slot=bookedSlots[ds]||{};
-  const status=slot.status||slot||'';
+  const status=(typeof slot==='object'?slot.status:slot)||'';
   updateTimeOptions(ds);
   updateRemainingSlots(ds,status);
   updSum();
@@ -914,10 +914,7 @@ function openReg(){
   document.querySelectorAll('.l5-box').forEach(b=>{b.value='';b.style.borderColor='var(--b)';b.style.background='#fff';});
   document.getElementById('l5-val').value='';
   document.getElementById('pay-btn').disabled=true;document.getElementById('pay-btn').style.opacity='.4';
-  ['reg-form','reg-bank','reg-paid','reg-cancelled'].forEach((id,i)=>{
-    const el=document.getElementById(id);
-    if(el){el.style.display=i===0?'block':'none';el.style.visibility=i===0?'visible':'hidden';}
-  });
+  switchView('reg-form');
   const isWS=c.type==='單次體驗';
   document.getElementById('r-bk-wrap').style.display=isWS?'block':'none';
   // Show date field for workshop
@@ -954,6 +951,15 @@ function updSum(){
   document.getElementById('rs-total').textContent=`NT$${total.toLocaleString()}`;
 }
 
+function switchView(showId){
+  ['reg-form','reg-bank','reg-paid','reg-cancelled'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(el) el.style.display=id===showId?'block':'none';
+  });
+  const mo=document.querySelector('#reg-ov .mo');
+  if(mo) mo.scrollTop=0;
+}
+
 async function submitReg(){
   const name=document.getElementById('r-name').value.trim();
   const phone=document.getElementById('r-phone').value.trim();
@@ -988,16 +994,7 @@ async function submitReg(){
     document.getElementById('rb-name').textContent=bankInfo.bank_name||'—';
     document.getElementById('rb-code').textContent=bankInfo.bank_code||'—';
     document.getElementById('rb-acct').textContent=bankInfo.bank_account||'—';
-    const regForm=document.getElementById('reg-form');
-    const regBank=document.getElementById('reg-bank');
-    // Hide form first
-    regForm.style.display='none';
-    // Show bank after brief delay to avoid overlap
-    requestAnimationFrame(()=>{
-      regBank.style.display='block';
-      const mo=document.querySelector('#reg-ov .mo');
-      if(mo){mo.scrollTop=0;}
-    });
+    switchView('reg-bank');
     load();
   }catch(e){toast(e.message,false);}
   finally{btn.disabled=false;btn.textContent='確認報名';}
@@ -1031,9 +1028,7 @@ async function submitPay(){
       body:JSON.stringify({last5_digits:last5})
     });
     if(!res.ok)throw new Error();
-    const rb=document.getElementById('reg-bank');rb.style.display='none';rb.style.visibility='hidden';
-    const rp=document.getElementById('reg-paid');rp.style.display='block';rp.style.visibility='visible';
-    setTimeout(()=>{const mo=document.querySelector('#reg-ov .mo');if(mo)mo.scrollTop=0;},10);
+    switchView('reg-paid');
   }catch(e){toast('送出失敗，請稍後再試',false);}
   finally{btn.disabled=false;btn.textContent='我已完成匯款';}
 }
@@ -1041,9 +1036,7 @@ async function cancelReg(){
   if(!currentRegId||!confirm('確定要取消此報名？'))return;
   try{
     await fetch(`${API}/classes/register/${currentRegId}/cancel`,{method:'POST'});
-    const rbc=document.getElementById('reg-bank');rbc.style.display='none';rbc.style.visibility='hidden';
-    const rc=document.getElementById('reg-cancelled');rc.style.display='block';rc.style.visibility='visible';
-    setTimeout(()=>{const mo=document.querySelector('#reg-ov .mo');if(mo)mo.scrollTop=0;},10);
+    switchView('reg-cancelled');
     load();
   }catch(e){toast('取消失敗',false);}
 }
