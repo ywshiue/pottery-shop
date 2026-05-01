@@ -1,0 +1,1227 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>是陶。課程</title>
+<link rel="dns-prefetch" href="https://pottery-shop.onrender.com">
+<style>
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --g:#2C4A6E;--gl:#E8EEF5;
+  --t:#1C2B3A;--m:#6B7280;
+  --b:#D4CFC9;--bg:#E0DCD5;--w:#F5F2EE;
+  --r:#8B6F47;--rl:#F5EDE0;
+  --serif:-apple-system,BlinkMacSystemFont,'Helvetica Neue',Arial,sans-serif;
+  --sans:-apple-system,BlinkMacSystemFont,'Helvetica Neue',Arial,sans-serif;
+}
+
+.ov{position:fixed;inset:0;background:rgba(28,43,58,.6);z-index:300;display:none;align-items:flex-end;justify-content:center;backdrop-filter:blur(3px);overflow:hidden}
+.ov.open{display:flex}
+.mo{background:var(--w);border-radius:20px 20px 0 0;padding:28px 28px 74px;width:100%;max-width:520px;max-height:92vh;overflow-y:auto;position:relative;overflow-x:hidden;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
+.mo-handle{width:36px;height:4px;background:var(--b);border-radius:2px;margin:0 auto 20px}
+body{font-family:var(--sans);background:var(--bg);color:var(--t);font-size:14px;line-height:1.8;font-weight:300;letter-spacing:.4px}
+
+/* ── Topbar ─────────────────────────────────────────── */
+.topbar{background:var(--w);border-bottom:1px solid var(--b);padding:0 24px 0 20px;height:64px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 1px 8px rgba(28,43,58,.05);overflow:visible}
+.logo-wrap{display:flex;align-items:center;text-decoration:none;overflow:visible}
+.nav-right{display:flex;align-items:center;gap:20px}
+.nav-link{font-family:var(--sans);font-size:12px;color:var(--m);text-decoration:none;letter-spacing:1px;transition:color .15s;font-weight:300}
+.nav-link:hover{color:var(--t)}
+
+/* ── Filter ─────────────────────────────────────────── */
+.wrap{max-width:1280px;margin:0 auto;padding:32px 24px 80px}
+.section-header{margin-bottom:28px}
+.section-title{font-family:var(--serif);font-size:20px;font-weight:400;color:var(--t);margin-bottom:12px;letter-spacing:2px}
+.fbar{display:flex;flex-wrap:wrap;gap:8px}
+.fc{padding:6px 18px;border-radius:99px;border:1px solid var(--b);font-size:12px;letter-spacing:.5px;cursor:pointer;background:transparent;color:var(--m);transition:all .2s;font-family:var(--sans);font-weight:300;flex-shrink:0;white-space:nowrap}
+.fc.on{background:var(--g);color:#fff;border-color:var(--g);letter-spacing:.8px;flex-shrink:0}
+
+/* ── Layout ─────────────────────────────────────────── */
+.layout{display:grid;grid-template-columns:1fr 320px;gap:24px;align-items:start}
+
+/* ── Product Grid ───────────────────────────────────── */
+.pc{background:var(--w);border:1px solid var(--b);border-radius:14px;overflow:hidden;transition:all .25s;cursor:pointer}
+.pc:hover{transform:translateY(-3px);box-shadow:0 8px 28px rgba(28,43,58,.1);border-color:transparent}
+.pimg{width:100%;aspect-ratio:1/1;background:var(--bg);position:relative;overflow:hidden}
+.pimg img{width:100%;height:100%;object-fit:cover;transition:transform .4s}
+.pc:hover .pimg img{transform:scale(1.05)}
+.pimg-count{position:absolute;bottom:10px;right:10px;background:rgba(28,43,58,.55);color:#fff;font-size:10px;letter-spacing:.3px;padding:3px 8px;border-radius:99px;backdrop-filter:blur(4px)}
+.smask{position:absolute;inset:0;background:rgba(28,43,58,.45);display:flex;align-items:center;justify-content:center}
+.smask-text{color:#fff;font-size:12px;letter-spacing:1.5px;font-weight:500}
+.pbody{padding:10px 13px}
+.pcat{font-family:var(--sans);font-size:10px;letter-spacing:1.5px;color:var(--m);text-transform:uppercase;margin-bottom:3px;font-weight:300}
+.pname{font-family:var(--serif);font-size:14px;font-weight:400;margin-bottom:2px;color:var(--t);transition:color .15s;letter-spacing:.8px}
+.pc:hover .pname{color:var(--g)}
+.psize{font-size:11px;color:var(--m);margin-bottom:5px;letter-spacing:.3px}
+.pprice{font-size:15px;font-weight:600;color:var(--g)}
+.pview{font-family:var(--sans);font-size:10px;color:var(--m);margin-top:4px;letter-spacing:.8px;display:flex;align-items:center;gap:4px;opacity:0;transition:opacity .2s;font-weight:300}
+.pc:hover .pview{opacity:1}
+
+/* ── Cart (Desktop) ─────────────────────────────────── */
+.cbox{background:var(--w);border:1px solid var(--b);border-radius:14px;padding:22px;position:sticky;top:80px}
+.chdr{font-family:var(--serif);font-size:15px;font-weight:400;display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;color:var(--t);letter-spacing:1.5px}
+.ccnt{background:var(--g);color:#fff;border-radius:99px;font-size:10px;font-weight:700;padding:2px 9px;letter-spacing:.3px}
+.cempty{text-align:center;padding:32px 0;color:var(--m);font-size:13px;letter-spacing:.3px}
+.ci{display:flex;gap:12px;padding:12px 0;border-bottom:1px solid var(--b);align-items:flex-start}
+.cimg{width:48px;height:48px;border-radius:8px;background:var(--bg);flex-shrink:0;overflow:hidden}
+.cimg img{width:100%;height:100%;object-fit:cover}
+.cn{font-size:13px;font-weight:600;color:var(--t);margin-bottom:2px}
+.csz{font-size:11px;color:var(--m);letter-spacing:.3px}
+.cp{font-size:13px;font-weight:600;color:var(--g);flex-shrink:0}
+.qr{display:flex;align-items:center;gap:6px;margin-top:6px}
+.qb{width:24px;height:24px;border-radius:6px;border:1px solid var(--b);background:transparent;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;color:var(--t);transition:all .15s}
+.qb:hover{border-color:var(--g);color:var(--g)}
+.totbl{margin-top:14px;padding-top:14px;border-top:1px solid var(--b)}
+.tr{display:flex;justify-content:space-between;font-size:13px;color:var(--m);margin-bottom:6px;letter-spacing:.3px}
+.tr.grand{font-weight:600;font-size:15px;color:var(--t);margin-top:10px}
+.cbtn{width:100%;margin-top:14px;padding:13px;background:var(--g);color:#fff;border:none;border-radius:10px;font-size:13px;font-weight:400;cursor:pointer;font-family:var(--serif);letter-spacing:2px;transition:background .15s}
+.cbtn:hover{background:#1e3450}
+
+/* ── Mobile cart btn ────────────────────────────────── */
+.m-cart-btn{display:none;position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--g);color:#fff;border:none;border-radius:99px;padding:14px 32px;font-size:14px;font-weight:600;font-family:var(--sans);cursor:pointer;z-index:90;box-shadow:0 6px 20px rgba(44,74,110,.35);letter-spacing:.5px;white-space:nowrap}
+.m-cart-overlay{position:fixed;inset:0;background:rgba(28,43,58,.5);z-index:150;display:none}
+.m-cart-overlay.open{display:block}
+.m-cart{position:fixed;bottom:0;left:0;right:0;background:var(--w);border-radius:20px 20px 0 0;padding:22px 22px 74px;z-index:160;max-height:80vh;overflow-y:auto;overflow-x:hidden;transform:translateY(100%);transition:transform .3s cubic-bezier(.32,.72,0,1);-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
+.m-cart.open{transform:translateY(0)}
+.m-cart-handle{width:36px;height:4px;background:var(--b);border-radius:2px;margin:0 auto 18px}
+
+/* ── Product Detail Modal ───────────────────────────── */
+.drawer-overlay{position:fixed;inset:0;background:rgba(28,43,58,.6);z-index:200;display:none;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(3px);overflow:hidden}
+.drawer-overlay.open{display:flex}
+.drawer{background:var(--w);border-radius:18px;width:100%;max-width:820px;max-height:88vh;overflow:clip;display:flex;flex-direction:column;box-shadow:0 24px 64px rgba(28,43,58,.2)}
+.drawer-close{padding:16px 20px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--b);flex-shrink:0}
+.drawer-close-btn{background:transparent;border:none;font-size:20px;cursor:pointer;color:var(--m);line-height:1;width:32px;height:32px;display:flex;align-items:center;justify-content:center;border-radius:50%;transition:background .15s}
+.drawer-close-btn:hover{background:var(--bg)}
+.drawer-cat{font-size:10px;letter-spacing:1.5px;color:var(--m);text-transform:uppercase}
+.drawer-content{flex:1;overflow:hidden;display:grid;grid-template-columns:1fr 1fr;min-height:0}
+@media(max-width:640px){.drawer-content{grid-template-columns:1fr}.drawer{max-height:92vh;border-radius:20px 20px 0 0;margin-top:auto}}
+
+/* Drawer image gallery */
+.d-main-img{width:100%;aspect-ratio:4/5;object-fit:cover;border-radius:12px;margin-bottom:12px;background:var(--bg)}
+.d-main-placeholder{width:100%;aspect-ratio:4/5;background:var(--bg);border-radius:12px;margin-bottom:12px;display:flex;align-items:center;justify-content:center;color:var(--b);font-size:48px}
+.d-thumbs{display:flex;gap:8px;margin-bottom:20px;overflow-x:auto;padding-bottom:4px;overflow-y:visible}
+.d-thumb{width:64px;height:64px;border-radius:8px;object-fit:cover;cursor:pointer;border:2px solid transparent;flex-shrink:0;opacity:.6;transition:all .15s}
+.d-thumb.on{border-color:var(--g);opacity:1}
+
+.d-name{font-family:var(--serif);font-size:22px;font-weight:400;color:var(--t);margin-bottom:6px;line-height:1.3;letter-spacing:1.5px}
+.d-price{font-size:20px;font-weight:600;color:var(--g);margin-bottom:6px}
+.d-size{font-size:12px;color:var(--m);letter-spacing:.5px;margin-bottom:14px}
+.d-divider{border:none;border-top:1px solid var(--b);margin:16px 0}
+.d-section-title{font-size:10px;letter-spacing:1.5px;color:var(--m);text-transform:uppercase;margin-bottom:8px}
+.d-desc{font-size:14px;color:var(--t);line-height:1.8;white-space:pre-wrap}
+.d-add-btn{width:100%;padding:14px;background:var(--g);color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;font-family:var(--sans);letter-spacing:.8px;transition:background .15s;margin-top:20px;flex-shrink:0}
+.d-add-btn:hover{background:#1e3450}
+.d-add-btn:disabled{background:var(--b);color:var(--m);cursor:not-allowed}
+.d-stock{font-size:12px;color:var(--m);text-align:center;margin-top:8px;letter-spacing:.3px;padding-bottom:8px}
+
+/* ── Lightbox ───────────────────────────────────────── */
+.lb{position:fixed;inset:0;background:rgba(10,15,20,.94);z-index:500;display:none;flex-direction:column;align-items:center;justify-content:center}
+.lb.open{display:flex}
+.lb-img{max-width:90vw;max-height:74vh;object-fit:contain;border-radius:8px}
+.lb-thumbs{display:flex;gap:8px;margin-top:16px;overflow-x:auto;padding:4px 20px;max-width:90vw}
+.lb-thumb{width:52px;height:52px;border-radius:6px;object-fit:cover;cursor:pointer;opacity:.5;border:2px solid transparent;flex-shrink:0;transition:all .15s}
+.lb-thumb.on{opacity:1;border-color:#fff}
+.lb-close{position:absolute;top:20px;right:22px;background:transparent;border:none;color:#fff;font-size:22px;cursor:pointer;opacity:.7;transition:opacity .15s}
+.lb-close:hover{opacity:1}
+.lb-nav{position:absolute;top:50%;transform:translateY(-50%);background:rgba(255,255,255,.12);border:none;color:#fff;width:44px;height:44px;border-radius:50%;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .15s}
+.lb-nav:hover{background:rgba(255,255,255,.25)}
+.lb-prev{left:18px}.lb-right{right:18px}
+.lb-info{color:rgba(255,255,255,.6);font-size:12px;margin-top:10px;letter-spacing:.5px}
+
+/* ── Checkout Modal ─────────────────────────────────── */
+.mtitle{font-family:var(--serif);font-size:18px;font-weight:400;margin-bottom:4px;color:var(--t);letter-spacing:1.5px}
+.msub{font-size:13px;color:var(--m);margin-bottom:22px;letter-spacing:.3px}
+.fg{display:flex;flex-direction:column;gap:5px;margin-bottom:14px}
+.lbl{font-size:10px;font-weight:700;color:var(--m);text-transform:uppercase;letter-spacing:.8px}
+input[type=text],input[type=email],input[type=tel],input[type=date],textarea{padding:11px 14px;border:1px solid var(--b);border-radius:9px;font-size:14px;font-family:var(--sans);background:var(--w);color:var(--t);outline:none;transition:border-color .15s;width:100%;box-sizing:border-box}
+input:focus,textarea:focus{border-color:var(--g)}
+textarea{resize:vertical;min-height:76px}
+.f2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px}
+.po{display:flex;align-items:center;gap:12px;padding:13px;border:1.5px solid var(--b);border-radius:10px;cursor:pointer;margin-bottom:8px;transition:all .15s}
+.po:hover{background:var(--bg)}.po.sel{border-color:var(--g);background:var(--gl)}
+.pl{font-size:14px;font-weight:600;color:var(--t);letter-spacing:.2px}.ps{font-size:11px;color:var(--m);margin-top:2px;letter-spacing:.3px}
+.ordsum{background:var(--bg);padding:14px;border-radius:10px;font-size:13px;margin-top:16px;border:1px solid var(--b)}
+.ordsum-row{display:flex;justify-content:space-between;color:var(--m);margin-bottom:5px}
+.ordsum-note{font-size:11px;color:var(--m);margin-top:10px;line-height:1.6;letter-spacing:.2px;padding-top:8px;border-top:1px solid var(--b)}
+.mftr{display:flex;gap:10px;margin-top:16px;justify-content:flex-end}
+.btn{display:inline-flex;align-items:center;padding:10px 22px;border-radius:9px;font-size:14px;font-weight:600;font-family:var(--sans);cursor:pointer;transition:all .15s;border:none;letter-spacing:.3px}
+.bg{background:var(--g);color:#fff}.bg:hover{background:#1e3450}.bg:disabled{opacity:.4;cursor:not-allowed}
+.bo{background:transparent;border:1px solid var(--b);color:var(--m)}.bo:hover{background:var(--bg)}
+.sbox{text-align:center;padding:32px 0}
+.s-icon{width:56px;height:56px;background:var(--gl);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 16px}
+
+/* ── Footer ─────────────────────────────────────────── */
+footer{background:var(--t);color:rgba(255,255,255,.7);padding:48px 32px 32px;margin-top:60px}
+.footer-inner{max-width:1280px;margin:0 auto;display:grid;grid-template-columns:1.2fr 1fr 1fr 1fr;gap:32px}
+.footer-logo{font-family:var(--serif);font-size:17px;font-weight:400;color:#fff;margin-bottom:8px;letter-spacing:2px}
+.footer-logo span{color:rgba(44,130,200,.8)}
+.footer-tagline{font-size:12px;letter-spacing:.5px;line-height:1.7}
+.footer-section-title{font-size:10px;letter-spacing:1.8px;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:14px;font-weight:600}
+.footer-list{list-style:none;display:flex;flex-direction:column;gap:8px}
+.footer-list li{font-size:13px;line-height:1.6;letter-spacing:.2px}
+.footer-list li strong{color:rgba(255,255,255,.9)}
+.footer-bottom{max-width:1280px;margin:32px auto 0;padding-top:20px;border-top:1px solid rgba(255,255,255,.08);font-size:11px;letter-spacing:.5px;color:rgba(255,255,255,.3);text-align:center}
+
+/* ── Toast ──────────────────────────────────────────── */
+#toast{position:fixed;bottom:88px;right:20px;background:var(--t);color:#fff;padding:11px 18px;border-radius:10px;font-size:13px;font-weight:500;z-index:999;opacity:0;transform:translateY(12px);transition:all .25s;pointer-events:none;max-width:calc(100vw - 40px);letter-spacing:.3px}
+#toast.show{opacity:1;transform:translateY(0)}
+.loading{text-align:center;padding:60px;color:var(--m);font-size:14px;letter-spacing:.5px}
+
+/* ── Responsive ─────────────────────────────────────── */
+
+/* ── FAQ ──────────────────────────────────────────────── */
+.faq-wrap{max-width:1280px;margin:0 auto;padding:0 24px 48px}
+.faq-title{font-family:var(--serif);font-size:20px;font-weight:400;color:var(--t);margin-bottom:20px;letter-spacing:2px}
+.faq-item{border-bottom:1px solid var(--b)}
+.faq-q{width:100%;background:transparent;border:none;padding:16px 0;display:flex;justify-content:space-between;align-items:center;cursor:pointer;font-family:var(--sans);font-size:14px;font-weight:500;color:var(--t);text-align:left;gap:16px;transition:color .15s}
+.faq-q:hover{color:var(--g)}
+.faq-icon{font-size:18px;color:var(--m);flex-shrink:0;transition:transform .25s;line-height:1}
+.faq-a{font-size:13px;color:var(--m);line-height:1.8;padding:0 0 16px;display:none;letter-spacing:.2px}
+.faq-item.open .faq-icon{transform:rotate(45deg)}
+.faq-item.open .faq-a{display:block}
+
+  .cbox{display:none}
+  .m-cart-btn{display:block}
+  .grid{grid-template-columns:repeat(2,1fr);gap:12px}
+  .wrap{padding:20px 16px 100px}
+  .topbar{padding:0 16px;height:56px;overflow:visible}
+  .f2{grid-template-columns:1fr}
+  
+  footer{padding:36px 20px 24px}
+  #toast{bottom:100px}
+  .drawer{width:100vw}
+}
+@media(min-width:761px){
+
+  
+  #toast{bottom:24px}
+}
+
+
+/* ── Course-specific additions ──────────────────────────── */
+/* Page header */
+.pg-header{padding:32px 24px 12px;max-width:1280px;margin:0 auto}
+.pg-title{font-family:var(--serif);font-size:20px;font-weight:400;color:var(--t);letter-spacing:2px;margin-bottom:12px}
+.pg-sub{font-size:12px;color:var(--m);letter-spacing:.3px}
+
+/* Course card – extends .prod pattern */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:20px}
+.cc{background:var(--w);border:1px solid var(--b);border-radius:14px;overflow:hidden;cursor:pointer;transition:all .25s;position:relative}
+.cc:hover{transform:translateY(-3px);box-shadow:0 8px 28px rgba(28,43,58,.1);border-color:transparent}
+.cc-img{width:100%;aspect-ratio:1;background:var(--bg);overflow:hidden;position:relative}
+.cc-img img{width:100%;height:100%;object-fit:cover;transition:transform .4s}
+.cc:hover .cc-img img{transform:scale(1.04)}
+.cc-sold-ov{position:absolute;inset:0;background:rgba(28,43,58,.42);display:flex;align-items:center;justify-content:center;pointer-events:none}
+.cc-sold-ov span{font-size:10px;letter-spacing:2.5px;color:#fff;border:1px solid rgba(255,255,255,.45);padding:4px 12px;border-radius:99px}
+.cc-body{padding:10px 13px 14px}
+.cc-type{font-size:10px;letter-spacing:1.5px;color:var(--m);text-transform:uppercase;margin-bottom:4px}
+.cc-name{font-family:var(--serif);font-size:14px;font-weight:400;color:var(--t);margin-bottom:3px;letter-spacing:.3px;line-height:1.35}
+.cc-date{font-size:11px;color:var(--m);margin-bottom:7px;line-height:1.55;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.cc-row{display:flex;justify-content:space-between;align-items:flex-end}
+.cc-price{font-size:15px;font-weight:600;color:var(--g)}
+/* Detail drawer – shares .drawer .drawer-overlay with index */
+.d-gallery{position:relative;overflow:hidden;background:var(--t)}
+.d-slide{position:absolute;inset:0;opacity:0;transition:opacity .65s}
+.d-slide.on{opacity:1;z-index:1}
+.d-slide img{width:100%;height:100%;object-fit:cover;opacity:.88}
+.d-slide-ph{width:100%;height:100%;background:linear-gradient(135deg,#1C2B3A,#2C4A6E);display:flex;align-items:center;justify-content:center;color:rgba(224,220,213,.15);font-size:28px}
+.d-dots{position:absolute;bottom:12px;left:50%;transform:translateX(-50%);display:flex;gap:5px;z-index:2}
+.d-dot{width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,.3);cursor:pointer;transition:all .25s}
+.d-dot.on{background:#fff;width:14px;border-radius:3px}
+.d-info{padding:32px 34px 80px;overflow-y:auto;overflow-x:hidden;display:flex;flex-direction:column;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;flex:1;min-height:0}
+.d-cat{font-size:9px;letter-spacing:2px;color:var(--m);text-transform:uppercase;margin-bottom:7px}
+.d-name{font-family:var(--serif);font-size:21px;font-weight:500;color:var(--t);letter-spacing:.5px;margin-bottom:4px;line-height:1.3}
+.d-price-row{display:flex;align-items:baseline;gap:8px;margin-bottom:14px}
+.d-price{font-size:19px;font-weight:600;color:var(--g)}
+.d-price del{font-size:12px;font-weight:300;color:var(--m)}
+.d-hr{height:1px;background:var(--b);margin:12px 0}
+.d-sec{font-size:9px;letter-spacing:2px;color:var(--m);text-transform:uppercase;margin-bottom:7px}
+.d-date-txt{font-size:13px;color:var(--t);line-height:1.4;margin-bottom:10px}
+.d-metas{display:flex;flex-direction:column;gap:6px;margin-bottom:12px}
+.d-meta-r{display:flex;gap:12px;font-size:12px}
+.d-meta-k{color:var(--m);min-width:52px;flex-shrink:0;letter-spacing:.2px}
+.d-meta-v{color:var(--t);line-height:1.6}
+.d-desc-txt{font-size:13px;color:var(--m);line-height:1.95;white-space:pre-wrap;margin-bottom:12px}
+.d-notes-box{font-size:12px;color:var(--m);line-height:1.9;white-space:pre-wrap;background:var(--bg);border-radius:9px;padding:12px 14px;margin-bottom:14px}
+.d-cap-wrap{margin-bottom:14px}
+.d-cap-bar{height:4px;background:var(--b);border-radius:2px;overflow:hidden;margin:5px 0 4px}
+.d-cap-fill{height:100%;background:var(--g);border-radius:2px}
+.d-cap-txt{font-size:10px;color:var(--m);letter-spacing:.3px}
+.d-reg-btn{width:100%;padding:13px;background:var(--g);color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:500;cursor:pointer;font-family:var(--sans);letter-spacing:.5px;transition:background .15s;margin-top:auto}
+.d-reg-btn:hover{background:#1e3450}
+.d-reg-btn:disabled{background:var(--b);color:var(--m);cursor:not-allowed}
+.d-sold-note{text-align:center;font-size:11px;color:var(--r);letter-spacing:.3px;margin-top:8px}
+
+/* Reg modal additions */
+.bk-opt{display:flex;align-items:flex-start;gap:10px;padding:10px 12px;border:1.5px solid var(--b);border-radius:8px;cursor:pointer;margin-bottom:7px;transition:all .15s}
+.bk-opt.sel{border-color:var(--g);background:var(--gl)}
+.reg-sum{background:var(--gl);border:1px solid #B8D0E8;border-radius:10px;padding:14px;margin-bottom:14px}
+.rs-title{font-size:9px;letter-spacing:1.5px;color:var(--g);font-weight:600;margin-bottom:8px;text-transform:uppercase}
+.rs-row{display:flex;justify-content:space-between;font-size:13px;color:var(--m);margin-bottom:4px}
+.rs-total{font-weight:600;color:var(--t);font-size:14px;border-top:1px solid #B8D0E8;padding-top:8px;margin-top:6px;display:flex;justify-content:space-between}
+.bank-box{background:var(--gl);border:1px solid #B8D0E8;border-radius:12px;padding:15px;margin-bottom:12px}
+.bank-lbl{font-size:9px;letter-spacing:1.5px;color:var(--g);font-weight:600;margin-bottom:10px;text-transform:uppercase}
+.bank-r{display:flex;justify-content:space-between;font-size:13px;margin-bottom:6px}
+.bank-r .k{color:var(--m)}.bank-r .v{font-weight:500;color:var(--t)}
+.bank-r.acct .v{font-weight:700;color:var(--g);font-size:15px;letter-spacing:2px}
+.bank-r.amt .v{font-weight:700;color:var(--g);font-size:15px}
+.l5-wrap{border:2px solid var(--g);border-radius:12px;padding:15px;background:var(--gl);margin-bottom:14px}
+.l5-boxes{display:flex;gap:8px;justify-content:center;margin-top:10px}
+.l5-box{width:48px;height:56px;border:2px solid var(--b);border-radius:10px;font-size:22px;font-weight:600;text-align:center;font-family:var(--sans);background:#fff;color:var(--t);outline:none;transition:all .15s}
+.done-icon{width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 14px}
+
+
+@media(max-width:760px){
+  .layout{grid-template-columns:1fr}
+  .pg-wrap{padding:0 16px 80px}
+  .pg-header{padding:20px 16px 12px}
+  .grid{grid-template-columns:repeat(2,1fr);gap:12px}
+  .wrap{padding:20px 16px 100px}
+  .f2{grid-template-columns:1fr}
+  .mo{border-radius:20px 20px 0 0;max-width:100%;padding-bottom:74px}
+  footer{padding:36px 20px 24px}
+  .footer-inner{grid-template-columns:1fr 1fr;gap:20px}
+  .drawer{width:100vw}
+}
+
+@media(max-width:600px){.footer-inner{grid-template-columns:1fr 1fr!important;gap:16px}footer{padding:36px 16px 24px}}
+
+</style>
+</head>
+<body>
+<div class="topbar">
+  <a class="logo-wrap" href="index.html" style="display:flex;align-items:center;gap:10px;text-decoration:none">
+    <svg width="46" height="46" viewBox="-2 -2 124 124" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M62 7 C76 3 94 10 106 24 C120 40 124 62 116 80 C107 100 88 112 66 114 C44 116 24 104 14 86 C2 66 2 42 16 24 C30 8 46 3 62 7 Z" stroke="#2C4A6E" stroke-width="2.5" fill="none"/>
+  <path d="M62 17 C74 14 89 20 99 32 C111 46 114 65 107 81 C99 97 83 106 64 108 C45 110 28 101 20 87 C10 71 11 50 22 36 C34 20 49 16 62 17 Z" stroke="#7BA3C8" stroke-width="1.2" fill="none" opacity=".5"/>
+  <ellipse cx="48" cy="44" rx="16" ry="10" stroke="#2C4A6E" stroke-width="1.4" fill="none" opacity=".5" transform="rotate(-15 48 44)"/>
+  <ellipse cx="82" cy="72" rx="13" ry="8" stroke="#2C4A6E" stroke-width="1.2" fill="none" opacity=".4" transform="rotate(10 82 72)"/>
+  <ellipse cx="56" cy="86" rx="9" ry="6" stroke="#7BA3C8" stroke-width="1" fill="none" opacity=".4" transform="rotate(-5 56 86)"/>
+  <circle cx="92" cy="40" r="5" stroke="#2C4A6E" stroke-width="1.2" fill="none" opacity=".5"/>
+  <circle cx="34" cy="64" r="4" stroke="#7BA3C8" stroke-width="1" fill="none" opacity=".4"/>
+  <circle cx="76" cy="96" r="3" stroke="#2C4A6E" stroke-width=".9" fill="none" opacity=".35"/>
+  <line x1="40" y1="28" x2="56" y2="34" stroke="#7BA3C8" stroke-width=".8" stroke-linecap="round" opacity=".4"/>
+  <line x1="88" y1="56" x2="100" y2="64" stroke="#7BA3C8" stroke-width=".8" stroke-linecap="round" opacity=".35"/>
+  <line x1="28" y1="80" x2="40" y2="75" stroke="#2C4A6E" stroke-width=".7" stroke-linecap="round" opacity=".3"/>
+</svg>
+    <div style="display:flex;flex-direction:column;gap:3px">
+      <div style="font-family:'Shippori Mincho',serif;font-size:18px;font-weight:500;color:#1C2B3A;letter-spacing:3px;line-height:1">是陶。</div>
+      <div style="font-family:'Noto Sans TC',sans-serif;font-size:8px;font-weight:300;color:#6B7280;letter-spacing:2.5px;text-transform:uppercase;line-height:1">It's Pottery</div>
+    </div>
+  </a>
+  <div class="nav-right">
+    <a href="index.html" class="nav-link">選品</a>
+    <a href="classes.html" class="nav-link active">課程</a>
+    <a href="https://www.instagram.com/ywshiue/" target="_blank" class="nav-link" style="display:flex;align-items:center" title="Instagram @ywshiue"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r=".8" fill="currentColor" stroke="none"/></svg></a>
+  </div>
+</div>
+
+<!-- Page header -->
+<div class="pg-header">
+  <div class="pg-title">課程</div>
+  <div class="pg-sub">手作陶體驗 · 基礎手拉坯 · 更多課程陸續開放</div>
+</div>
+
+<!-- Filter bar -->
+<div style="max-width:1280px;margin:0 auto">
+</div>
+
+<!-- Grid -->
+<div style="max-width:1280px;margin:0 auto;padding:0 24px 80px">
+  <div class="grid" id="grid"><div class="loading">載入中⋯</div></div>
+</div>
+
+<!-- ── Course FAQ ──────────────────────────────────── -->
+<div class="faq-wrap" id="course-faq-section" style="display:none">
+  <div class="faq-title">常見問題</div>
+
+  <div class="faq-item">
+    <button class="faq-q" onclick="toggleCourseFaq(this)">
+      <span>付款方式是什麼？</span><span class="faq-icon">+</span>
+    </button>
+    <div class="faq-a">本店僅支援<strong>線上銀行轉帳</strong>，不提供現金付款。報名後系統將提供匯款帳號，請於 24 小時內完成轉帳，逾期將自動取消報名。</div>
+  </div>
+
+  <div class="faq-item">
+    <button class="faq-q" onclick="toggleCourseFaq(this)">
+      <span>課程可以取消嗎？</span><span class="faq-icon">+</span>
+    </button>
+    <div class="faq-a">如需取消，請提前 3 天來信告知；3 天內取消酌收 30% 行政費用。</div>
+  </div>
+
+  <div class="faq-item">
+    <button class="faq-q" onclick="toggleCourseFaq(this)">
+      <span>手作陶體驗和手拉坯有什麼不同？</span><span class="faq-icon">+</span>
+    </button>
+    <div class="faq-a"><strong>手作陶體驗</strong>是單次課程，透過五感覺察完成一件手捏陶作品，適合想體驗陶藝的初學者。<strong>基礎手拉坯</strong>是四堂連續課程，系統學習拉坯技法，適合想真正學會陶藝技能的學員。</div>
+  </div>
+
+  <div class="faq-item">
+    <button class="faq-q" onclick="toggleCourseFaq(this)">
+      <span>作品何時可以取回？</span><span class="faq-icon">+</span>
+    </button>
+    <div class="faq-a">陶作燒製時程約 1 週，修坯、上釉約 2～3 週。完成後將通知您領取或安排寄送，作品請於通知後 2 個月內領取。</div>
+  </div>
+
+  <div class="faq-item">
+    <button class="faq-q" onclick="toggleCourseFaq(this)">
+      <span>上課地點在哪裡？</span><span class="faq-icon">+</span>
+    </button>
+    <div class="faq-a">工作室位於<strong>高雄市茄萣區</strong>，報名確認後將提供完整地址。</div>
+  </div>
+</div>
+
+<div style="text-align:center;padding:16px 0 32px">
+  <button onclick="openCourseQModal()" style="background:transparent;border:none;cursor:pointer;font-family:var(--sans);font-size:13px;color:var(--g);letter-spacing:.5px;display:inline-flex;align-items:center;gap:6px;padding:10px 22px;border-radius:99px;border:1.5px solid var(--g);transition:all .2s" onmouseover="this.style.background='var(--gl)'" onmouseout="this.style.background='transparent'">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+    有其他疑問？點此提問
+  </button>
+</div>
+
+<!-- Course detail drawer (same structure as product drawer) -->
+<div class="drawer-overlay" id="d-overlay" onclick="if(event.target===this)closeDetail()">
+  <div class="drawer" onclick="event.stopPropagation()">
+    <div class="drawer-content">
+      <!-- Left: image gallery -->
+      <div class="d-gallery" id="d-gallery" style="cursor:zoom-in">
+        <div class="d-slide-ph">◻</div>
+      </div>
+      <!-- Right: course info -->
+      <div class="d-info" id="d-info">
+        <div class="d-cat" id="d-cat">課程</div>
+        <div class="d-name" id="d-name"></div>
+        <div class="d-price-row">
+          <div class="d-price" id="d-price"></div>
+        </div>
+        <div class="d-hr"></div>
+        <!-- Instructor toggle -->
+        <div id="d-instructor-btn-wrap" style="display:none;margin-bottom:12px">
+          <button onclick="toggleInstructor()" style="display:inline-flex;align-items:center;gap:7px;background:var(--bg);border:1px solid var(--b);border-radius:99px;padding:7px 14px;cursor:pointer;font-family:var(--sans);font-size:12px;color:var(--m);transition:all .15s" onmouseover="this.style.borderColor='var(--g)';this.style.color='var(--g)'" onmouseout="this.style.borderColor='var(--b)';this.style.color='var(--m)'">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+            <span id="d-instructor-btn-text">關於講師</span>
+          </button>
+        </div>
+        <div id="d-instructor" style="display:none;background:var(--bg);border-radius:10px;padding:14px;margin-bottom:14px">
+          <div style="display:flex;gap:12px;align-items:flex-start">
+            <img id="d-instructor-photo" src="" style="width:52px;height:52px;border-radius:50%;object-fit:cover;flex-shrink:0;display:none">
+            <div style="flex:1">
+              <div id="d-instructor-name" style="font-size:14px;font-weight:500;color:var(--t);margin-bottom:4px"></div>
+              <div id="d-instructor-bio" style="font-size:12px;color:var(--m);line-height:1.8"></div>
+            </div>
+          </div>
+        </div>
+        <div id="d-instructor-divider" style="display:none;border:none;border-top:1px solid var(--b);margin:0 0 16px"></div>
+        <div id="d-instructor-section"></div>
+        <div class="d-sec">開課時段</div>
+        <div class="d-date-txt" id="d-date"></div>
+        <div class="d-metas" id="d-metas"></div>
+        <div class="d-hr"></div>
+        <div class="d-sec">課程介紹</div>
+        <div class="d-desc-txt" id="d-desc"></div>
+        <div class="d-notes-box" id="d-notes" style="display:none"></div>
+        <div class="d-cap-wrap" id="d-cap"></div>
+        <button class="d-reg-btn" id="d-reg-btn" onclick="openReg()">立即報名</button>
+        <div class="d-sold-note" id="d-sold-note" style="display:none"></div>
+        <button onclick="shareItem()" style="display:flex;align-items:center;gap:7px;background:transparent;border:none;cursor:pointer;font-family:var(--sans);font-size:14px;color:var(--m);padding:10px 0 15px;transition:opacity .15s" onmouseover="this.style.opacity='.6'" onmouseout="this.style.opacity='1'">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+          分享此課程
+        </button>
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Lightbox -->
+<div class="lb" id="lb" onclick="if(event.target===this)closeLb()">
+  <div class="lb-close" onclick="closeLb()">×</div>
+  <button class="lb-nav lb-prev" onclick="lbNav(-1)">&#8249;</button>
+  <img id="lb-img" src="" alt="">
+  <button class="lb-nav lb-next" onclick="lbNav(1)">&#8250;</button>
+</div>
+
+<!-- Registration modal (same as checkout modal) -->
+<div class="ov" id="reg-ov" onclick="if(event.target===this)closeReg()">
+  <div class="mo">
+    <div class="mo-handle"></div>
+
+    <!-- Step 1: form -->
+    <div id="reg-form">
+      <div style="font-family:var(--serif);font-size:20px;font-weight:400;color:var(--t);letter-spacing:1px;margin-bottom:4px" id="reg-title">課程報名</div>
+      <div style="font-size:12px;color:var(--m);margin-bottom:18px" id="reg-sub"></div>
+      <div class="f2">
+        <div class="fg" style="margin:0"><label class="lbl">姓名 *</label><input type="text" id="r-name" placeholder="王小明"></div>
+        <div class="fg" style="margin:0"><label class="lbl">電話 *</label><input type="tel" id="r-phone" placeholder="0912-345-678"></div>
+      </div>
+      <div class="fg" style="margin-top:12px"><label class="lbl">Email *</label><input type="email" id="r-email" placeholder="you@example.com"></div>
+      <!-- 體驗課：個人/包場 -->
+      <div id="r-bk-wrap" class="fg">
+        <label class="lbl">報名方式 *</label>
+        <div class="bk-opt sel" id="bk-p" onclick="selBk('personal')">
+          <input type="radio" name="bk" checked style="accent-color:var(--g);margin-top:2px;flex-shrink:0">
+          <div><div style="font-size:14px;font-weight:500;color:var(--t)">個人報名</div><div style="font-size:11px;color:var(--m);margin-top:1px">1 人參加</div></div>
+        </div>
+        <div class="bk-opt" id="bk-g" onclick="selBk('group')">
+          <input type="radio" name="bk" style="accent-color:var(--g);margin-top:2px;flex-shrink:0">
+          <div><div style="font-size:14px;font-weight:500;color:var(--t)">包場</div><div style="font-size:11px;color:var(--m);margin-top:1px">因空間關係最多 4 人，費用依人數計算</div></div>
+        </div>
+        <div id="bk-cnt" style="display:none;margin-top:6px">
+          <label class="lbl">包場人數</label>
+          <select id="r-members" onchange="updSum()" style="margin-top:4px">
+            <option value="2">2 人</option><option value="3">3 人</option><option value="4">4 人</option>
+          </select>
+        </div>
+      </div>
+      <!-- 體驗課：選日期 -->
+      <div class="fg" id="r-date-wrap" style="display:none">
+        <label class="lbl">希望上課日期 *</label>
+        <input type="text" id="r-date" placeholder="點擊選擇日期" readonly
+          onclick="calOpen()"
+          style="box-sizing:border-box;width:100%;min-height:44px;padding:10px 12px;border:1px solid var(--b);border-radius:8px;font-size:14px;font-family:var(--sans);background:var(--w);color:var(--t);outline:none;cursor:pointer">
+        <div id="cal-popup" style="display:none;border:1px solid var(--b);border-radius:10px;background:var(--w);margin-top:4px;overflow:hidden;box-shadow:0 4px 16px rgba(28,43,58,.1)">
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-bottom:1px solid var(--b)">
+            <button type="button" onclick="calNav(-1)" style="background:none;border:none;cursor:pointer;font-size:18px;color:var(--t);line-height:1;padding:2px 6px">‹</button>
+            <div id="cal-title" style="font-size:13px;font-weight:500;color:var(--t)"></div>
+            <button type="button" onclick="calNav(1)" style="background:none;border:none;cursor:pointer;font-size:18px;color:var(--t);line-height:1;padding:2px 6px">›</button>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(7,1fr);text-align:center;padding:6px 8px 0">
+            <div style="font-size:10px;color:var(--m);padding:2px 0">日</div>
+            <div style="font-size:10px;color:var(--m);padding:2px 0">一</div>
+            <div style="font-size:10px;color:var(--m);padding:2px 0">二</div>
+            <div style="font-size:10px;color:var(--m);padding:2px 0">三</div>
+            <div style="font-size:10px;color:var(--m);padding:2px 0">四</div>
+            <div style="font-size:10px;color:var(--m);padding:2px 0">五</div>
+            <div style="font-size:10px;color:var(--m);padding:2px 0">六</div>
+          </div>
+          <div id="cal-grid" style="display:grid;grid-template-columns:repeat(7,1fr);text-align:center;padding:4px 8px 10px;gap:1px"></div>
+        </div>
+        <div style="font-size:11px;color:var(--m);margin-top:4px">可上課日：週二、週四、週六</div>
+        <div id="r-time-wrap" style="display:block;margin-top:10px">
+          <label class="lbl">上課時段 *</label>
+          <select id="r-time" onchange="onTimeChange()" style="margin-top:4px;padding:10px 12px;border:1px solid var(--b);border-radius:8px;font-size:14px;font-family:var(--sans);background:var(--w);color:var(--t);outline:none;width:100%;box-sizing:border-box">
+            <option value="09:00–12:00">上午時段　09:00 – 12:00</option>
+            <option value="13:30–16:30">下午時段　13:30 – 16:30</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Workshop: date picker -->
+      
+      <div class="fg"><label class="lbl">備註</label><textarea id="r-note" placeholder="特殊需求或想說的話⋯"></textarea></div>
+      <div class="reg-sum">
+        <div class="rs-title">費用確認</div>
+        <div class="rs-row"><span id="rs-name"></span><span id="rs-price"></span></div>
+        <div class="rs-total"><span>合計</span><span id="rs-total"></span></div>
+      </div>
+      <div style="background:var(--rl);border-radius:8px;padding:10px 12px;margin-bottom:14px;font-size:12px;color:var(--r)">
+        ⚠️ 本店僅支援<strong>線上銀行轉帳</strong>，不提供現金付款
+      </div>
+      <div style="display:flex;gap:8px">
+        <button class="btn bo" style="flex:1" onclick="closeReg()">取消</button>
+        <button class="btn bg" style="flex:2" id="r-submit" onclick="submitReg()">確認報名</button>
+      </div>
+    </div>
+
+    <!-- Step 2: bank info + last5 -->
+    <div id="reg-bank" style="display:none">
+      <div style="text-align:center;margin-bottom:18px">
+        <div class="done-icon" style="background:var(--gl)">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M5 12l5 5L19 7" stroke="#2C4A6E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div style="font-family:var(--serif);font-size:19px;font-weight:400;color:var(--t)">報名已建立</div>
+        <div style="font-size:12px;color:var(--m);margin-top:4px">報名編號：<strong id="reg-id"></strong></div>
+      </div>
+      <div class="bank-box">
+        <div class="bank-lbl">請匯款至以下帳戶</div>
+        <div class="bank-r"><span class="k">銀行名稱</span><span class="v" id="rb-name">—</span></div>
+        <div class="bank-r"><span class="k">銀行代碼</span><span class="v" id="rb-code">—</span></div>
+        <div class="bank-r acct"><span class="k">帳號</span><span class="v" id="rb-acct">—</span></div>
+        <div class="bank-r amt"><span class="k">應匯金額</span><span class="v" id="rb-amt">—</span></div>
+      </div>
+      <div style="background:var(--rl);border-radius:8px;padding:10px 12px;margin-bottom:14px;font-size:12px;color:var(--r);line-height:1.8">
+        ⚠️ 請於 <strong>24 小時內完成匯款</strong><br>逾期將自動取消報名，恕不另行通知
+      </div>
+      <div class="l5-wrap">
+        <div style="font-size:13px;font-weight:600;color:var(--g)">匯款完成後，請填入帳號後五碼</div>
+        <div style="font-size:12px;color:var(--m);margin-top:4px;line-height:1.6">填入後按確認，我們收到才會安排課程</div>
+        <div class="l5-boxes">
+          <input type="text" maxlength="1" class="l5-box" oninput="l5in(this,0)" onkeydown="l5kd(event,0)" inputmode="numeric">
+          <input type="text" maxlength="1" class="l5-box" oninput="l5in(this,1)" onkeydown="l5kd(event,1)" inputmode="numeric">
+          <input type="text" maxlength="1" class="l5-box" oninput="l5in(this,2)" onkeydown="l5kd(event,2)" inputmode="numeric">
+          <input type="text" maxlength="1" class="l5-box" oninput="l5in(this,3)" onkeydown="l5kd(event,3)" inputmode="numeric">
+          <input type="text" maxlength="1" class="l5-box" oninput="l5in(this,4)" onkeydown="l5kd(event,4)" inputmode="numeric">
+        </div>
+        <input type="hidden" id="l5-val">
+      </div>
+      <button class="btn bg" style="width:100%;margin-bottom:8px;opacity:.4" id="pay-btn" onclick="submitPay()" disabled>我已完成匯款</button>
+      <button class="btn bo" style="width:100%;font-size:13px;color:var(--r);border-color:var(--r)" onclick="cancelReg()">取消報名</button>
+    </div>
+
+    <!-- Step 3a: paid done -->
+    <div id="reg-paid" style="display:none">
+      <div class="done-icon" style="background:var(--gl)">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M5 12l5 5L19 7" stroke="#2C4A6E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <div style="font-family:var(--serif);font-size:19px;color:var(--t);margin-bottom:8px">感謝您的報名</div>
+      <div style="font-size:13px;color:var(--m);line-height:1.8;margin-bottom:22px">我們確認收款後將以 Email 通知課程細節<br>如有疑問請透過 Instagram @ywshiue 聯繫</div>
+      <button class="btn bg" style="width:100%" onclick="closeReg()">關閉</button>
+    </div>
+
+    <!-- Step 3b: cancel done -->
+    <div id="reg-cancelled" style="display:none">
+      <div class="done-icon" style="background:var(--rl)">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M18 6L6 18M6 6l12 12" stroke="#8B6F47" stroke-width="2" stroke-linecap="round"/></svg>
+      </div>
+      <div style="font-family:var(--serif);font-size:19px;color:var(--t);margin-bottom:8px">報名已取消</div>
+      <div style="font-size:13px;color:var(--m);line-height:1.8;margin-bottom:22px">取消通知已寄至您的 Email</div>
+      <button class="btn bo" style="width:100%" onclick="closeReg()">關閉</button>
+    </div>
+
+  </div>
+</div>
+
+<!-- Q&A Modal for courses -->
+<div class="ov q-ov" id="cq-ov" onclick="if(event.target===this)closeCourseQModal()">
+  <div class="mo">
+    <div class="mo-handle"></div>
+    <div style="font-family:var(--serif);font-size:20px;font-weight:400;color:var(--t);margin-bottom:6px;letter-spacing:1.5px">有其他疑問？</div>
+    <div style="font-size:13px;color:var(--m);margin-bottom:20px;line-height:1.7">填寫問題後送出，回覆將寄至您的 Email，問答也會公開顯示</div>
+    <div class="fg"><label class="lbl">Email *</label><input type="email" id="cq-email" placeholder="you@example.com"></div>
+    <div class="fg" style="margin-bottom:18px"><label class="lbl">問題內容 *</label><textarea id="cq-text" placeholder="請描述您的問題..." style="min-height:96px"></textarea></div>
+    <div id="cq-done" style="display:none;background:var(--gl);border-radius:8px;padding:11px 14px;font-size:13px;color:var(--g);margin-bottom:14px">已送出，我們將盡快回覆並公開答案 ✓</div>
+    <div style="display:flex;gap:8px;justify-content:flex-end">
+      <button class="btn bo" onclick="closeCourseQModal()">取消</button>
+      <button class="btn bg" id="cq-btn" onclick="submitCourseQ()">送出問題</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+
+
+
+  
+  </div>
+</div>
+
+<script>
+const API='https://pottery-shop.onrender.com';
+// Warm up backend
+fetch('https://pottery-shop.onrender.com/').catch(()=>{});
+
+function toast(msg,ok=true){const t=document.getElementById('toast');t.textContent=msg;t.style.background=ok?'#1C2B3A':'#8B6F47';t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2600);}
+
+let courses=[],cat='',currentCourse=null,currentRegId=null,bankInfo={},bkType='personal';
+let lbImgs=[],lbIdx=0;
+const dSlides={};
+
+// ── Init ──────────────────────────────────────────────────
+function shareItem(){
+  const c=currentCourse;
+  const url=`${location.origin}${location.pathname}?course=${c?c.id:''}`;
+  const title=c?'是陶。'+c.name:'是陶。課程';
+  const text=c?c.name+' — 是陶。It\'s Pottery':'是陶。It\'s Pottery';
+  try{
+    if(navigator.share){
+      navigator.share({title,text,url}).catch(()=>{});
+    } else {
+      navigator.clipboard.writeText(url).then(()=>toast('連結已複製')).catch(()=>{
+        const ta=document.createElement('textarea');ta.value=url;document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);toast('連結已複製');
+      });
+    }
+  }catch(e){toast('連結已複製');}
+}
+
+// ── Custom Calendar (no external deps) ────────────────────
+let calYear=0, calMonth=0, bookedSlots={};
+
+function calOpen(){
+  const popup=document.getElementById('cal-popup');
+  if(!popup) return;
+  if(popup.style.display==='block'){popup.style.display='none';return;}
+  if(calYear===0){
+    const n=new Date();
+    calYear=n.getFullYear();
+    calMonth=n.getMonth();
+  }
+  popup.style.display='block';
+  calRender();
+}
+
+function calNav(dir){
+  calMonth+=dir;
+  if(calMonth>11){calMonth=0;calYear++;}
+  if(calMonth<0){calMonth=11;calYear--;}
+  calRender();
+}
+
+function calRender(){
+  // Parse allowed days from course date_desc
+  // Format: 可上課：週二、週四、週六｜時段：09:00–12:00、13:30–16:30
+  const dayMap={'日':0,'一':1,'二':2,'三':3,'四':4,'五':5,'六':6};
+  let ALLOWED_DAYS=[2,4,6]; // default
+  let ALLOWED_SLOTS=['09:00–12:00','13:30–16:30'];
+  if(currentCourse?.date_desc){
+    const wdM=currentCourse.date_desc.match(/可上課：週([^｜]+)/);
+    if(wdM) ALLOWED_DAYS=wdM[1].split('、').map(d=>dayMap[d]).filter(x=>x!==undefined);
+    const tsM=currentCourse.date_desc.match(/時段：([^｜]+)/);
+    if(tsM) ALLOWED_SLOTS=tsM[1].split('、');
+  }
+  const BLOCKED_DAYS=[0,1,2,3,4,5,6].filter(d=>!ALLOWED_DAYS.includes(d));
+  const title=document.getElementById('cal-title');
+  const grid=document.getElementById('cal-grid');
+  if(!title||!grid) return;
+  title.textContent=calYear+'年 '+(calMonth+1)+'月';
+
+  const today=new Date();today.setHours(0,0,0,0);
+  const tmr=new Date(today);tmr.setDate(tmr.getDate()+1);
+  const firstDay=new Date(calYear,calMonth,1).getDay();
+  const daysInMonth=new Date(calYear,calMonth+1,0).getDate();
+  const selectedVal=document.getElementById('r-date')?.value||'';
+
+  let html='';
+  for(let i=0;i<firstDay;i++) html+='<div></div>';
+
+  for(let d=1;d<=daysInMonth;d++){
+    const date=new Date(calYear,calMonth,d);
+    const dow=date.getDay();
+    const ds=calYear+'-'+String(calMonth+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');
+    const isPast=date<tmr;
+    const isDayBlocked=BLOCKED_DAYS.includes(dow);
+    const slot=bookedSlots[ds]||{};
+    const status=(typeof slot==='object'?slot.status:slot)||'';
+    const isFullyBooked=status==='fully_booked';
+    const isGroupBlocked=bkType==='group'&&typeof status==='string'&&status!=='';
+    const isDisabled=isPast||isDayBlocked||isFullyBooked||isGroupBlocked;
+    const isSelected=ds===selectedVal;
+
+    let bg='transparent', color=isDisabled?'#C8C4BE':'var(--t)', fw='400', cursor=isDisabled?'default':'pointer';
+    if(isSelected){bg='var(--g)';color='#fff';fw='600';}
+    else if(!isDisabled){bg='transparent';}
+
+    const onclick=isDisabled?'':`onclick="calSelect('${ds}')"`;
+    html+=`<div style="padding:6px 2px;border-radius:6px;font-size:13px;color:${color};background:${bg};font-weight:${fw};cursor:${cursor}" ${onclick}>${d}</div>`;
+  }
+  grid.innerHTML=html;
+}
+
+function updateTimeOptions(dateStr){
+  const sel=document.getElementById('r-time');
+  if(!sel) return;
+  const slotData=bookedSlots[dateStr]||{};
+  const status=(typeof slotData==='object'?slotData.status:slotData)||'';
+  const isGroup=typeof bkType!=='undefined'&&bkType==='group';
+  sel.innerHTML='';
+  if(isGroup){
+    if(status){
+      const o=document.createElement('option');
+      o.value='';o.textContent='此日期已有其他預約，無法包場';o.disabled=true;sel.appendChild(o);
+    } else {
+      [{v:'09:00–12:00',l:'上午時段　09:00 – 12:00'},{v:'13:30–16:30',l:'下午時段　13:30 – 16:30'}].forEach(t=>{
+        const o=document.createElement('option');o.value=t.v;o.textContent=t.l;sel.appendChild(o);
+      });
+    }
+    return;
+  }
+  // Get allowed slots from course
+  const courseSlots=(()=>{
+    if(!currentCourse?.date_desc) return ['09:00–12:00','13:30–16:30'];
+    const m=currentCourse.date_desc.match(/時段：([^｜]+)/);
+    return m?m[1].split('、'):['09:00–12:00','13:30–16:30'];
+  })();
+  const showMorning=courseSlots.includes('09:00–12:00')&&status!=='afternoon_only'&&status!=='fully_booked';
+  const showAfternoon=courseSlots.includes('13:30–16:30')&&status!=='morning_only'&&status!=='fully_booked';
+  if(showMorning){const o=document.createElement('option');const amSlot=courseSlots.find(s=>parseInt(s)<12);o.value=amSlot||'09:00–12:00';o.textContent='上午時段　'+(amSlot||'09:00–12:00').replace('–',' – ');sel.appendChild(o);}
+  if(showAfternoon){const o=document.createElement('option');const pmSlot=courseSlots.find(s=>parseInt(s)>=12);o.value=pmSlot||'13:30–16:30';o.textContent='下午時段　'+(pmSlot||'13:30–16:30').replace('–',' – ');sel.appendChild(o);}
+  if(!sel.options.length){const o=document.createElement('option');o.value='';o.textContent='此日期已額滿';o.disabled=true;sel.appendChild(o);}
+}
+
+function updateRemainingSlots(dateStr,status){
+  const el=document.getElementById('r-slots-info');
+  if(!el)return;
+  if(!dateStr){el.style.display='none';return;}
+  const slotData=bookedSlots[dateStr]||{};
+  const MAX=4;
+  const selTime=document.getElementById('r-time')?.value||'';
+  let msg='',color='var(--m)';
+  if(status==='fully_booked'){msg='此日期所有時段已額滿';color='var(--r)';}
+  else if(selTime.includes('09:00')){
+    const rem=slotData.morning_remaining!==undefined?slotData.morning_remaining:MAX;
+    if(rem<=0){msg='上午時段已額滿';color='var(--r)';}
+    else if(rem<=2){msg=`上午時段僅剩 ${rem} 個名額`;color='var(--r)';}
+    else{msg=`上午時段剩餘 ${rem} 個名額`;color='var(--g)';}
+  } else if(selTime.includes('13:30')){
+    const rem=slotData.afternoon_remaining!==undefined?slotData.afternoon_remaining:MAX;
+    if(rem<=0){msg='下午時段已額滿';color='var(--r)';}
+    else if(rem<=2){msg=`下午時段僅剩 ${rem} 個名額`;color='var(--r)';}
+    else{msg=`下午時段剩餘 ${rem} 個名額`;color='var(--g)';}
+  }
+  if(msg){el.textContent=msg;el.style.color=color;el.style.display='block';}
+  else{el.style.display='none';}
+}
+
+function onTimeChange(){
+  const dateStr=document.getElementById('r-date').value;
+  const slot=bookedSlots[dateStr]||{};
+  const status=(typeof slot==='object'?slot.status:slot)||'';
+  updateRemainingSlots(dateStr,status);
+}
+
+function calSelect(ds){
+  const input=document.getElementById('r-date');
+  if(input) input.value=ds;
+  document.getElementById('cal-popup').style.display='none';
+  document.getElementById('r-time-wrap').style.display='block';
+  const slot=bookedSlots[ds]||{};
+  const status=(typeof slot==='object'?slot.status:slot)||'';
+  updateTimeOptions(ds);
+  updateRemainingSlots(ds,status);
+  updSum();
+}
+
+function calInit(){
+  const n=new Date();
+  calYear=n.getFullYear();
+  calMonth=n.getMonth();
+  fetchAndInitCal();
+}
+
+async function fetchAndInitCal(){
+  bookedSlots={};
+  if(currentCourse){
+    try{
+      bookedSlots=await fetch(`${API}/classes/booked-dates/${currentCourse.id}`).then(r=>r.json())||{};
+    }catch(e){}
+  }
+}
+
+function onDateChange(){}
+
+async function init(){
+  try{
+    bankInfo = await fetch(`${API}/bank-info`).then(r=>r.json());
+  }catch(e){}
+  load();
+}
+
+// ── Load courses ──────────────────────────────────────────
+async function load(){
+  const g=document.getElementById('grid');
+  g.innerHTML='<div class="loading">載入中⋯</div>';
+  try{
+    const url=cat?`${API}/classes?type=${encodeURIComponent(cat)}`:`${API}/classes`;
+    courses=await fetch(url).then(r=>r.json());
+    render();
+  }catch(e){g.innerHTML='<div class="loading" style="color:var(--r)">載入失敗，請重新整理頁面</div>';}
+}
+
+function setCat(btn,c){
+  document.querySelectorAll('.fc').forEach(x=>x.classList.remove('on'));
+  btn.classList.add('on'); cat=c; load();
+}
+
+function getImgs(c){ return c.image_urls?.filter(Boolean).length?c.image_urls.filter(Boolean):c.image_url?[c.image_url]:[]; }
+
+function render(){
+  const g=document.getElementById('grid');
+  document.getElementById('course-faq-section').style.display='block';
+  if(!courses.length){g.innerHTML='<div class="loading">目前暫無課程</div>';return;}
+  g.innerHTML=courses.map(c=>{
+    const imgs=getImgs(c);
+    const mainImg=imgs.length?`<img style="width:100%;aspect-ratio:1;object-fit:cover;display:block" src="${imgs[0]}" alt="${c.name}" loading="lazy">`:'<div style="width:100%;aspect-ratio:1;background:var(--bg)"></div>';
+    const inactive=!c.is_active;
+    return`<div class="cc" onclick="openDetail(${c.id})">
+      <div class="cc-img">
+        ${mainImg}
+        ${inactive?`<div class="smask"><div style="color:#fff;font-size:11px;letter-spacing:2px;font-weight:500">暫停報名</div></div>`:''}
+      </div>
+      <div class="cc-body">
+        <div class="cc-type">${c.type||''}</div>
+        <div class="cc-name">${c.name}</div>
+        <div class="cc-price">NT$${(c.price||0).toLocaleString()}</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ── Detail ────────────────────────────────────────────────
+function openDetail(id){
+  const c=courses.find(x=>x.id===id);
+  if(!c)return;
+  currentCourse=c;
+  // 單次體驗名額是按天/時段計算，不用 registered 判斷
+  const isWS=c.type==='單次體驗';
+  const full=isWS?false:(c.registered>=c.capacity);
+  const canReg=c.is_active&&!full;
+  const imgs=getImgs(c);
+  const pct=Math.min(100,Math.round(c.registered/c.capacity*100));
+  const rem=c.capacity-c.registered;
+
+  document.getElementById('d-cat').textContent=c.type.toUpperCase();
+  document.getElementById('d-name').textContent=c.name;
+  document.getElementById('d-price').textContent=`NT$${c.price.toLocaleString()} / 人起`;
+  // Format date_desc sessions
+  const _dateEl=document.getElementById('d-date');
+  if(_dateEl){
+    if(c.date_desc){
+      const _lines=c.date_desc.split('\n').filter(Boolean);
+      _dateEl.innerHTML=_lines.map(line=>{
+        if(line.includes('第')&&line.includes('堂')){
+          const pts=line.split('｜');
+          const label=pts[0];
+          const datetime=pts[1]||'';
+          const desc=pts.slice(2).join('｜');
+          return `<div style="margin-bottom:10px;line-height:1.4">
+            <div style="font-size:12px;font-weight:600;color:var(--t);margin-bottom:1px">${label}</div>
+            <div style="font-size:12px;color:var(--m)">${datetime}${desc?' ｜ '+desc:''}</div>
+          </div>`;
+        }
+        return `<div style="font-size:13px;color:var(--m);margin-bottom:6px">${line}</div>`;
+      }).join('');
+      _dateEl.style.display='block';
+    } else {
+      _dateEl.textContent='—';
+      _dateEl.style.display='block';
+    }
+  }
+
+  const metas=[];
+  if(c.duration)metas.push(['時長',c.duration]);
+  if(c.location)metas.push(['地點',c.location]);
+  if(c.price_note)metas.push(['費用包含',c.price_note]);
+  document.getElementById('d-metas').innerHTML=metas.map(([k,v])=>
+    `<div class="d-meta-r"><span class="d-meta-k">${k}</span><span class="d-meta-v">${v}</span></div>`
+  ).join('');
+
+  document.getElementById('d-desc').textContent=c.description||'';
+  // Instructor
+  const instrSection=document.getElementById('d-instructor-section');
+  const instrDiv=document.getElementById('d-instructor');
+  const instrDivider=document.getElementById('d-instructor-divider');
+  const hasInstr=c.instructor_name||c.instructor_bio||c.instructor_photo;
+  // Show toggle button instead of always-visible section
+  const instrBtnWrap=document.getElementById('d-instructor-btn-wrap');
+  if(instrBtnWrap)instrBtnWrap.style.display=hasInstr?'block':'none';
+  if(instrSection)instrSection.style.display='none'; // hide label, use button
+  if(instrDivider)instrDivider.style.display=hasInstr?'block':'none';
+  if(instrDiv){
+    instrDiv.style.display='none'; // start collapsed
+    document.getElementById('d-instructor-btn-text').textContent='關於講師';
+    const ph=document.getElementById('d-instructor-photo');
+    if(ph){ph.src=c.instructor_photo||'';ph.style.display=c.instructor_photo?'block':'none';}
+    const nm=document.getElementById('d-instructor-name');
+    if(nm)nm.textContent=c.instructor_name||'';
+    const bio=document.getElementById('d-instructor-bio');
+    if(bio)bio.textContent=c.instructor_bio||'';
+  }
+  const notesEl=document.getElementById('d-notes');
+  notesEl.textContent=c.notes||'';notesEl.style.display=c.notes?'block':'none';
+
+  // Only show capacity bar for 專業課程
+  const capEl2=document.getElementById('d-cap');
+  if(capEl2){
+    if(c.type==='專業課程'){
+      capEl2.innerHTML=`<div class="d-cap-bar"><div class="d-cap-fill" style="width:${pct}%"></div></div>
+       <div class="d-cap-txt">${full?'名額已滿':rem<=3?`剩餘 ${rem} 名`:`${c.registered||0}/${c.capacity} 人`}</div>`;
+    } else {
+      capEl2.innerHTML='';
+    }
+  }
+
+  const btn=document.getElementById('d-reg-btn');
+  const note=document.getElementById('d-sold-note');
+  btn.disabled=!canReg;
+  btn.textContent=!c.is_active?'暫停報名':'立即報名';
+  note.style.display=(!c.is_active||(!isWS&&full))?'block':'none';
+  note.textContent=(!isWS&&full)?'此梯次已額滿，歡迎關注下期開課訊息':'此梯次暫停報名';
+
+  // gallery
+  buildGallery(imgs);
+  document.getElementById('d-overlay').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+
+function closeDetail(){
+  clearInterval(dSlides.timer);
+  document.getElementById('d-overlay').classList.remove('open');
+  document.body.style.overflow='';
+}
+
+function buildGallery(imgs){
+  const el=document.getElementById('d-gallery');
+  if(!imgs.length){el.innerHTML='<div class="d-slide-ph">◻</div>';return;}
+  el.innerHTML=imgs.map((url,i)=>
+    `<div class="d-slide${i===0?' on':''}" onclick="openLb(${i})">
+      <img src="${url}" alt="" loading="lazy">
+    </div>`
+  ).join('')+
+  (imgs.length>1?`<div class="d-dots">${imgs.map((_,i)=>`<div class="d-dot${i===0?' on':''}" onclick="event.stopPropagation();goSlide(${i})"></div>`).join('')}</div>`:'');
+  lbImgs=imgs; lbIdx=0;
+  dSlides.cur=0;dSlides.tot=imgs.length;
+  clearInterval(dSlides.timer);
+  if(imgs.length>1) dSlides.timer=setInterval(()=>goSlide((dSlides.cur+1)%dSlides.tot),3000);
+}
+
+function goSlide(idx){
+  document.querySelectorAll('#d-gallery .d-slide').forEach((s,i)=>s.classList.toggle('on',i===idx));
+  document.querySelectorAll('#d-gallery .d-dot').forEach((d,i)=>d.classList.toggle('on',i===idx));
+  dSlides.cur=idx;lbIdx=idx;
+}
+
+// Lightbox
+function openLb(idx){lbIdx=idx;document.getElementById('lb-img').src=lbImgs[idx];document.getElementById('lb').style.display='flex';}
+function closeLb(){document.getElementById('lb').style.display='none';}
+function lbNav(d){lbIdx=(lbIdx+d+lbImgs.length)%lbImgs.length;document.getElementById('lb-img').src=lbImgs[lbIdx];}
+
+// ── Registration ──────────────────────────────────────────
+function openReg(){
+  const c=currentCourse;
+  document.getElementById('reg-title').textContent=c.name;
+  document.getElementById('reg-sub').textContent=c.date_desc?.split('\n')[0]||'';
+  ['r-name','r-phone','r-email','r-note'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('r-date').value='';
+  document.querySelectorAll('.l5-box').forEach(b=>{b.value='';b.style.borderColor='var(--b)';b.style.background='#fff';});
+  document.getElementById('l5-val').value='';
+  document.getElementById('pay-btn').disabled=true;document.getElementById('pay-btn').style.opacity='.4';
+  switchView('reg-form');
+  const isWS=c.type==='單次體驗';
+  document.getElementById('r-bk-wrap').style.display=isWS?'block':'none';
+  // Show date field for workshop
+  const dw=document.getElementById('r-date-wrap');
+  if(dw) dw.style.display=isWS?'block':'none';
+  // Reset date picker
+  if(isWS) calInit();
+  selBk('personal');updSum();
+  document.getElementById('reg-ov').classList.add('open');
+}
+
+function closeReg(){document.getElementById('reg-ov').classList.remove('open');}
+
+function selBk(t){
+  bkType=t;
+  // Re-filter time slots based on booking type
+  const dateVal=document.getElementById('r-date')?.value;
+  if(dateVal) updateTimeOptions(dateVal);
+  document.getElementById('bk-p').classList.toggle('sel',t==='personal');
+  document.getElementById('bk-g').classList.toggle('sel',t==='group');
+  document.getElementById('bk-p').querySelector('input').checked=t==='personal';
+  document.getElementById('bk-g').querySelector('input').checked=t==='group';
+  document.getElementById('bk-cnt').style.display=t==='group'?'block':'none';
+  updSum();
+}
+function getM(){return bkType==='group'?parseInt(document.getElementById('r-members').value)||2:1;}
+function updSum(){
+  const c=currentCourse;if(!c)return;
+  const isWS=c.type==='單次體驗';
+  const m=isWS?getM():1;
+  const total=c.price*m;
+  document.getElementById('rs-name').textContent=isWS?(bkType==='group'?`包場 × ${m} 人`:'個人報名'):'四堂完整課程';
+  document.getElementById('rs-price').textContent=`NT$${c.price.toLocaleString()}${m>1?' × '+m:''}`;
+  document.getElementById('rs-total').textContent=`NT$${total.toLocaleString()}`;
+}
+
+function switchView(showId){
+  ['reg-form','reg-bank','reg-paid','reg-cancelled'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(el) el.style.display=id===showId?'block':'none';
+  });
+  const mo=document.querySelector('#reg-ov .mo');
+  if(mo) mo.scrollTop=0;
+}
+
+async function submitReg(){
+  const name=document.getElementById('r-name').value.trim();
+  const phone=document.getElementById('r-phone').value.trim();
+  const email=document.getElementById('r-email').value.trim();
+  if(!name||!phone||!email){toast('請填寫所有必填欄位',false);return;}
+  const isWS2=currentCourse?.type==='單次體驗';
+  const preferredDate=document.getElementById('r-date')?.value||'';
+  if(isWS2&&!preferredDate){toast('請選擇希望上課的日期',false);return;}
+  if(isWS2&&preferredDate){
+    const _day=new Date(preferredDate+'T12:00:00').getDay();
+    if([0,1,3,5].includes(_day)){toast('請選擇可上課日期（週二、四、六）',false);return;}
+  }
+  const preferredTime=isWS2?(document.getElementById('r-time')?.value||'13:30–16:30'):'';
+  const c=currentCourse;
+  const isWS=c.type==='單次體驗';
+  const members=isWS?getM():1;
+  const btn=document.getElementById('r-submit');
+  btn.disabled=true;btn.textContent='送出中⋯';
+  try{
+    const res=await fetch(`${API}/classes/register`,{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({class_id:c.id,name,phone,email,members,
+        preferred_date:isWS2?preferredDate+' '+preferredTime:'',
+        course_type:isWS2?(bkType==='group'?'group':'individual'):'四堂完整課程',
+        note:document.getElementById('r-note').value})
+    });
+    const data=await res.json();
+    if(!res.ok)throw new Error(data.detail||'報名失敗');
+    currentRegId=data.reg_id;
+    document.getElementById('reg-id').textContent='#'+data.reg_id;
+    document.getElementById('rb-amt').textContent='NT$'+data.total.toLocaleString();
+    document.getElementById('rb-name').textContent=bankInfo.bank_name||'—';
+    document.getElementById('rb-code').textContent=bankInfo.bank_code||'—';
+    document.getElementById('rb-acct').textContent=bankInfo.bank_account||'—';
+    switchView('reg-bank');
+  }catch(e){document.getElementById('reg-form').style.display='block';toast(e.message,false);}
+  finally{btn.disabled=false;btn.textContent='確認報名';}
+}
+
+function l5in(el,idx){
+  el.value=el.value.replace(/[^0-9]/g,'');
+  el.style.borderColor=el.value?'#2C4A6E':'var(--b)';
+  el.style.background=el.value?'#E8EEF5':'#fff';
+  if(el.value){const bs=document.querySelectorAll('.l5-box');if(idx<4)bs[idx+1].focus();}
+  const val=[...document.querySelectorAll('.l5-box')].map(b=>b.value).join('');
+  document.getElementById('l5-val').value=val;
+  const btn=document.getElementById('pay-btn');
+  btn.disabled=val.length!==5;btn.style.opacity=val.length===5?'1':'.4';
+}
+function l5kd(e,idx){
+  if(e.key==='Backspace'){
+    const bs=document.querySelectorAll('.l5-box');
+    if(!bs[idx].value&&idx>0){bs[idx-1].focus();bs[idx-1].value='';bs[idx-1].style.borderColor='var(--b)';bs[idx-1].style.background='#fff';
+    document.getElementById('l5-val').value=[...bs].map(b=>b.value).join('');
+    document.getElementById('pay-btn').disabled=true;document.getElementById('pay-btn').style.opacity='.4';}
+  }
+}
+async function submitPay(){
+  const last5=document.getElementById('l5-val').value;
+  if(last5.length!==5)return;
+  const btn=document.getElementById('pay-btn');btn.disabled=true;btn.textContent='送出中⋯';
+  try{
+    const res=await fetch(`${API}/classes/register/${currentRegId}/payment`,{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({last5_digits:last5})
+    });
+    if(!res.ok)throw new Error();
+    switchView('reg-paid');
+  }catch(e){toast('送出失敗，請稍後再試',false);}
+  finally{btn.disabled=false;btn.textContent='我已完成匯款';}
+}
+async function cancelReg(){
+  if(!currentRegId||!confirm('確定要取消此報名？'))return;
+  try{
+    await fetch(`${API}/classes/register/${currentRegId}/cancel`,{method:'POST'});
+    switchView('reg-cancelled');
+    load();
+  }catch(e){toast('取消失敗',false);}
+}
+
+// ── FAQ ────────────────────────────────────────────────────
+// ── Flatpickr calendar ────────────────────────────────────
+
+
+function toggleInstructor(){
+  const div=document.getElementById('d-instructor');
+  const btn=document.getElementById('d-instructor-btn-text');
+  if(!div)return;
+  const isOpen=div.style.display!=='none';
+  div.style.display=isOpen?'none':'flex';
+  if(btn)btn.textContent=isOpen?'關於講師':'收起介紹';
+}
+
+function toggleCourseFaq(btn){
+  btn.closest('.faq-item').classList.toggle('open');
+}
+
+// ── Course Q&A Modal ───────────────────────────────────────
+function openCourseQModal(){
+  const ov=document.getElementById('cq-ov');
+  if(!ov)return;
+  ov.classList.add('open');
+  document.getElementById('cq-done').style.display='none';
+  document.getElementById('cq-email').value='';
+  document.getElementById('cq-text').value='';
+  document.body.style.overflow='hidden';
+}
+function closeCourseQModal(){
+  const ov=document.getElementById('cq-ov');
+  if(ov)ov.classList.remove('open');
+  document.body.style.overflow='';
+}
+async function submitCourseQ(){
+  const email=document.getElementById('cq-email').value.trim();
+  const question=document.getElementById('cq-text').value.trim();
+  if(!email||!question){toast('請填寫所有欄位',false);return;}
+  const btn=document.getElementById('cq-btn');
+  btn.disabled=true;btn.textContent='送出中...';
+  try{
+    const res=await fetch(`${API}/questions/`,{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({email,question})
+    });
+    if(!res.ok)throw new Error();
+    document.getElementById('cq-done').style.display='block';
+    document.getElementById('cq-email').value='';
+    document.getElementById('cq-text').value='';
+    setTimeout(()=>closeCourseQModal(),2500);
+  }catch(e){toast('送出失敗，請稍後再試',false);}
+  finally{btn.disabled=false;btn.textContent='送出問題';}
+}
+
+
+init();
+
+const _urlC=new URLSearchParams(location.search).get('course');
+if(_urlC) setTimeout(()=>{const c=courses.find(x=>String(x.id)===_urlC);if(c)openDetail(c.id);},600);
+</script>
+
+<footer id="footer-info">
+  <div class="footer-inner">
+    <div>
+      <svg width="46" height="46" viewBox="-2 -2 124 124" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M62 7 C76 3 94 10 106 24 C120 40 124 62 116 80 C107 100 88 112 66 114 C44 116 24 104 14 86 C2 66 2 42 16 24 C30 8 46 3 62 7 Z" stroke="#E0DCD5" stroke-width="2.5" fill="none"/>
+  <path d="M62 17 C74 14 89 20 99 32 C111 46 114 65 107 81 C99 97 83 106 64 108 C45 110 28 101 20 87 C10 71 11 50 22 36 C34 20 49 16 62 17 Z" stroke="#7BA3C8" stroke-width="1.2" fill="none" opacity=".5"/>
+  <ellipse cx="48" cy="44" rx="16" ry="10" stroke="#E0DCD5" stroke-width="1.4" fill="none" opacity=".5" transform="rotate(-15 48 44)"/>
+  <ellipse cx="82" cy="72" rx="13" ry="8" stroke="#E0DCD5" stroke-width="1.2" fill="none" opacity=".4" transform="rotate(10 82 72)"/>
+  <ellipse cx="56" cy="86" rx="9" ry="6" stroke="#7BA3C8" stroke-width="1" fill="none" opacity=".4" transform="rotate(-5 56 86)"/>
+  <circle cx="92" cy="40" r="5" stroke="#E0DCD5" stroke-width="1.2" fill="none" opacity=".5"/>
+  <circle cx="34" cy="64" r="4" stroke="#7BA3C8" stroke-width="1" fill="none" opacity=".4"/>
+  <circle cx="76" cy="96" r="3" stroke="#E0DCD5" stroke-width=".9" fill="none" opacity=".35"/>
+  <line x1="40" y1="28" x2="56" y2="34" stroke="#7BA3C8" stroke-width=".8" stroke-linecap="round" opacity=".4"/>
+  <line x1="88" y1="56" x2="100" y2="64" stroke="#7BA3C8" stroke-width=".8" stroke-linecap="round" opacity=".35"/>
+  <line x1="28" y1="80" x2="40" y2="75" stroke="#E0DCD5" stroke-width=".7" stroke-linecap="round" opacity=".3"/>
+</svg>
+      <div style="font-family:'Shippori Mincho',serif;font-size:17px;font-weight:400;color:#fff;letter-spacing:2px;margin-bottom:4px">是陶。</div>
+      <div style="font-family:'Noto Sans TC',sans-serif;font-size:8px;font-weight:300;color:rgba(255,255,255,.4);letter-spacing:2.5px;text-transform:uppercase;margin-bottom:8px">It's Pottery</div>
+      <div class="footer-tagline">手作陶藝，每件作品皆為獨一無二的存在<br>以土為媒，傳遞日常中的美好</div>
+      <div style="margin-top:12px;font-size:11px;color:var(--m);line-height:2.2">
+        <a href="https://www.instagram.com/ywshiue/" target="_blank" style="color:var(--m);text-decoration:none;display:block">IG：@ywshiue</a>
+        <a href="mailto:ywshiue@gmail.com" style="color:var(--m);text-decoration:none;display:block">Email：ywshiue@gmail.com</a>
+      </div>
+    </div>
+    <div>
+      <div class="footer-section-title">運費說明</div>
+      <ul class="footer-list">
+        <li><strong>運費 NT$160</strong>（全台灣本島）</li>
+        <li>離島地區運費另計，下單後聯繫確認</li>
+        <li>單筆訂單滿 NT$3,000 免運費</li>
+        <li>商品以氣泡紙及紙箱妥善包裝出貨</li>
+        <li style="margin-top:8px"><strong>工作室取貨</strong><br>高雄市茄萣區，結帳選擇工作室取貨，另行確認時間，免運費</li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-section-title">付款方式</div>
+      <ul class="footer-list">
+        <li><strong>銀行轉帳</strong><br>下單後將提供匯款帳號，請於 24 小時內完成付款，逾期訂單將自動取消</li>
+        <li style="margin-top:8px"><strong>出貨時間</strong><br>確認付款後 3–5 個工作天出貨，若有特殊情況將提前通知</li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-section-title">退換貨說明</div>
+      <ul class="footer-list">
+        <li><strong>商品破損</strong><br>收到商品後請於 48 小時內拍照回報，確認後安排補寄或退款</li>
+        <li style="margin-top:8px"><strong>不接受退換貨</strong><br>手作陶器每件均為獨一無二，非商品本身破裂毀損，恕不接受退換貨需求</li>
+        <li style="margin-top:8px"><strong>色差說明</strong><br>手工釉燒作品因拍攝光線略有色差，不列為瑕疵範圍</li>
+      </ul>
+    </div>
+  </div>
+    <div class="footer-bottom" style="display:flex;align-items:center;justify-content:center;gap:20px">© 是陶。 All rights reserved <a href="https://www.instagram.com/ywshiue/" target="_blank" style="color:rgba(255,255,255,.5);text-decoration:none;display:flex;align-items:center;gap:5px;transition:color .15s" onmouseover="this.style.color='rgba(255,255,255,.9)'" onmouseout="this.style.color='rgba(255,255,255,.5)'"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r=".8" fill="currentColor" stroke="none"/></svg> @ywshiue</a></div>
+</footer>
+</body>
+</html>
