@@ -116,11 +116,13 @@ async def confirm_reg_payment(reg_id: int, body: PaymentConfirmReg):
 @router.get("/booked-dates/{class_id}")
 async def get_booked_dates(class_id: int):
     """
-    回傳日期可用狀態：
-    - fully_booked: 整天不能選（包場 or 上下午都滿）
-    - morning_full: 上午滿（09:00–12:00）
-    - afternoon_full: 下午滿（13:30–16:30）
-    每個時段上限 4 人（members 加總）
+    邏輯：
+    - 包場（course_type=group）預約某天 → 整天 fully_booked
+    - 個人預約上午 → 這天下午不能選；其他個人最多4人可選上午
+    - 個人預約下午 → 這天上午不能選；其他個人最多4人可選下午
+    - 上午有人預約 → 包場不能選這天
+    - 下午有人預約 → 包場不能選這天
+    回傳 { date: status } status = fully_booked | morning_only | afternoon_only | morning_full
     """
     MAX_PER_SLOT = 4
     regs = await sb_fetch(
@@ -129,8 +131,7 @@ async def get_booked_dates(class_id: int):
     )
 
     from collections import defaultdict
-    # date → { "morning": total_members, "afternoon": total_members, "group": bool }
-    slots = defaultdict(lambda: {"morning": 0, "afternoon": 0, "group": False})
+    slots = defaultdict(lambda: {"morning": 0, "afternoon": 0, "has_group": False, "has_any": False})
 
     for r in regs:
         pd = r.get("preferred_date", "") or ""
@@ -139,32 +140,64 @@ async def get_booked_dates(class_id: int):
         parts = pd.split(" ")
         date_part = parts[0]
         time_part = parts[1] if len(parts) > 1 else ""
-        members = r.get("members") or 1
+        members = int(r.get("members") or 1)
         course_type = r.get("course_type", "") or ""
 
-        # 包場
-        if course_type == "group" or members >= 4:
-            slots[date_part]["group"] = True
-            continue
+        slots[date_part]["has_any"] = True
 
-        if "09:00" in time_part:
+        if course_type == "group":
+            slots[date_part]["has_group"] = True
+        elif "09:00" in time_part:
             slots[date_part]["morning"] += members
         elif "13:30" in time_part:
             slots[date_part]["afternoon"] += members
 
     result = {}
     for date, s in slots.items():
-        if s["group"]:
+        morning = s["morning"]
+        afternoon = s["afternoon"]
+        has_group = s["has_group"]
+        has_any = s["has_any"]
+
+        if has_group:
+            # 包場已預約 → 整天不能選
             result[date] = "fully_booked"
-        else:
-            morning_full = s["morning"] >= MAX_PER_SLOT
-            afternoon_full = s["afternoon"] >= MAX_PER_SLOT
-            if morning_full and afternoon_full:
+        elif morning > 0 and afternoon > 0:
+            # 上下午都有人 → 不能包場，且各時段獨立限制
+            if morning >= MAX_PER_SLOT and afternoon >= MAX_PER_SLOT:
                 result[date] = "fully_booked"
-            elif morning_full:
-                result[date] = "morning_full"
-            elif afternoon_full:
-                result[date] = "afternoon_full"
+            elif morning >= MAX_PER_SLOT:
+                result[date] = "afternoon_only"  # 只剩下午
+            elif afternoon >= MAX_PER_SLOT:
+                result[date] = "morning_only"    # 只剩上午
+            else:
+                result[date] = "no_group"        # 有人了，不能包場，但兩時段都還有位
+        elif morning > 0:
+            # 上午有人 → 只能選上午（不能包場，不能選下午）
+            if morning >= MAX_PER_SLOT:
+                result[date] = "fully_booked"
+            else:
+                result[date] = "morning_only"
+        elif afternoon > 0:
+            # 下午有人 → 只能選下午（不能包場，不能選上午）
+            if afternoon >= MAX_PER_SLOT:
+                result[date] = "fully_booked"
+            else:
+                result[date] = "afternoon_only"
+
+    # Also attach remaining counts for frontend display
+    # Fetch class capacity
+    cls_data = await sb_fetch(f"/classes?id=eq.{class_id}&select=capacity", use_secret=False)
+    capacity = cls_data[0]["capacity"] if cls_data else 4
+
+    # Add slot counts to result
+    for date, s in slots.items():
+        if date in result:
+            result[date] = {
+                "status": result[date],
+                "morning_remaining": max(0, MAX_PER_SLOT - s["morning"]),
+                "afternoon_remaining": max(0, MAX_PER_SLOT - s["afternoon"]),
+            }
 
     return result
 
