@@ -752,9 +752,16 @@ function openDetail(id){
   const notesEl=document.getElementById('d-notes');
   notesEl.textContent=c.notes||'';notesEl.style.display=c.notes?'block':'none';
 
-  document.getElementById('d-cap').innerHTML=
-    `<div class="d-cap-bar"><div class="d-cap-fill" style="width:${pct}%"></div></div>
-     <div class="d-cap-txt">${full?'名額已滿':rem<=3?`剩餘 ${rem} 名`:`${c.registered}/${c.capacity} 人`}</div>`;
+  // Only show capacity bar for 專業課程
+  const capEl2=document.getElementById('d-cap');
+  if(capEl2){
+    if(c.type==='專業課程'){
+      capEl2.innerHTML=`<div class="d-cap-bar"><div class="d-cap-fill" style="width:${pct}%"></div></div>
+       <div class="d-cap-txt">${full?'名額已滿':rem<=3?`剩餘 ${rem} 名`:`${c.registered||0}/${c.capacity} 人`}</div>`;
+    } else {
+      capEl2.innerHTML='';
+    }
+  }
 
   const btn=document.getElementById('d-reg-btn');
   const note=document.getElementById('d-sold-note');
