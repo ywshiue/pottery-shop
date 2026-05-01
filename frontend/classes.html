@@ -19,7 +19,7 @@
 
 .ov{position:fixed;inset:0;background:rgba(28,43,58,.6);z-index:300;display:none;align-items:flex-end;justify-content:center;backdrop-filter:blur(3px);overflow:hidden}
 .ov.open{display:flex}
-.mo{background:var(--w);border-radius:20px 20px 0 0;padding:28px 28px 74px;width:100%;max-width:520px;max-height:92vh;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
+.mo{background:var(--w);border-radius:20px 20px 0 0;padding:28px 28px 74px;width:100%;max-width:520px;max-height:92vh;overflow-y:auto;position:relative;overflow-x:hidden;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
 .mo-handle{width:36px;height:4px;background:var(--b);border-radius:2px;margin:0 auto 20px}
 body{font-family:var(--sans);background:var(--bg);color:var(--t);font-size:14px;line-height:1.8;font-weight:300;letter-spacing:.4px}
 
@@ -290,6 +290,9 @@ footer{background:var(--t);color:rgba(255,255,255,.7);padding:48px 32px 32px;mar
 @media(max-width:520px){}
 
 #reg-form,#reg-bank,#reg-paid,#reg-cancelled{width:100%;box-sizing:border-box}
+
+.reg-view{display:none!important}
+.reg-view.active{display:block!important}
 </style>
 </head>
 <body>
@@ -450,7 +453,7 @@ footer{background:var(--t);color:rgba(255,255,255,.7);padding:48px 32px 32px;mar
     <div class="mo-handle"></div>
 
     <!-- Step 1: form -->
-    <div id="reg-form">
+    <div id="reg-form" class="reg-view active">
       <div style="font-family:var(--serif);font-size:20px;font-weight:400;color:var(--t);letter-spacing:1px;margin-bottom:4px" id="reg-title">課程報名</div>
       <div style="font-size:12px;color:var(--m);margin-bottom:18px" id="reg-sub"></div>
       <div class="f2">
@@ -526,7 +529,7 @@ footer{background:var(--t);color:rgba(255,255,255,.7);padding:48px 32px 32px;mar
       </div>
 
     <!-- Step 2: bank info + last5 -->
-    <div id="reg-bank" style="display:none">
+    <div id="reg-bank" class="reg-view">
       <div style="text-align:center;margin-bottom:18px">
         <div class="done-icon" style="background:var(--gl)">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M5 12l5 5L19 7" stroke="#2C4A6E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -561,7 +564,7 @@ footer{background:var(--t);color:rgba(255,255,255,.7);padding:48px 32px 32px;mar
     </div>
 
     <!-- Step 3a: paid done -->
-    <div id="reg-paid" style="display:none">
+    <div id="reg-paid" class="reg-view">
       <div class="done-icon" style="background:var(--gl)">
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M5 12l5 5L19 7" stroke="#2C4A6E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </div>
@@ -571,7 +574,7 @@ footer{background:var(--t);color:rgba(255,255,255,.7);padding:48px 32px 32px;mar
     </div>
 
     <!-- Step 3b: cancel done -->
-    <div id="reg-cancelled" style="display:none">
+    <div id="reg-cancelled" class="reg-view">
       <div class="done-icon" style="background:var(--rl)">
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M18 6L6 18M6 6l12 12" stroke="#8B6F47" stroke-width="2" stroke-linecap="round"/></svg>
       </div>
@@ -1011,18 +1014,13 @@ function switchView(showId){
   ['reg-form','reg-bank','reg-paid','reg-cancelled'].forEach(id=>{
     const el=document.getElementById(id);
     if(!el) return;
-    if(id===showId){
-      el.style.setProperty('display','block','important');
-    } else {
-      el.style.setProperty('display','none','important');
-    }
+    el.classList.toggle('active', id===showId);
   });
-  // Scroll to top
   requestAnimationFrame(()=>{
     const mo=document.querySelector('#reg-ov .mo');
     if(mo) mo.scrollTop=0;
   });
-}
+
 
 async function submitReg(){
   const name=document.getElementById('r-name').value.trim();
