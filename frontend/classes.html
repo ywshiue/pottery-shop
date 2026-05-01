@@ -500,7 +500,7 @@ fetch('https://pottery-shop.onrender.com/').catch(()=>{});
         <div style="font-size:11px;color:var(--m);margin-top:4px">可上課日：週二、週四、週六</div>
         <div id="r-time-wrap" style="display:block;margin-top:10px">
           <label class="lbl">上課時段 *</label>
-          <select id="r-time" onchange="updateRemainingSlots(document.getElementById('r-date').value, bookedSlots[document.getElementById('r-date').value]?.status||bookedSlots[document.getElementById('r-date').value]||'')" style="margin-top:4px;padding:10px 12px;border:1px solid var(--b);border-radius:8px;font-size:14px;font-family:var(--sans);background:var(--w);color:var(--t);outline:none;width:100%;box-sizing:border-box">
+          <select id="r-time" onchange="onTimeChange()" style="margin-top:4px;padding:10px 12px;border:1px solid var(--b);border-radius:8px;font-size:14px;font-family:var(--sans);background:var(--w);color:var(--t);outline:none;width:100%;box-sizing:border-box">
             <option value="09:00–12:00">上午時段　09:00 – 12:00</option>
             <option value="13:30–16:30">下午時段　13:30 – 16:30</option>
           </select>
@@ -1032,6 +1032,13 @@ function updateTimeOptions(dateStr){
     o.value='';o.textContent='此日期所有時段已額滿';o.disabled=true;sel.appendChild(o);
   }
   // Show remaining slots
+  updateRemainingSlots(dateStr, status);
+}
+
+function onTimeChange(){
+  const dateStr=document.getElementById('r-date').value;
+  const slot=bookedSlots[dateStr]||{};
+  const status=slot.status||slot||'';
   updateRemainingSlots(dateStr, status);
 }
 
