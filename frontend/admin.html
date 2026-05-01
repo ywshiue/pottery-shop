@@ -329,9 +329,27 @@ const API = 'https://pottery-shop.onrender.com';
             <label style="font-size:13px;cursor:pointer"><input type="checkbox" value="0" id="wd-0"> 週日</label>
           </div>
           <label class="lbl">可上課時段</label>
-          <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:4px">
-            <label style="font-size:13px;cursor:pointer"><input type="checkbox" value="09:00–12:00" id="ts-am"> 上午 09:00–12:00</label>
-            <label style="font-size:13px;cursor:pointer"><input type="checkbox" value="13:30–16:30" id="ts-pm"> 下午 13:30–16:30</label>
+          <div style="margin-bottom:8px">
+            <label style="display:flex;align-items:center;gap:8px;font-size:13px;margin-bottom:6px">
+              <input type="checkbox" id="ts-am-enable" onchange="toggleSlot('am')"> 上午時段
+              <select id="ts-am-start" style="padding:4px 8px;border:1px solid var(--b);border-radius:6px;font-size:12px;font-family:inherit;background:var(--w)">
+                <option>08:00</option><option>09:00</option><option selected>09:00</option><option>10:00</option>
+              </select>
+              <span style="font-size:12px;color:var(--m)">–</span>
+              <select id="ts-am-end" style="padding:4px 8px;border:1px solid var(--b);border-radius:6px;font-size:12px;font-family:inherit;background:var(--w)">
+                <option>11:00</option><option>11:30</option><option selected>12:00</option><option>12:30</option><option>13:00</option>
+              </select>
+            </label>
+            <label style="display:flex;align-items:center;gap:8px;font-size:13px">
+              <input type="checkbox" id="ts-pm-enable" onchange="toggleSlot('pm')"> 下午時段
+              <select id="ts-pm-start" style="padding:4px 8px;border:1px solid var(--b);border-radius:6px;font-size:12px;font-family:inherit;background:var(--w)">
+                <option>12:00</option><option>12:30</option><option>13:00</option><option selected>13:30</option><option>14:00</option>
+              </select>
+              <span style="font-size:12px;color:var(--m)">–</span>
+              <select id="ts-pm-end" style="padding:4px 8px;border:1px solid var(--b);border-radius:6px;font-size:12px;font-family:inherit;background:var(--w)">
+                <option>15:00</option><option>15:30</option><option>16:00</option><option selected>16:30</option><option>17:00</option><option>18:00</option>
+              </select>
+            </label>
           </div>
           <input type="hidden" id="cls-date">
         </div>
@@ -1134,22 +1152,42 @@ async function deleteSeries(id,name){
   }catch(e){toast('刪除失敗',false);}
 }
 // ── 單次體驗 weekday/timeslot helpers ─────────────────────
+function toggleSlot(period){
+  // Enable/disable time selects when checkbox toggled
+  const on=document.getElementById('ts-'+period+'-enable').checked;
+  ['start','end'].forEach(k=>{
+    const el=document.getElementById('ts-'+period+'-'+k);
+    if(el) el.disabled=!on;
+  });
+}
+
 function getWsDateDesc(){
   const days=['日','一','二','三','四','五','六'];
-  const wds=[...document.querySelectorAll('#cls-date-text-wrap input[type=checkbox][id^=wd-]:checked')].map(x=>x.value);
-  const tss=[...document.querySelectorAll('#cls-date-text-wrap input[type=checkbox][id^=ts-]:checked')].map(x=>x.value);
+  const wds=[...document.querySelectorAll('#cls-date-text-wrap input[id^=wd-]:checked')].map(x=>x.value);
+  let slots=[];
+  const amOn=document.getElementById('ts-am-enable')?.checked;
+  const pmOn=document.getElementById('ts-pm-enable')?.checked;
+  if(amOn){
+    const s=document.getElementById('ts-am-start')?.value||'09:00';
+    const e=document.getElementById('ts-am-end')?.value||'12:00';
+    slots.push(s+'–'+e);
+  }
+  if(pmOn){
+    const s=document.getElementById('ts-pm-start')?.value||'13:30';
+    const e=document.getElementById('ts-pm-end')?.value||'16:30';
+    slots.push(s+'–'+e);
+  }
   let parts=[];
   if(wds.length) parts.push('可上課：週'+wds.map(w=>days[parseInt(w)]).join('、'));
-  if(tss.length) parts.push('時段：'+tss.join('、'));
+  if(slots.length) parts.push('時段：'+slots.join('、'));
   const dt=document.getElementById('cls-date');
   if(dt) dt.value=parts.join('｜');
 }
 
 function setWsDateDesc(dateDesc){
   if(!dateDesc) return;
-  // Parse weekdays
-  const wdMatch=dateDesc.match(/可上課：週([^｜]+)/);
   const days=['日','一','二','三','四','五','六'];
+  const wdMatch=dateDesc.match(/可上課：週([^｜]+)/);
   if(wdMatch){
     const selected=wdMatch[1].split('、');
     for(let i=0;i<7;i++){
@@ -1157,22 +1195,35 @@ function setWsDateDesc(dateDesc){
       if(el) el.checked=selected.includes(days[i]);
     }
   }
-  // Parse timeslots
   const tsMatch=dateDesc.match(/時段：([^｜]+)/);
   if(tsMatch){
-    const slots=tsMatch[1].split('、');
-    const am=document.getElementById('ts-am');
-    const pm=document.getElementById('ts-pm');
-    if(am) am.checked=slots.includes('09:00–12:00');
-    if(pm) pm.checked=slots.includes('13:30–16:30');
+    tsMatch[1].split('、').forEach(slot=>{
+      const m=slot.match(/(\d{2}:\d{2})–(\d{2}:\d{2})/);
+      if(!m) return;
+      const start=m[1], end=m[2];
+      const h=parseInt(start);
+      if(h<12){
+        const el=document.getElementById('ts-am-enable');
+        if(el){el.checked=true;toggleSlot('am');}
+        const ss=document.getElementById('ts-am-start');if(ss)ss.value=start;
+        const se=document.getElementById('ts-am-end');if(se)se.value=end;
+      } else {
+        const el=document.getElementById('ts-pm-enable');
+        if(el){el.checked=true;toggleSlot('pm');}
+        const ps=document.getElementById('ts-pm-start');if(ps)ps.value=start;
+        const pe=document.getElementById('ts-pm-end');if(pe)pe.value=end;
+      }
+    });
   }
   getWsDateDesc();
 }
 
 function resetWsFields(){
   document.querySelectorAll('#cls-date-text-wrap input[type=checkbox]').forEach(el=>el.checked=false);
-  const dt=document.getElementById('cls-date');
-  if(dt) dt.value='';
+  ['ts-am-start','ts-am-end','ts-pm-start','ts-pm-end'].forEach(id=>{
+    const el=document.getElementById(id);if(el)el.disabled=true;
+  });
+  const dt=document.getElementById('cls-date');if(dt)dt.value='';
 }
 
 
