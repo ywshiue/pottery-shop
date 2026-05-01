@@ -1010,19 +1010,18 @@ function updSum(){
 function switchView(showId){
   ['reg-form','reg-bank','reg-paid','reg-cancelled'].forEach(id=>{
     const el=document.getElementById(id);
-    if(el) el.style.display=id===showId?'block':'none';
+    if(!el) return;
+    if(id===showId){
+      el.style.setProperty('display','block','important');
+    } else {
+      el.style.setProperty('display','none','important');
+    }
   });
-  // Force scroll to top with multiple methods
-  const mo=document.querySelector('#reg-ov .mo');
-  if(mo){
-    mo.scrollTop=0;
-    mo.scrollTo({top:0,behavior:'instant'});
-  }
-  // Also scroll the overlay itself
-  const ov=document.getElementById('reg-ov');
-  if(ov) ov.scrollTop=0;
-  // Force reflow
-  window.scrollTo(0,0);
+  // Scroll to top
+  requestAnimationFrame(()=>{
+    const mo=document.querySelector('#reg-ov .mo');
+    if(mo) mo.scrollTop=0;
+  });
 }
 
 async function submitReg(){
