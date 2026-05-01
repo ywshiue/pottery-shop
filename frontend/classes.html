@@ -129,7 +129,7 @@ body{font-family:var(--sans);background:var(--bg);color:var(--t);font-size:14px;
 /* ── Checkout Modal ─────────────────────────────────── */
 .ov{position:fixed;inset:0;background:rgba(28,43,58,.6);z-index:300;display:none;align-items:flex-end;justify-content:center;backdrop-filter:blur(3px);overflow:hidden}
 .ov.open{display:flex}
-.mo{background:var(--w);border-radius:20px 20px 0 0;padding:28px 28px 74px;width:100%;max-width:520px;max-height:92vh;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
+.mo{background:var(--w);border-radius:20px 20px 0 0;padding:28px 28px 74px;width:100%;max-width:520px;max-height:92vh;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;position:relative}
 .mo-handle{width:36px;height:4px;background:var(--b);border-radius:2px;margin:0 auto 20px}
 .mtitle{font-family:var(--serif);font-size:18px;font-weight:400;margin-bottom:4px;color:var(--t);letter-spacing:1.5px}
 .msub{font-size:13px;color:var(--m);margin-bottom:22px;letter-spacing:.3px}
@@ -223,11 +223,6 @@ footer{background:var(--t);color:rgba(255,255,255,.7);padding:48px 32px 32px;mar
 .cc-date{font-size:11px;color:var(--m);margin-bottom:7px;line-height:1.55;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
 .cc-row{display:flex;justify-content:space-between;align-items:flex-end}
 .cc-price{font-size:15px;font-weight:600;color:var(--g)}
-.cap-mini{margin-top:8px}
-.cap-mini-bar{height:2px;background:var(--b);border-radius:2px;overflow:hidden;margin-bottom:3px}
-.cap-mini-fill{height:100%;background:var(--g);border-radius:2px}
-.cap-mini-txt{font-size:9px;color:var(--m);letter-spacing:.3px}
-
 /* Detail drawer – shares .drawer .drawer-overlay with index */
 .d-gallery{position:relative;overflow:hidden;background:var(--t)}
 .d-slide{position:absolute;inset:0;opacity:0;transition:opacity .65s}
@@ -837,6 +832,9 @@ function closeReg(){document.getElementById('reg-ov').classList.remove('open');}
 
 function selBk(t){
   bkType=t;
+  // Re-filter time slots based on booking type
+  const dateVal=document.getElementById('r-date')?.value;
+  if(dateVal) updateTimeOptions(dateVal);
   document.getElementById('bk-p').classList.toggle('sel',t==='personal');
   document.getElementById('bk-g').classList.toggle('sel',t==='group');
   document.getElementById('bk-p').querySelector('input').checked=t==='personal';
@@ -891,6 +889,9 @@ async function submitReg(){
     document.getElementById('rb-acct').textContent=bankInfo.bank_account||'—';
     document.getElementById('reg-form').style.display='none';
     document.getElementById('reg-bank').style.display='block';
+    // Scroll modal back to top
+    const mo=document.querySelector('.mo');
+    if(mo) mo.scrollTop=0;
     load();
   }catch(e){toast(e.message,false);}
   finally{btn.disabled=false;btn.textContent='確認報名';}
@@ -977,7 +978,8 @@ function initFlatpickr(){
       function(date){
         if([0,1,3,5].includes(date.getDay())) return true;
         const ds=date.getFullYear()+'-'+String(date.getMonth()+1).padStart(2,'0')+'-'+String(date.getDate()).padStart(2,'0');
-        return bookedSlots[ds]==='fully_booked';
+        const st=bookedSlots[ds];
+        return st==='fully_booked';
       }
     ],
     dateFormat:'Y-m-d',
@@ -993,20 +995,69 @@ function updateTimeOptions(dateStr){
   const sel=document.getElementById('r-time');
   if(!sel) return;
   const status=bookedSlots[dateStr]||'';
-  // Reset all options
+  const isGroup=bkType==='group';
   sel.innerHTML='';
-  if(status!=='morning_full'){
+
+  if(isGroup){
+    // 包場：只要有任何狀態就不能選
+    if(status){
+      const o=document.createElement('option');
+      o.value='';o.textContent='此日期已有其他預約，無法包場';o.disabled=true;sel.appendChild(o);
+    } else {
+      ['09:00–12:00','13:30–16:30'].forEach((t,i)=>{
+        const o=document.createElement('option');
+        o.value=t;o.textContent=(i===0?'上午時段　':'下午時段　')+t;sel.appendChild(o);
+      });
+    }
+    return;
+  }
+
+  // 個人報名
+  const showMorning = status!=='afternoon_only' && status!=='fully_booked';
+  const showAfternoon = status!=='morning_only' && status!=='fully_booked';
+
+  if(showMorning){
     const o=document.createElement('option');
     o.value='09:00–12:00';o.textContent='上午時段　09:00 – 12:00';sel.appendChild(o);
   }
-  if(status!=='afternoon_full'){
+  if(showAfternoon){
     const o=document.createElement('option');
     o.value='13:30–16:30';o.textContent='下午時段　13:30 – 16:30';sel.appendChild(o);
   }
   if(sel.options.length===0){
     const o=document.createElement('option');
-    o.value='';o.textContent='此日期已額滿';o.disabled=true;sel.appendChild(o);
+    o.value='';o.textContent='此日期所有時段已額滿';o.disabled=true;sel.appendChild(o);
   }
+  // Show remaining slots
+  updateRemainingSlots(dateStr, status);
+}
+
+function updateRemainingSlots(dateStr, status){
+  const el=document.getElementById('r-slots-info');
+  if(!el) return;
+  if(!dateStr){el.style.display='none';return;}
+  const MAX=4;
+  // Count booked for each slot from bookedSlots
+  // We only have status not exact counts, show info based on status
+  let msg='';
+  if(status==='fully_booked'){
+    msg='此日期已額滿';
+    el.style.color='var(--r)';
+  } else if(status==='morning_only'){
+    msg='下午時段已有預約，僅開放上午時段';
+    el.style.color='var(--m)';
+  } else if(status==='afternoon_only'){
+    msg='上午時段已有預約，僅開放下午時段';
+    el.style.color='var(--m)';
+  } else if(status==='no_group'){
+    msg='此日期已有個人預約，無法包場';
+    el.style.color='var(--m)';
+  } else {
+    msg='此日期可預約';
+    el.style.color='var(--g)';
+  }
+  el.textContent=msg;
+  el.style.display='block';
 }
 
 function onDateChange(){} // kept for compatibility
