@@ -85,9 +85,10 @@ async def register(reg: RegistrationIn):
     })
     reg_id = data[0]["id"]
 
-    # 更新已報名人數
-    await sb_fetch(f"/classes?id=eq.{reg.class_id}", method="PATCH",
-                   body={"registered": cls["registered"] + members})
+    # 更新已報名人數（只更新專業課程）
+    if cls.get("type") != "單次體驗":
+        await sb_fetch(f"/classes?id=eq.{reg.class_id}", method="PATCH",
+                       body={"registered": cls["registered"] + members})
 
     # 寄確認信給學員
     await send_reg_confirm(reg_id, reg, cls, total)
@@ -220,11 +221,11 @@ async def cancel_registration(reg_id: int):
                            body={"registered": new_count})
 
     await send_cancel_reg_email(reg)
-    # Decrement registered count
-    cls = await sb_fetch(f"/classes?id=eq.{reg['class_id']}&select=registered", use_secret=True)
-    if cls:
+    # Decrement registered count (only for 專業課程)
+    cls_type_check = await sb_fetch(f"/classes?id=eq.{reg['class_id']}&select=registered,type", use_secret=True)
+    if cls_type_check and cls_type_check[0].get("type") != "單次體驗":
         members = reg.get("members") or 1
-        new_count = max(0, (cls[0].get("registered") or 0) - members)
+        new_count = max(0, (cls_type_check[0].get("registered") or 0) - members)
         await sb_fetch(f"/classes?id=eq.{reg['class_id']}", method="PATCH", body={"registered": new_count})
     return {"message": "報名已取消"}
 
@@ -282,13 +283,13 @@ async def delete_reg(reg_id: int, authorization: str = Header(...)):
     # Get registration before deleting to update registered count
     regs = await sb_fetch(f"/registrations?id=eq.{reg_id}&select=class_id,members,status", use_secret=True)
     await sb_fetch(f"/registrations?id=eq.{reg_id}", method="DELETE")
-    # Decrement registered count if not already cancelled
+    # Decrement registered count if not already cancelled (only for 專業課程)
     if regs and regs[0].get("status") != "cancelled":
         reg = regs[0]
-        members = reg.get("members") or 1
-        cls = await sb_fetch(f"/classes?id=eq.{reg['class_id']}&select=registered", use_secret=True)
-        if cls:
-            new_count = max(0, (cls[0].get("registered") or 0) - members)
+        cls_check = await sb_fetch(f"/classes?id=eq.{reg['class_id']}&select=registered,type", use_secret=True)
+        if cls_check and cls_check[0].get("type") != "單次體驗":
+            members = reg.get("members") or 1
+            new_count = max(0, (cls_check[0].get("registered") or 0) - members)
             await sb_fetch(f"/classes?id=eq.{reg['class_id']}", method="PATCH", body={"registered": new_count})
     return {"message": "已刪除"}
 
