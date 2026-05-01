@@ -662,16 +662,18 @@ function render(){
   document.getElementById('course-faq-section').style.display='block';
   if(!courses.length){g.innerHTML='<div class="loading">目前暫無課程</div>';return;}
   g.innerHTML=courses.map(c=>{
-    const full=c.registered>=c.capacity;
     const imgs=getImgs(c);
-    const mainImg=imgs.length?`<img class="cc-img" src="${imgs[0]}" alt="${c.name}" loading="lazy">`:'<div class="cc-img" style="background:var(--bg)"></div>';
+    const mainImg=imgs.length?`<img style="width:100%;aspect-ratio:1;object-fit:cover;display:block" src="${imgs[0]}" alt="${c.name}" loading="lazy">`:'<div style="width:100%;aspect-ratio:1;background:var(--bg)"></div>';
+    const inactive=!c.is_active;
     return`<div class="cc" onclick="openDetail(${c.id})">
-      ${mainImg}
+      <div class="cc-img">
+        ${mainImg}
+        ${inactive?`<div class="smask"><div style="color:#fff;font-size:11px;letter-spacing:2px;font-weight:500">暫停報名</div></div>`:''}
+      </div>
       <div class="cc-body">
         <div class="cc-type">${c.type||''}</div>
         <div class="cc-name">${c.name}</div>
         <div class="cc-price">NT$${(c.price||0).toLocaleString()}</div>
-        ${!c.is_active?'<div class="sold-out-tag" style="color:var(--m);border-color:var(--m)">暫停報名</div>':full?'<div class="sold-out-tag">SOLD OUT</div>':''}
       </div>
     </div>`;
   }).join('');
@@ -1057,17 +1059,16 @@ function updateRemainingSlots(dateStr, status){
   if(status==='fully_booked'){
     msg='此日期所有時段已額滿'; color='var(--r)';
   } else if(selTime.includes('09:00')){
+    // morning_remaining: 0 means full, undefined means no one booked yet = MAX available
     const rem=slotData.morning_remaining!==undefined ? slotData.morning_remaining : MAX;
-    msg=rem>0?`上午時段剩餘 ${rem} 個名額`:'上午時段已額滿';
-    color=rem>0?'var(--g)':'var(--r)';
+    if(rem<=0){msg='上午時段已額滿';color='var(--r)';}
+    else if(rem<=2){msg=`上午時段僅剩 ${rem} 個名額`;color='var(--r)';}
+    else{msg=`上午時段剩餘 ${rem} 個名額`;color='var(--g)';}
   } else if(selTime.includes('13:30')){
     const rem=slotData.afternoon_remaining!==undefined ? slotData.afternoon_remaining : MAX;
-    msg=rem>0?`下午時段剩餘 ${rem} 個名額`:'下午時段已額滿';
-    color=rem>0?'var(--g)':'var(--r)';
-  } else if(status==='morning_only'){
-    msg='下午時段已有預約，僅開放上午時段'; color='var(--m)';
-  } else if(status==='afternoon_only'){
-    msg='上午時段已有預約，僅開放下午時段'; color='var(--m)';
+    if(rem<=0){msg='下午時段已額滿';color='var(--r)';}
+    else if(rem<=2){msg=`下午時段僅剩 ${rem} 個名額`;color='var(--r)';}
+    else{msg=`下午時段剩餘 ${rem} 個名額`;color='var(--g)';}
   }
 
   if(msg){
