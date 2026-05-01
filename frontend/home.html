@@ -11,6 +11,17 @@ body{
   background:#E0DCD5;
   min-height:100vh;
   display:flex;align-items:center;justify-content:center;
+  position:relative;
+  overflow:hidden;
+}
+body::before{
+  content:'';
+  position:fixed;
+  inset:0;
+  background:url('bg_pottery.png') center center / cover no-repeat;
+  opacity:0.12;
+  z-index:0;
+  pointer-events:none;
 }
 .wrap{
   display:flex;flex-direction:column;
@@ -21,7 +32,8 @@ body{
 }
 .logo{opacity:0;animation:up .8s ease .2s forwards;margin-bottom:18px}
 .name{
-  font-size:32px;font-weight:400;color:#1C2B3A;letter-spacing:2px;font-family:'Ma Shan Zheng',cursive;
+  font-size:28px;font-weight:500;color:#1C2B3A;letter-spacing:3px;
+  font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',Arial,sans-serif;
   opacity:0;animation:up .7s ease .7s forwards;margin-bottom:6px
 }
 .en{
@@ -47,9 +59,6 @@ body{
 }
 .link:hover .link-arrow{transform:translateX(2px)}
 @keyframes up{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400&family=Klee+One&family=Ma+Shan+Zheng&family=ZCOOL+KuaiLe&display=swap" rel="stylesheet">
 </style>
 </head>
 <body>
