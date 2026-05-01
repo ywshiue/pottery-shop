@@ -1035,6 +1035,8 @@ async function submitReg(){
   const members=isWS?getM():1;
   const btn=document.getElementById('r-submit');
   btn.disabled=true;btn.textContent='送出中⋯';
+  // Hide form immediately to prevent overlap during async wait
+  document.getElementById('reg-form').style.display='none';
   try{
     const res=await fetch(`${API}/classes/register`,{
       method:'POST',headers:{'Content-Type':'application/json'},
@@ -1053,7 +1055,7 @@ async function submitReg(){
     document.getElementById('rb-acct').textContent=bankInfo.bank_account||'—';
     switchView('reg-bank');
     load();
-  }catch(e){toast(e.message,false);}
+  }catch(e){document.getElementById('reg-form').style.display='block';toast(e.message,false);}
   finally{btn.disabled=false;btn.textContent='確認報名';}
 }
 
