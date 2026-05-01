@@ -291,8 +291,7 @@ footer{background:var(--t);color:rgba(255,255,255,.7);padding:48px 32px 32px;mar
 
 #reg-form,#reg-bank,#reg-paid,#reg-cancelled{width:100%;box-sizing:border-box}
 
-.reg-view{display:none!important;height:0!important;overflow:hidden!important;margin:0!important;padding:0!important}
-.reg-view.active{display:block!important;height:auto!important;overflow:visible!important}
+
 </style>
 </head>
 <body>
@@ -453,7 +452,7 @@ footer{background:var(--t);color:rgba(255,255,255,.7);padding:48px 32px 32px;mar
     <div class="mo-handle"></div>
 
     <!-- Step 1: form -->
-    <div id="reg-form" class="reg-view active">
+    <div id="reg-form">
       <div style="font-family:var(--serif);font-size:20px;font-weight:400;color:var(--t);letter-spacing:1px;margin-bottom:4px" id="reg-title">課程報名</div>
       <div style="font-size:12px;color:var(--m);margin-bottom:18px" id="reg-sub"></div>
       <div class="f2">
@@ -529,7 +528,7 @@ footer{background:var(--t);color:rgba(255,255,255,.7);padding:48px 32px 32px;mar
       </div>
 
     <!-- Step 2: bank info + last5 -->
-    <div id="reg-bank" class="reg-view">
+    <div id="reg-bank" style="display:none">
       <div style="text-align:center;margin-bottom:18px">
         <div class="done-icon" style="background:var(--gl)">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M5 12l5 5L19 7" stroke="#2C4A6E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -564,7 +563,7 @@ footer{background:var(--t);color:rgba(255,255,255,.7);padding:48px 32px 32px;mar
     </div>
 
     <!-- Step 3a: paid done -->
-    <div id="reg-paid" class="reg-view">
+    <div id="reg-paid" style="display:none">
       <div class="done-icon" style="background:var(--gl)">
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M5 12l5 5L19 7" stroke="#2C4A6E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </div>
@@ -574,7 +573,7 @@ footer{background:var(--t);color:rgba(255,255,255,.7);padding:48px 32px 32px;mar
     </div>
 
     <!-- Step 3b: cancel done -->
-    <div id="reg-cancelled" class="reg-view">
+    <div id="reg-cancelled" style="display:none">
       <div class="done-icon" style="background:var(--rl)">
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M18 6L6 18M6 6l12 12" stroke="#8B6F47" stroke-width="2" stroke-linecap="round"/></svg>
       </div>
@@ -1011,19 +1010,12 @@ function updSum(){
 }
 
 function switchView(showId){
-  const mo=document.querySelector('#reg-ov .mo');
-  // First hide all
   ['reg-form','reg-bank','reg-paid','reg-cancelled'].forEach(id=>{
     const el=document.getElementById(id);
-    if(el) el.classList.remove('active');
+    if(el) el.style.display=id===showId?'block':'none';
   });
-  // Then show target
-  const target=document.getElementById(showId);
-  if(target) target.classList.add('active');
-  // Scroll to top immediately
-  if(mo){ mo.scrollTop=0; }
-  // And again after render
-  setTimeout(()=>{ if(mo) mo.scrollTop=0; },50);
+  const mo=document.querySelector('#reg-ov .mo');
+  if(mo) mo.scrollTop=0;
 }
 
 async function submitReg(){
