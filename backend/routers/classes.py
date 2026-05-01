@@ -312,6 +312,8 @@ async def send_reg_confirm(reg_id: int, reg: RegistrationIn, cls: dict, total: i
         <p style="font-size:14px;color:#1C2B3A;line-height:1.9;margin:0">
           親愛的 {reg.name}，<br><br>
           我們已收到您報名 <strong>{cls.get('name', cls.get('title',''))}</strong> 的申請。<br>
+          報名方式：<strong>{'包場' if reg.course_type == 'group' else '個人'}</strong>　人數：<strong>{reg.members or 1} 人</strong><br>
+          {f'希望上課日期：<strong>{reg.preferred_date}</strong><br>' if reg.preferred_date else ''}
           請於 <strong>24 小時內完成匯款</strong>，逾期將自動取消報名。
         </p>
       </div>
