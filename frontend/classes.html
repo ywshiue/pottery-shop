@@ -1056,7 +1056,9 @@ async function submitReg(){
     document.getElementById('rb-name').textContent=bankInfo.bank_name||'—';
     document.getElementById('rb-code').textContent=bankInfo.bank_code||'—';
     document.getElementById('rb-acct').textContent=bankInfo.bank_account||'—';
+    console.log('calling switchView reg-bank, current reg-bank class:', document.getElementById('reg-bank').className);
     switchView('reg-bank');
+    console.log('after switchView, reg-bank class:', document.getElementById('reg-bank').className, 'display:', getComputedStyle(document.getElementById('reg-bank')).display);
   }catch(e){document.getElementById('reg-form').style.display='block';toast(e.message,false);}
   finally{btn.disabled=false;btn.textContent='確認報名';}
 }
