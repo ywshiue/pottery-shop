@@ -289,7 +289,15 @@ footer{background:var(--t);color:rgba(255,255,255,.7);padding:48px 32px 32px;mar
 
 @media(max-width:520px){.mo{padding:20px 16px 40px;border-radius:16px 16px 0 0;max-height:90vh}}
 </style>
-
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<style>
+.flatpickr-day.flatpickr-disabled{color:#C8C4BE!important;background:transparent!important;cursor:not-allowed!important}
+.flatpickr-calendar{border-radius:12px!important;box-shadow:0 8px 28px rgba(28,43,58,.15)!important;border:1px solid #D4CFC9!important;font-family:-apple-system,BlinkMacSystemFont,sans-serif!important}
+.flatpickr-day.selected{background:#2C4A6E!important;border-color:#2C4A6E!important}
+.flatpickr-day:hover{background:#E8EEF5!important}
+</style>
+</head>
+<body>
 <div class="topbar">
   <a class="logo-wrap" href="index.html" style="display:flex;align-items:center;gap:10px;text-decoration:none">
     <svg width="46" height="46" viewBox="-2 -2 124 124" fill="none" xmlns="http://www.w3.org/2000/svg">
