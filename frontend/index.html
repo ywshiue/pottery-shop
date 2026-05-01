@@ -940,6 +940,9 @@ async function load(){
     const res=await fetch(url);
     if(!res.ok)throw new Error('載入失敗');
     products=await res.json();render();
+    // Auto-open product from URL param
+    const _pid=new URLSearchParams(location.search).get('product');
+    if(_pid){const _p=products.find(x=>String(x.id)===_pid);if(_p)openDrawer(_p.id);}
   }catch(e){document.getElementById('grid').innerHTML=`<div class="loading" style="color:var(--r)">${e.message}</div>`;}
 }
 function setCat(btn,c){
@@ -1334,9 +1337,7 @@ loadBankInfo();
 loadSeries();
 
 
-// Open product from URL param
-const _urlP=new URLSearchParams(location.search).get('product');
-if(_urlP) setTimeout(()=>{const p=products.find(x=>String(x.id)===_urlP);if(p)openDrawer(p.id);},600);
+
 
 loadPublicQA();
 
