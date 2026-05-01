@@ -230,6 +230,12 @@ async def cancel_registration(reg_id: int):
                            body={"registered": new_count})
 
     await send_cancel_reg_email(reg)
+    # Decrement registered count
+    cls = await sb_fetch(f"/classes?id=eq.{reg['class_id']}&select=registered", use_secret=True)
+    if cls:
+        members = reg.get("members") or 1
+        new_count = max(0, (cls[0].get("registered") or 0) - members)
+        await sb_fetch(f"/classes?id=eq.{reg['class_id']}", method="PATCH", body={"registered": new_count})
     return {"message": "報名已取消"}
 
 # ── 管理員：課程 CRUD ─────────────────────────────────────
@@ -283,7 +289,17 @@ async def update_reg(reg_id: int, body: RegStatusUpdate, authorization: str = He
 async def delete_reg(reg_id: int, authorization: str = Header(...)):
     token = authorization.replace("Bearer ", "")
     await verify_admin_token(token)
+    # Get registration before deleting to update registered count
+    regs = await sb_fetch(f"/registrations?id=eq.{reg_id}&select=class_id,members,status", use_secret=True)
     await sb_fetch(f"/registrations?id=eq.{reg_id}", method="DELETE")
+    # Decrement registered count if not already cancelled
+    if regs and regs[0].get("status") != "cancelled":
+        reg = regs[0]
+        members = reg.get("members") or 1
+        cls = await sb_fetch(f"/classes?id=eq.{reg['class_id']}&select=registered", use_secret=True)
+        if cls:
+            new_count = max(0, (cls[0].get("registered") or 0) - members)
+            await sb_fetch(f"/classes?id=eq.{reg['class_id']}", method="PATCH", body={"registered": new_count})
     return {"message": "已刪除"}
 
 # ── 寄信 ─────────────────────────────────────────────────
