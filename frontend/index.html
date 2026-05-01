@@ -335,18 +335,6 @@ textarea{resize:vertical;min-height:76px}
 .sbox{text-align:center;padding:32px 0}
 .s-icon{width:56px;height:56px;background:var(--gl);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 16px}
 
-/* ── Footer ─────────────────────────────────────────── */
-footer{background:var(--t);color:rgba(255,255,255,.7);padding:48px 32px 32px;margin-top:60px}
-.footer-inner{max-width:1280px;margin:0 auto;display:grid;grid-template-columns:1.2fr 1fr 1fr 1fr;gap:32px}
-.footer-logo{font-family:var(--serif);font-size:17px;font-weight:400;color:#fff;margin-bottom:8px;letter-spacing:2px}
-.footer-logo span{color:rgba(44,130,200,.8)}
-.footer-tagline{font-size:12px;letter-spacing:.5px;line-height:1.7}
-.footer-section-title{font-size:10px;letter-spacing:1.8px;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:14px;font-weight:600}
-.footer-list{list-style:none;display:flex;flex-direction:column;gap:8px}
-.footer-list li{font-size:13px;line-height:1.6;letter-spacing:.2px}
-.footer-list li strong{color:rgba(255,255,255,.9)}
-.footer-bottom{max-width:1280px;margin:32px auto 0;padding-top:20px;border-top:1px solid rgba(255,255,255,.08);font-size:11px;letter-spacing:.5px;color:rgba(255,255,255,.3);text-align:center}
-
 /* ── Toast ──────────────────────────────────────────── */
 .loading{text-align:center;padding:60px;color:var(--m);font-size:14px;letter-spacing:.5px}
 
@@ -363,7 +351,9 @@ footer{background:var(--t);color:rgba(255,255,255,.7);padding:48px 32px 32px;mar
 .faq-item.open .faq-icon{transform:rotate(45deg)}
 .faq-item.open .faq-a{display:block}
 @media(max-width:760px){
-  .layout{grid-template-columns:1fr}
+  .layout{grid-template-columns:1fr  .footer-inner{grid-template-columns:1fr 1fr;gap:20px}
+  footer{padding:36px 20px 24px}
+}
   .cbox{display:none}
   .m-cart-btn{display:block}
   .grid{grid-template-columns:repeat(2,1fr);gap:12px}
