@@ -684,7 +684,9 @@ function openDetail(id){
   const c=courses.find(x=>x.id===id);
   if(!c)return;
   currentCourse=c;
-  const full=c.registered>=c.capacity;
+  // 單次體驗名額是按天/時段計算，不用 registered 判斷
+  const isWS=c.type==='單次體驗';
+  const full=isWS?false:(c.registered>=c.capacity);
   const canReg=c.is_active&&!full;
   const imgs=getImgs(c);
   const pct=Math.min(100,Math.round(c.registered/c.capacity*100));
@@ -757,9 +759,9 @@ function openDetail(id){
   const btn=document.getElementById('d-reg-btn');
   const note=document.getElementById('d-sold-note');
   btn.disabled=!canReg;
-  btn.textContent=full?'名額已滿':!c.is_active?'暫停報名':'立即報名';
-  note.style.display=!canReg?'block':'none';
-  note.textContent=full?'此梯次已額滿，歡迎關注下期開課訊息':'此梯次暫停報名';
+  btn.textContent=!c.is_active?'暫停報名':'立即報名';
+  note.style.display=(!c.is_active||(!isWS&&full))?'block':'none';
+  note.textContent=(!isWS&&full)?'此梯次已額滿，歡迎關注下期開課訊息':'此梯次暫停報名';
 
   // gallery
   buildGallery(imgs);
