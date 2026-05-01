@@ -609,6 +609,10 @@ footer{background:var(--t);color:rgba(255,255,255,.7);padding:48px 32px 32px;mar
 </div>
 
 <script>
+const API='https://pottery-shop.onrender.com';
+// Warm up backend
+fetch('https://pottery-shop.onrender.com/').catch(()=>{});
+
 function toast(msg,ok=true){const t=document.getElementById('toast');t.textContent=msg;t.style.background=ok?'#1C2B3A':'#8B6F47';t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2600);}
 
 let courses=[],cat='',currentCourse=null,currentRegId=null,bankInfo={},bkType='personal';
