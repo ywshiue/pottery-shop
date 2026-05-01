@@ -127,9 +127,9 @@ body{font-family:var(--sans);background:var(--bg);color:var(--t);font-size:14px;
 .lb-info{color:rgba(255,255,255,.6);font-size:12px;margin-top:10px;letter-spacing:.5px}
 
 /* ── Checkout Modal ─────────────────────────────────── */
-.ov{position:fixed;inset:0;background:rgba(28,43,58,.6);z-index:300;display:none;align-items:flex-end;justify-content:center;backdrop-filter:blur(3px);isolation:isolate;overflow:hidden}
+.ov{position:fixed;inset:0;background:rgba(28,43,58,.6);z-index:300;display:none;flex-direction:column;align-items:stretch;justify-content:flex-end;backdrop-filter:blur(3px);overflow:hidden}
 .ov.open{display:flex}
-.mo{background:var(--w);border-radius:20px 20px 0 0;padding:28px 24px 40px;width:100%;max-width:520px;max-height:88vh;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
+.mo{background:var(--w);border-radius:20px 20px 0 0;padding:24px 20px 48px;width:100%;max-height:88vh;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;flex-shrink:0}
 .mo-handle{width:36px;height:4px;background:var(--b);border-radius:2px;margin:0 auto 20px}
 .mtitle{font-family:var(--serif);font-size:18px;font-weight:400;margin-bottom:4px;color:var(--t);letter-spacing:1.5px}
 .msub{font-size:13px;color:var(--m);margin-bottom:22px;letter-spacing:.3px}
@@ -287,25 +287,7 @@ footer{background:var(--t);color:rgba(255,255,255,.7);padding:48px 32px 32px;mar
 .footer-bottom{max-width:1280px;margin:32px auto 0;padding-top:20px;border-top:1px solid rgba(255,255,255,.08);font-size:11px;letter-spacing:.5px;color:rgba(255,255,255,.3);text-align:center}
 
 
-@media(max-width:520px){
-  .mo{padding:24px 18px 36px;max-height:90vh;border-radius:18px 18px 0 0}
-  #reg-bank,#reg-form{width:100%;max-width:100%;box-sizing:border-box}
-}
-</style>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-<style>
-.flatpickr-day.flatpickr-disabled{color:#C8C4BE!important;background:transparent!important;cursor:not-allowed!important}
-.flatpickr-calendar{border-radius:12px!important;box-shadow:0 8px 28px rgba(28,43,58,.15)!important;border:1px solid #D4CFC9!important;font-family:-apple-system,BlinkMacSystemFont,sans-serif!important}
-.flatpickr-day.selected{background:#2C4A6E!important;border-color:#2C4A6E!important}
-.flatpickr-day:hover{background:#E8EEF5!important}
-</style>
-</head>
-<body>
-<script>
-const API='https://pottery-shop.onrender.com';
-
-// Warm up backend on page load
-fetch('https://pottery-shop.onrender.com/').catch(()=>{});
+@media(max-width:520px){.mo{padding:20px 16px 40px;border-radius:16px 16px 0 0;max-height:90vh}});
 
 </script>
 
@@ -839,6 +821,8 @@ function closeReg(){document.getElementById('reg-ov').classList.remove('open');}
 
 function selBk(t){
   bkType=t;
+  // Re-init flatpickr to update disabled dates for group/personal
+  if(fpInstance) initFlatpickr();
   // Re-filter time slots based on booking type
   const dateVal=document.getElementById('r-date')?.value;
   if(dateVal) updateTimeOptions(dateVal);
@@ -881,9 +865,9 @@ async function submitReg(){
   try{
     const res=await fetch(`${API}/classes/register`,{
       method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({class_id:c.id,name,phone,email,members,preferred_date:isWS2?preferredDate+' '+preferredTime:'',
-        course_type:isWS2?(bkType==='group'?'group':'individual'):`四堂完整課程`,
-        preferred_date:isWS?preferredDate+'  13:30–16:30':'',
+      body:JSON.stringify({class_id:c.id,name,phone,email,members,
+        preferred_date:isWS2?preferredDate+' '+preferredTime:'',
+        course_type:isWS2?(bkType==='group'?'group':'individual'):'四堂完整課程',
         note:document.getElementById('r-note').value})
     });
     const data=await res.json();
@@ -896,15 +880,14 @@ async function submitReg(){
     document.getElementById('rb-acct').textContent=bankInfo.bank_account||'—';
     const regForm=document.getElementById('reg-form');
     const regBank=document.getElementById('reg-bank');
+    // Hide form first
     regForm.style.display='none';
-    regForm.style.visibility='hidden';
-    regBank.style.display='block';
-    regBank.style.visibility='visible';
-    // Force scroll to top
-    setTimeout(()=>{
+    // Show bank after brief delay to avoid overlap
+    requestAnimationFrame(()=>{
+      regBank.style.display='block';
       const mo=document.querySelector('#reg-ov .mo');
-      if(mo){mo.scrollTop=0;mo.scrollTo(0,0);}
-    },10);
+      if(mo){mo.scrollTop=0;}
+    });
     load();
   }catch(e){toast(e.message,false);}
   finally{btn.disabled=false;btn.textContent='確認報名';}
@@ -995,7 +978,10 @@ function initFlatpickr(){
         const ds=date.getFullYear()+'-'+String(date.getMonth()+1).padStart(2,'0')+'-'+String(date.getDate()).padStart(2,'0');
         const slot=bookedSlots[ds];
         const st=slot?.status||slot||'';
-        return st==='fully_booked';
+        if(st==='fully_booked') return true;
+        // For group bookings, disable any date with existing bookings
+        if(typeof bkType!=='undefined'&&bkType==='group'&&st) return true;
+        return false;
       }
     ],
     dateFormat:'Y-m-d',
@@ -1016,14 +1002,15 @@ function updateTimeOptions(dateStr){
   sel.innerHTML='';
 
   if(isGroup){
-    // 包場：只要有任何狀態就不能選
-    if(status){
+    // 包場：只要有任何預約就不能選（已在 flatpickr 反灰但仍處理時段）
+    const hasAnyBooking=status&&status!=='';
+    if(hasAnyBooking){
       const o=document.createElement('option');
       o.value='';o.textContent='此日期已有其他預約，無法包場';o.disabled=true;sel.appendChild(o);
     } else {
-      ['09:00–12:00','13:30–16:30'].forEach((t,i)=>{
+      [{v:'09:00–12:00',l:'上午時段　09:00 – 12:00'},{v:'13:30–16:30',l:'下午時段　13:30 – 16:30'}].forEach(t=>{
         const o=document.createElement('option');
-        o.value=t;o.textContent=(i===0?'上午時段　':'下午時段　')+t;sel.appendChild(o);
+        o.value=t.v;o.textContent=t.l;sel.appendChild(o);
       });
     }
     return;
