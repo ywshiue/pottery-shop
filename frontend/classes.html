@@ -495,7 +495,7 @@ fetch('https://pottery-shop.onrender.com/').catch(()=>{});
         <div style="font-size:11px;color:var(--m);margin-top:4px">可上課日：週二、週四、週六</div>
         <div id="r-time-wrap" style="display:block;margin-top:10px">
           <label class="lbl">上課時段 *</label>
-          <select id="r-time" style="margin-top:4px;padding:10px 12px;border:1px solid var(--b);border-radius:8px;font-size:14px;font-family:var(--sans);background:var(--w);color:var(--t);outline:none;width:100%;box-sizing:border-box">
+          <select id="r-time" onchange="updateRemainingSlots(document.getElementById('r-date').value, bookedSlots[document.getElementById('r-date').value]?.status||bookedSlots[document.getElementById('r-date').value]||'')" style="margin-top:4px;padding:10px 12px;border:1px solid var(--b);border-radius:8px;font-size:14px;font-family:var(--sans);background:var(--w);color:var(--t);outline:none;width:100%;box-sizing:border-box">
             <option value="09:00–12:00">上午時段　09:00 – 12:00</option>
             <option value="13:30–16:30">下午時段　13:30 – 16:30</option>
           </select>
@@ -657,27 +657,12 @@ function render(){
   document.getElementById('course-faq-section').style.display='block';
   if(!courses.length){g.innerHTML='<div class="loading">目前暫無課程</div>';return;}
   g.innerHTML=courses.map(c=>{
-    const full=c.registered>=c.capacity;
     const canReg=c.is_active&&!full;
     const imgs=getImgs(c);
-    const pct=Math.min(100,Math.round(c.registered/c.capacity*100));
-    const rem=c.capacity-c.registered;
-    return`<div class="cc" onclick="openDetail(${c.id})">
-      <div class="cc-img">
-        ${imgs.length?`<img src="${imgs[0]}" loading="lazy" alt="${c.name}">`:'<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:var(--b);font-size:32px">◻</div>'}
-        ${(!canReg)?`<div class="cc-sold-ov"><span>${full?'SOLD OUT':'暫停報名'}</span></div>`:''}
-      </div>
-      <div class="cc-body">
-        <div class="cc-type">${c.type}</div>
-        <div class="cc-name">${c.name}</div>
-
-        <div class="cc-row">
-          <div class="cc-price">NT$${c.price.toLocaleString()} <span style="font-size:11px;font-weight:300;color:var(--m)">/ 人起</span></div>
-          <div style="font-size:11px;color:var(--m)">${c.capacity}人</div>
+    return`<div class="cc" onclick="openDetail(人</div>
         </div>
         <div class="cap-mini">
-          <div class="cap-mini-bar"><div class="cap-mini-fill" style="width:${pct}%"></div></div>
-          <div class="cap-mini-txt">${full?'名額已滿':rem<=3?`剩 ${rem} 名`:`${c.registered}/${c.capacity}`}</div>
+          <div class="cap-mini-bar"><div class="cap-mini-fill" style="width: 名`:``}</div>
         </div>
       </div>
     </div>`;
@@ -978,7 +963,8 @@ function initFlatpickr(){
       function(date){
         if([0,1,3,5].includes(date.getDay())) return true;
         const ds=date.getFullYear()+'-'+String(date.getMonth()+1).padStart(2,'0')+'-'+String(date.getDate()).padStart(2,'0');
-        const st=bookedSlots[ds];
+        const slot=bookedSlots[ds];
+        const st=slot?.status||slot||'';
         return st==='fully_booked';
       }
     ],
@@ -994,7 +980,8 @@ function initFlatpickr(){
 function updateTimeOptions(dateStr){
   const sel=document.getElementById('r-time');
   if(!sel) return;
-  const status=bookedSlots[dateStr]||'';
+  const slotData=bookedSlots[dateStr]||{};
+  const status=slotData.status||slotData||'';
   const isGroup=bkType==='group';
   sel.innerHTML='';
 
@@ -1036,28 +1023,32 @@ function updateRemainingSlots(dateStr, status){
   const el=document.getElementById('r-slots-info');
   if(!el) return;
   if(!dateStr){el.style.display='none';return;}
+  const slotData=bookedSlots[dateStr]||{};
   const MAX=4;
-  // Count booked for each slot from bookedSlots
-  // We only have status not exact counts, show info based on status
-  let msg='';
+  const selTime=document.getElementById('r-time')?.value||'';
+  let msg=''; let color='var(--m)';
+
   if(status==='fully_booked'){
-    msg='此日期已額滿';
-    el.style.color='var(--r)';
+    msg='此日期所有時段已額滿'; color='var(--r)';
+  } else if(selTime.includes('09:00')){
+    const rem=slotData.morning_remaining!==undefined ? slotData.morning_remaining : MAX;
+    msg=rem>0?`上午時段剩餘 ${rem} 個名額`:'上午時段已額滿';
+    color=rem>0?'var(--g)':'var(--r)';
+  } else if(selTime.includes('13:30')){
+    const rem=slotData.afternoon_remaining!==undefined ? slotData.afternoon_remaining : MAX;
+    msg=rem>0?`下午時段剩餘 ${rem} 個名額`:'下午時段已額滿';
+    color=rem>0?'var(--g)':'var(--r)';
   } else if(status==='morning_only'){
-    msg='下午時段已有預約，僅開放上午時段';
-    el.style.color='var(--m)';
+    msg='下午時段已有預約，僅開放上午時段'; color='var(--m)';
   } else if(status==='afternoon_only'){
-    msg='上午時段已有預約，僅開放下午時段';
-    el.style.color='var(--m)';
-  } else if(status==='no_group'){
-    msg='此日期已有個人預約，無法包場';
-    el.style.color='var(--m)';
-  } else {
-    msg='此日期可預約';
-    el.style.color='var(--g)';
+    msg='上午時段已有預約，僅開放下午時段'; color='var(--m)';
   }
-  el.textContent=msg;
-  el.style.display='block';
+
+  if(msg){
+    el.textContent=msg; el.style.color=color; el.style.display='block';
+  } else {
+    el.style.display='none';
+  }
 }
 
 function onDateChange(){} // kept for compatibility
