@@ -488,10 +488,26 @@ fetch('https://pottery-shop.onrender.com/').catch(()=>{});
       <!-- 體驗課：選日期 -->
       <div class="fg" id="r-date-wrap" style="display:none">
         <label class="lbl">希望上課日期 *</label>
-        <input type="date" id="r-date"
-          style="box-sizing:border-box;width:100%;min-height:44px;padding:10px 12px;border:1px solid var(--b);border-radius:8px;font-size:14px;font-family:var(--sans);background:var(--w);color:var(--t);outline:none;display:block;-webkit-appearance:none;appearance:none"
-          onchange="onDateChange()">
-        <div id="r-date-error" style="font-size:11px;color:var(--r);margin-top:4px;display:none">此日期無法上課，請選擇週二、週四、週六</div>
+        <input type="hidden" id="r-date">
+        <!-- Custom Calendar -->
+        <div id="cal-wrap" style="border:1px solid var(--b);border-radius:10px;overflow:hidden;background:var(--w);user-select:none">
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-bottom:1px solid var(--b)">
+            <button type="button" onclick="calNav(-1)" style="background:transparent;border:none;cursor:pointer;font-size:16px;color:var(--t);padding:2px 6px">‹</button>
+            <div id="cal-title" style="font-size:13px;font-weight:500;color:var(--t)"></div>
+            <button type="button" onclick="calNav(1)" style="background:transparent;border:none;cursor:pointer;font-size:16px;color:var(--t);padding:2px 6px">›</button>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(7,1fr);text-align:center;padding:6px 8px 2px">
+            <div style="font-size:10px;color:var(--m);padding:3px 0">日</div>
+            <div style="font-size:10px;color:var(--m);padding:3px 0">一</div>
+            <div style="font-size:10px;color:var(--m);padding:3px 0">二</div>
+            <div style="font-size:10px;color:var(--m);padding:3px 0">三</div>
+            <div style="font-size:10px;color:var(--m);padding:3px 0">四</div>
+            <div style="font-size:10px;color:var(--m);padding:3px 0">五</div>
+            <div style="font-size:10px;color:var(--m);padding:3px 0">六</div>
+          </div>
+          <div id="cal-grid" style="display:grid;grid-template-columns:repeat(7,1fr);text-align:center;padding:0 8px 8px;gap:2px"></div>
+        </div>
+        <div id="cal-selected" style="font-size:12px;color:var(--g);margin-top:6px;display:none"></div>
         <div id="r-time-wrap" style="display:none;margin-top:10px">
           <label class="lbl">上課時段 *</label>
           <select id="r-time" style="margin-top:4px;padding:10px 12px;border:1px solid var(--b);border-radius:8px;font-size:14px;font-family:var(--sans);background:var(--w);color:var(--t);outline:none;width:100%;box-sizing:border-box">
@@ -499,7 +515,6 @@ fetch('https://pottery-shop.onrender.com/').catch(()=>{});
             <option value="13:30–16:30">下午時段　13:30 – 16:30</option>
           </select>
         </div>
-        <div style="font-size:11px;color:var(--m);margin-top:6px">可上課日：週二、週四、週六</div>
       </div>
         <div style="font-size:11px;color:var(--m);margin-top:4px;letter-spacing:.2px">課程時間固定為 13:30 – 16:30，確認後我們將與您聯繫</div>
       </div>
@@ -821,18 +836,14 @@ function openReg(){
   // Show date field for workshop
   const dw=document.getElementById('r-date-wrap');
   if(dw) dw.style.display=isWS?'block':'none';
+  // Reset calendar
   const de=document.getElementById('r-date');
-  if(de){
-    de.value='';
-    de.style.borderColor='var(--b)';
-    const tmr=new Date();tmr.setDate(tmr.getDate()+1);
-    de.min=tmr.toISOString().split('T')[0];
-  }
-  // Reset time wrap and error
+  if(de) de.value='';
   const tw=document.getElementById('r-time-wrap');
   if(tw) tw.style.display='none';
-  const err=document.getElementById('r-date-error');
-  if(err) err.style.display='none';
+  const sel=document.getElementById('cal-selected');
+  if(sel) sel.style.display='none';
+  calInit();
   selBk('personal');updSum();
   document.getElementById('reg-ov').classList.add('open');
 }
@@ -944,28 +955,77 @@ async function cancelReg(){
 }
 
 // ── FAQ ────────────────────────────────────────────────────
-function onDateChange(){
-  const val=document.getElementById('r-date').value;
-  const errEl=document.getElementById('r-date-error');
-  const timeWrap=document.getElementById('r-time-wrap');
-  if(!val){errEl.style.display='none';timeWrap.style.display='none';return;}
-  // Parse date parts directly to avoid timezone issues
-  const parts=val.split('-');
-  const d=new Date(parseInt(parts[0]),parseInt(parts[1])-1,parseInt(parts[2]));
-  const day=d.getDay(); // 0=日,1=一,2=二,3=三,4=四,5=五,6=六
-  const blocked=[0,1,3,5]; // 日一三五不可選
-  const dateEl=document.getElementById('r-date');
-  if(blocked.includes(day)){
-    errEl.style.display='block';
-    timeWrap.style.display='none';
-    dateEl.style.borderColor='var(--r)';
-  } else {
-    errEl.style.display='none';
-    timeWrap.style.display='block';
-    dateEl.style.borderColor='var(--g)';
+// ── Custom Calendar ───────────────────────────────────────
+let calYear=0, calMonth=0;
+
+function calInit(){
+  const now=new Date();
+  calYear=now.getFullYear();
+  calMonth=now.getMonth();
+  // Start from tomorrow
+  const tmr=new Date();tmr.setDate(tmr.getDate()+1);
+  calRender();
+}
+
+function calNav(dir){
+  calMonth+=dir;
+  if(calMonth>11){calMonth=0;calYear++;}
+  if(calMonth<0){calMonth=11;calYear--;}
+  calRender();
+}
+
+function calRender(){
+  const BLOCKED=[0,1,3,5]; // 日一三五
+  const today=new Date();today.setHours(0,0,0,0);
+  const tmr=new Date(today);tmr.setDate(tmr.getDate()+1);
+
+  const title=document.getElementById('cal-title');
+  if(title) title.textContent=calYear+'年 '+(calMonth+1)+'月';
+
+  const grid=document.getElementById('cal-grid');
+  if(!grid) return;
+
+  const first=new Date(calYear,calMonth,1).getDay();
+  const days=new Date(calYear,calMonth+1,0).getDate();
+  const selected=document.getElementById('r-date').value;
+
+  let html='';
+  for(let i=0;i<first;i++) html+='<div></div>';
+  for(let d=1;d<=days;d++){
+    const date=new Date(calYear,calMonth,d);
+    const dow=date.getDay();
+    const dateStr=calYear+'-'+String(calMonth+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');
+    const isPast=date<tmr;
+    const isBlocked=BLOCKED.includes(dow);
+    const isSelected=dateStr===selected;
+    let style='font-size:13px;padding:6px 2px;border-radius:6px;cursor:pointer;';
+    if(isPast||isBlocked){
+      style+='color:#C8C4BE;cursor:default;';
+    } else if(isSelected){
+      style+='background:var(--g);color:#fff;font-weight:600;';
+    } else {
+      style+='color:var(--t);';
+    }
+    const click=(isPast||isBlocked)?'':`onclick="calSelect('${dateStr}')"`;
+    html+=`<div style="${style}" ${click}>${d}</div>`;
   }
+  grid.innerHTML=html;
+}
+
+function calSelect(dateStr){
+  document.getElementById('r-date').value=dateStr;
+  const parts=dateStr.split('-');
+  const d=new Date(parseInt(parts[0]),parseInt(parts[1])-1,parseInt(parts[2]));
+  const weekNames=['日','一','二','三','四','五','六'];
+  const sel=document.getElementById('cal-selected');
+  if(sel){sel.textContent='已選擇：'+dateStr+' (週'+weekNames[d.getDay()]+')';sel.style.display='block';}
+  document.getElementById('r-time-wrap').style.display='block';
+  calRender();
   updSum();
 }
+
+function onDateChange(){} // kept for compatibility
+
 
 function toggleInstructor(){
   const div=document.getElementById('d-instructor');
