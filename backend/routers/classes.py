@@ -125,15 +125,14 @@ async def debug_regs(class_id: int):
 @router.get("/booked-dates/{class_id}")
 async def get_booked_dates(class_id: int):
     """
-    邏輯：
-    - 包場（course_type=group）預約某天 → 整天 fully_booked
-    - 個人預約上午 → 這天下午不能選；其他個人最多4人可選上午
-    - 個人預約下午 → 這天上午不能選；其他個人最多4人可選下午
-    - 上午有人預約 → 包場不能選這天
-    - 下午有人預約 → 包場不能選這天
-    回傳 { date: status } status = fully_booked | morning_only | afternoon_only | morning_full
+    回傳日期時段狀態與剩餘名額。
+    capacity = 同天同時段上限人數。
+    - 包場(group)預約某天 → 整天 fully_booked
+    - 個人預約上午 → 這天只能繼續選上午(最多capacity人)，下午不能選，也不能包場
+    - 個人預約下午 → 這天只能繼續選下午，上午不能選，也不能包場
     """
-    # Get class capacity as per-slot limit
+    from collections import defaultdict
+
     cls_info = await sb_fetch(f"/classes?id=eq.{class_id}&select=capacity", use_secret=False)
     MAX_PER_SLOT = cls_info[0]["capacity"] if cls_info else 4
 
@@ -142,20 +141,17 @@ async def get_booked_dates(class_id: int):
         use_secret=False
     )
 
-    from collections import defaultdict
-    slots = defaultdict(lambda: {"morning": 0, "afternoon": 0, "has_group": False, "has_any": False})
+    slots = defaultdict(lambda: {"morning": 0, "afternoon": 0, "has_group": False})
 
     for r in regs:
         pd = r.get("preferred_date", "") or ""
         if not pd:
             continue
-        parts = pd.split(" ")
+        parts = pd.strip().split(" ")
         date_part = parts[0]
         time_part = parts[1] if len(parts) > 1 else ""
         members = int(r.get("members") or 1)
         course_type = r.get("course_type", "") or ""
-
-        slots[date_part]["has_any"] = True
 
         if course_type == "group":
             slots[date_part]["has_group"] = True
@@ -169,46 +165,40 @@ async def get_booked_dates(class_id: int):
         morning = s["morning"]
         afternoon = s["afternoon"]
         has_group = s["has_group"]
-        has_any = s["has_any"]
+
+        morning_rem = max(0, MAX_PER_SLOT - morning)
+        afternoon_rem = max(0, MAX_PER_SLOT - afternoon)
 
         if has_group:
-            # 包場已預約 → 整天不能選
-            result[date] = "fully_booked"
+            status = "fully_booked"
         elif morning > 0 and afternoon > 0:
-            # 上下午都有人 → 不能包場，且各時段獨立限制
-            if morning >= MAX_PER_SLOT and afternoon >= MAX_PER_SLOT:
-                result[date] = "fully_booked"
-            elif morning >= MAX_PER_SLOT:
-                result[date] = "afternoon_only"  # 只剩下午
-            elif afternoon >= MAX_PER_SLOT:
-                result[date] = "morning_only"    # 只剩上午
+            # 上下午都有人 → 不能包場
+            if morning_rem == 0 and afternoon_rem == 0:
+                status = "fully_booked"
+            elif morning_rem == 0:
+                status = "afternoon_only"
+            elif afternoon_rem == 0:
+                status = "morning_only"
             else:
-                result[date] = "no_group"        # 有人了，不能包場，但兩時段都還有位
+                status = "no_group"
         elif morning > 0:
-            # 上午有人 → 只能選上午（不能包場，不能選下午）
-            if morning >= MAX_PER_SLOT:
-                result[date] = "fully_booked"
-            else:
-                result[date] = "morning_only"
+            # 只有上午有人 → 只能選上午
+            status = "fully_booked" if morning_rem == 0 else "morning_only"
         elif afternoon > 0:
-            # 下午有人 → 只能選下午（不能包場，不能選上午）
-            if afternoon >= MAX_PER_SLOT:
-                result[date] = "fully_booked"
-            else:
-                result[date] = "afternoon_only"
+            # 只有下午有人 → 只能選下午
+            status = "fully_booked" if afternoon_rem == 0 else "afternoon_only"
+        else:
+            continue
 
-    # Add slot counts to result
-    for date, s in slots.items():
-        if date in result:
-            result[date] = {
-                "status": result[date],
-                "morning_remaining": max(0, MAX_PER_SLOT - s["morning"]),
-                "afternoon_remaining": max(0, MAX_PER_SLOT - s["afternoon"]),
-            }
+        result[date] = {
+            "status": status,
+            "morning_remaining": morning_rem,
+            "afternoon_remaining": afternoon_rem,
+        }
 
     return result
 
-# ── 公開：學員取消報名 ────────────────────────────────────
+
 @router.post("/register/{reg_id}/cancel")
 async def cancel_registration(reg_id: int):
     regs = await sb_fetch(f"/registrations?id=eq.{reg_id}")
