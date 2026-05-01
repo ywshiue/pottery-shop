@@ -1020,7 +1020,7 @@ function switchView(showId){
     const mo=document.querySelector('#reg-ov .mo');
     if(mo) mo.scrollTop=0;
   });
-
+}
 
 async function submitReg(){
   const name=document.getElementById('r-name').value.trim();
@@ -1154,7 +1154,6 @@ async function submitCourseQ(){
   finally{btn.disabled=false;btn.textContent='送出問題';}
 }
 
-}
 
 init();
 
