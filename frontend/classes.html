@@ -291,8 +291,8 @@ footer{background:var(--t);color:rgba(255,255,255,.7);padding:48px 32px 32px;mar
 
 #reg-form,#reg-bank,#reg-paid,#reg-cancelled{width:100%;box-sizing:border-box}
 
-.reg-view{display:none!important}
-.reg-view.active{display:block!important}
+.reg-view{display:none!important;height:0!important;overflow:hidden!important;margin:0!important;padding:0!important}
+.reg-view.active{display:block!important;height:auto!important;overflow:visible!important}
 </style>
 </head>
 <body>
@@ -1011,15 +1011,19 @@ function updSum(){
 }
 
 function switchView(showId){
+  const mo=document.querySelector('#reg-ov .mo');
+  // First hide all
   ['reg-form','reg-bank','reg-paid','reg-cancelled'].forEach(id=>{
     const el=document.getElementById(id);
-    if(!el) return;
-    el.classList.toggle('active', id===showId);
+    if(el) el.classList.remove('active');
   });
-  requestAnimationFrame(()=>{
-    const mo=document.querySelector('#reg-ov .mo');
-    if(mo) mo.scrollTop=0;
-  });
+  // Then show target
+  const target=document.getElementById(showId);
+  if(target) target.classList.add('active');
+  // Scroll to top immediately
+  if(mo){ mo.scrollTop=0; }
+  // And again after render
+  setTimeout(()=>{ if(mo) mo.scrollTop=0; },50);
 }
 
 async function submitReg(){
@@ -1056,9 +1060,7 @@ async function submitReg(){
     document.getElementById('rb-name').textContent=bankInfo.bank_name||'—';
     document.getElementById('rb-code').textContent=bankInfo.bank_code||'—';
     document.getElementById('rb-acct').textContent=bankInfo.bank_account||'—';
-    console.log('calling switchView reg-bank, current reg-bank class:', document.getElementById('reg-bank').className);
     switchView('reg-bank');
-    console.log('after switchView, reg-bank class:', document.getElementById('reg-bank').className, 'display:', getComputedStyle(document.getElementById('reg-bank')).display);
   }catch(e){document.getElementById('reg-form').style.display='block';toast(e.message,false);}
   finally{btn.disabled=false;btn.textContent='確認報名';}
 }
