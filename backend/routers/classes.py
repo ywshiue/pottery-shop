@@ -113,6 +113,15 @@ async def confirm_reg_payment(reg_id: int, body: PaymentConfirmReg):
     return {"message": "已收到匯款確認"}
 
 # ── 公開：已預約日期與時段狀態 ───────────────────────────
+@router.get("/debug-regs/{class_id}")
+async def debug_regs(class_id: int):
+    """Debug: show all registrations and their statuses"""
+    regs = await sb_fetch(
+        f"/registrations?class_id=eq.{class_id}&select=id,status,preferred_date,members,course_type",
+        use_secret=False
+    )
+    return regs
+
 @router.get("/booked-dates/{class_id}")
 async def get_booked_dates(class_id: int):
     """
