@@ -928,7 +928,7 @@ function renderRegs(){
   list.innerHTML=filtered.map(r=>`
     <div class="o-card">
       <div class="o-card-top"><div><div class="o-id" style="font-size:13px">#${r.id} ${r.name}</div>
-        <div class="o-date">${r.class_title}${r.course_type?' · '+r.course_type:''}${r.members>1?' · '+r.members+'人':''}</div></div>
+        <div class="o-date">${r.class_title}${r.course_type?' · '+({'group':'包場','individual':'個人'}[r.course_type]||r.course_type):''}${r.members?' · '+r.members+'人':''}</div></div>
         <span class="bdg ${RSC[r.status]||'ba'}">${RSL[r.status]||r.status}</span>
       </div>
       <div class="o-contact">📞 ${r.phone} · ✉️ ${r.email}</div>
