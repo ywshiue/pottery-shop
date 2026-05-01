@@ -318,8 +318,22 @@ const API = 'https://pottery-shop.onrender.com';
         <div class="fg"><label class="lbl">地點</label><input type="text" id="cls-location" placeholder="高雄市茄萣區"></div>
         <!-- Workshop: free text date desc -->
         <div class="fg" id="cls-date-text-wrap">
-          <label class="lbl">開課時段說明</label>
-          <textarea id="cls-date" placeholder="例：每週六 14:00～17:30（報名後確認日期）" style="min-height:72px"></textarea>
+          <label class="lbl">可上課星期</label>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px">
+            <label style="font-size:13px;cursor:pointer"><input type="checkbox" value="1" id="wd-1"> 週一</label>
+            <label style="font-size:13px;cursor:pointer"><input type="checkbox" value="2" id="wd-2"> 週二</label>
+            <label style="font-size:13px;cursor:pointer"><input type="checkbox" value="3" id="wd-3"> 週三</label>
+            <label style="font-size:13px;cursor:pointer"><input type="checkbox" value="4" id="wd-4"> 週四</label>
+            <label style="font-size:13px;cursor:pointer"><input type="checkbox" value="5" id="wd-5"> 週五</label>
+            <label style="font-size:13px;cursor:pointer"><input type="checkbox" value="6" id="wd-6"> 週六</label>
+            <label style="font-size:13px;cursor:pointer"><input type="checkbox" value="0" id="wd-0"> 週日</label>
+          </div>
+          <label class="lbl">可上課時段</label>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:4px">
+            <label style="font-size:13px;cursor:pointer"><input type="checkbox" value="09:00–12:00" id="ts-am"> 上午 09:00–12:00</label>
+            <label style="font-size:13px;cursor:pointer"><input type="checkbox" value="13:30–16:30" id="ts-pm"> 下午 13:30–16:30</label>
+          </div>
+          <input type="hidden" id="cls-date">
         </div>
         <!-- Throwing: structured date/time picker -->
         <div id="cls-date-picker-wrap" style="display:none">
@@ -823,6 +837,7 @@ function resetClass(){
   const t=document.getElementById('class-form-title');if(t)t.textContent='新增課程';
   clsImgFiles=[];clsPendingUrls=[];renderClsImgGrid();
   const fi=document.getElementById('cls-fi');if(fi)fi.value='';
+  resetWsFields();
   ['cls-instructor-name','cls-instructor-bio'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
   const ipu=document.getElementById('cls-instructor-photo-url');if(ipu)ipu.value='';
   const ipp=document.getElementById('cls-instructor-photo-preview');if(ipp)ipp.innerHTML='';
@@ -844,13 +859,24 @@ function editClass(cls){
     // Parse existing date_desc into sessions
     if(cls.date_desc){
       cls.date_desc.split('\n').forEach(line=>{
-        const m=line.match(/第\d+堂｜(\S+)\s+(\S+)–(\S+)(?:｜(.*))?/)|| line.match(/(\S+)\s+(\S+)–(\S+)/);
-        if(m) sessions.push({id:Date.now()+Math.random(),date:m[1],start:m[2],end:m[3],content:m[4]||''});
+        if(!line.trim()) return;
+        // Format: 第1堂｜2026-06-06 10:00–12:00｜內容
+        const m1=line.match(/第\d+堂｜(\d{4}-\d{2}-\d{2})\s+(\d{2}:\d{2})–(\d{2}:\d{2})(?:｜(.*))?/);
+        if(m1){sessions.push({id:Date.now()+Math.random(),date:m1[1],start:m1[2],end:m1[3],content:m1[4]||''});return;}
+        // Fallback: date time–time
+        const m2=line.match(/(\d{4}-\d{2}-\d{2})\s+(\d{2}:\d{2})–(\d{2}:\d{2})(?:\s*｜(.*))?/);
+        if(m2){sessions.push({id:Date.now()+Math.random(),date:m2[1],start:m2[2],end:m2[3],content:m2[4]||''});return;}
       });
-      renderSessions();
+      if(sessions.length) renderSessions();
+      else {
+        // Parse failed, keep original date_desc
+        const dt=document.getElementById('cls-date');
+        if(dt) dt.value=cls.date_desc;
+      }
     }
   } else {
     onClsTypeChange(cls.type||'單次體驗');
+    if(cls.type==='單次體驗') setWsDateDesc(cls.date_desc||'');
   }
   clsImgFiles=[];clsPendingUrls=cls.image_urls?.length?[...cls.image_urls]:cls.image_url?[cls.image_url]:[];
   renderClsImgGrid();
@@ -862,6 +888,7 @@ async function saveClass(){
   const price=parseInt(document.getElementById('cls-price').value);
   const cap=parseInt(document.getElementById('cls-capacity').value);
   if(!name||!price||!cap){toast('請填寫必填欄位',false);return;}
+  if(document.getElementById('cls-type').value==='單次體驗') getWsDateDesc();
   const btn=document.getElementById('cls-save-btn');btn.disabled=true;btn.textContent='儲存中...';
   try{
     const newUrls=await clsUploadImgs();
@@ -1106,6 +1133,48 @@ async function deleteSeries(id,name){
     renderSeriesList();toast('已刪除');
   }catch(e){toast('刪除失敗',false);}
 }
+// ── 單次體驗 weekday/timeslot helpers ─────────────────────
+function getWsDateDesc(){
+  const days=['日','一','二','三','四','五','六'];
+  const wds=[...document.querySelectorAll('#cls-date-text-wrap input[type=checkbox][id^=wd-]:checked')].map(x=>x.value);
+  const tss=[...document.querySelectorAll('#cls-date-text-wrap input[type=checkbox][id^=ts-]:checked')].map(x=>x.value);
+  let parts=[];
+  if(wds.length) parts.push('可上課：週'+wds.map(w=>days[parseInt(w)]).join('、'));
+  if(tss.length) parts.push('時段：'+tss.join('、'));
+  const dt=document.getElementById('cls-date');
+  if(dt) dt.value=parts.join('｜');
+}
+
+function setWsDateDesc(dateDesc){
+  if(!dateDesc) return;
+  // Parse weekdays
+  const wdMatch=dateDesc.match(/可上課：週([^｜]+)/);
+  const days=['日','一','二','三','四','五','六'];
+  if(wdMatch){
+    const selected=wdMatch[1].split('、');
+    for(let i=0;i<7;i++){
+      const el=document.getElementById('wd-'+i);
+      if(el) el.checked=selected.includes(days[i]);
+    }
+  }
+  // Parse timeslots
+  const tsMatch=dateDesc.match(/時段：([^｜]+)/);
+  if(tsMatch){
+    const slots=tsMatch[1].split('、');
+    const am=document.getElementById('ts-am');
+    const pm=document.getElementById('ts-pm');
+    if(am) am.checked=slots.includes('09:00–12:00');
+    if(pm) pm.checked=slots.includes('13:30–16:30');
+  }
+  getWsDateDesc();
+}
+
+function resetWsFields(){
+  document.querySelectorAll('#cls-date-text-wrap input[type=checkbox]').forEach(el=>el.checked=false);
+  const dt=document.getElementById('cls-date');
+  if(dt) dt.value='';
+}
+
 
 </script>
 </body>
