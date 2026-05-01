@@ -703,8 +703,8 @@ function openDetail(id){
           const label=pts[0];
           const datetime=pts[1]||'';
           const desc=pts.slice(2).join('｜');
-          return `<div style="margin-bottom:12px">
-            <div style="font-size:12px;font-weight:600;color:var(--t);margin-bottom:2px">${label}</div>
+          return `<div style="margin-bottom:6px">
+            <div style="font-size:12px;font-weight:600;color:var(--t)">${label}</div>
             <div style="font-size:12px;color:var(--m)">${datetime}${desc?' ｜ '+desc:''}</div>
           </div>`;
         }
