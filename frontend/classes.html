@@ -816,7 +816,7 @@ function openReg(){
   document.getElementById('l5-val').value='';
   document.getElementById('pay-btn').disabled=true;document.getElementById('pay-btn').style.opacity='.4';
   ['reg-form','reg-bank','reg-paid','reg-cancelled'].forEach((id,i)=>document.getElementById(id).style.display=i===0?'block':'none');
-  const isWS=c.type==='手作陶體驗';
+  const isWS=c.type==='單次體驗';
   document.getElementById('r-bk-wrap').style.display=isWS?'block':'none';
   // Show date field for workshop
   const dw=document.getElementById('r-date-wrap');
@@ -824,9 +824,15 @@ function openReg(){
   const de=document.getElementById('r-date');
   if(de){
     de.value='';
+    de.style.borderColor='var(--b)';
     const tmr=new Date();tmr.setDate(tmr.getDate()+1);
     de.min=tmr.toISOString().split('T')[0];
   }
+  // Reset time wrap and error
+  const tw=document.getElementById('r-time-wrap');
+  if(tw) tw.style.display='none';
+  const err=document.getElementById('r-date-error');
+  if(err) err.style.display='none';
   selBk('personal');updSum();
   document.getElementById('reg-ov').classList.add('open');
 }
@@ -845,7 +851,7 @@ function selBk(t){
 function getM(){return bkType==='group'?parseInt(document.getElementById('r-members').value)||2:1;}
 function updSum(){
   const c=currentCourse;if(!c)return;
-  const isWS=c.type==='手作陶體驗';
+  const isWS=c.type==='單次體驗';
   const m=isWS?getM():1;
   const total=c.price*m;
   document.getElementById('rs-name').textContent=isWS?(bkType==='group'?`包場 × ${m} 人`:'個人報名'):'四堂完整課程';
@@ -858,7 +864,7 @@ async function submitReg(){
   const phone=document.getElementById('r-phone').value.trim();
   const email=document.getElementById('r-email').value.trim();
   if(!name||!phone||!email){toast('請填寫所有必填欄位',false);return;}
-  const isWS2=currentCourse?.type==='手作陶體驗';
+  const isWS2=currentCourse?.type==='單次體驗';
   const preferredDate=document.getElementById('r-date')?.value||'';
   if(isWS2&&!preferredDate){toast('請選擇希望上課的日期',false);return;}
   if(isWS2&&preferredDate){
@@ -867,7 +873,7 @@ async function submitReg(){
   }
   const preferredTime=isWS2?(document.getElementById('r-time')?.value||'13:30–16:30'):'';
   const c=currentCourse;
-  const isWS=c.type==='手作陶體驗';
+  const isWS=c.type==='單次體驗';
   const members=isWS?getM():1;
   const btn=document.getElementById('r-submit');
   btn.disabled=true;btn.textContent='送出中⋯';
