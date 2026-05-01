@@ -127,9 +127,9 @@ body{font-family:var(--sans);background:var(--bg);color:var(--t);font-size:14px;
 .lb-info{color:rgba(255,255,255,.6);font-size:12px;margin-top:10px;letter-spacing:.5px}
 
 /* ── Checkout Modal ─────────────────────────────────── */
-.ov{position:fixed;inset:0;background:rgba(28,43,58,.55);z-index:300;display:none;flex-direction:column;align-items:stretch;justify-content:flex-end;overflow:hidden}
+.ov{position:fixed;inset:0;background:rgba(28,43,58,.55);z-index:300;display:none;align-items:flex-end;justify-content:center}
 .ov.open{display:flex}
-.mo{background:var(--w);border-radius:20px 20px 0 0;padding:24px 20px 48px;width:100%;max-width:100%;max-height:88vh;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;flex-shrink:0}
+.mo{background:var(--w);border-radius:20px 20px 0 0;padding:24px 20px 48px;width:100%;max-height:88vh;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
 .mo-handle{width:36px;height:4px;background:var(--b);border-radius:2px;margin:0 auto 20px}
 .mtitle{font-family:var(--serif);font-size:18px;font-weight:400;margin-bottom:4px;color:var(--t);letter-spacing:1.5px}
 .msub{font-size:13px;color:var(--m);margin-bottom:22px;letter-spacing:.3px}
@@ -287,6 +287,8 @@ footer{background:var(--t);color:rgba(255,255,255,.7);padding:48px 32px 32px;mar
 
 
 @media(max-width:520px){}
+
+#reg-form,#reg-bank,#reg-paid,#reg-cancelled{width:100%;box-sizing:border-box}
 </style>
 </head>
 <body>
@@ -447,7 +449,7 @@ footer{background:var(--t);color:rgba(255,255,255,.7);padding:48px 32px 32px;mar
     <div class="mo-handle"></div>
 
     <!-- Step 1: form -->
-    <div id="reg-form" style="width:100%;box-sizing:border-box">
+    <div id="reg-form">
       <div style="font-family:var(--serif);font-size:20px;font-weight:400;color:var(--t);letter-spacing:1px;margin-bottom:4px" id="reg-title">課程報名</div>
       <div style="font-size:12px;color:var(--m);margin-bottom:18px" id="reg-sub"></div>
       <div class="f2">
@@ -525,7 +527,7 @@ footer{background:var(--t);color:rgba(255,255,255,.7);padding:48px 32px 32px;mar
     </div>
 
     <!-- Step 2: bank info + last5 -->
-    <div id="reg-bank" style="display:none;width:100%;box-sizing:border-box">
+    <div id="reg-bank" style="display:none">
       <div style="text-align:center;margin-bottom:18px">
         <div class="done-icon" style="background:var(--gl)">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M5 12l5 5L19 7" stroke="#2C4A6E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -560,7 +562,7 @@ footer{background:var(--t);color:rgba(255,255,255,.7);padding:48px 32px 32px;mar
     </div>
 
     <!-- Step 3a: paid done -->
-    <div id="reg-paid" style="display:none;text-align:center;padding:10px 0">
+    <div id="reg-paid" style="display:none">
       <div class="done-icon" style="background:var(--gl)">
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M5 12l5 5L19 7" stroke="#2C4A6E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </div>
@@ -570,7 +572,7 @@ footer{background:var(--t);color:rgba(255,255,255,.7);padding:48px 32px 32px;mar
     </div>
 
     <!-- Step 3b: cancel done -->
-    <div id="reg-cancelled" style="display:none;text-align:center;padding:10px 0">
+    <div id="reg-cancelled" style="display:none">
       <div class="done-icon" style="background:var(--rl)">
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M18 6L6 18M6 6l12 12" stroke="#8B6F47" stroke-width="2" stroke-linecap="round"/></svg>
       </div>
