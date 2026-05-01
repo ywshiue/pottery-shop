@@ -890,6 +890,7 @@ function openDetail(id){
 
   const metas=[];
   if(c.duration)metas.push(['時長',c.duration]);
+  if(c.age_limit)metas.push(['年齡限制',c.age_limit]);
   if(c.location)metas.push(['地點',c.location]);
   if(c.price_note)metas.push(['費用包含',c.price_note]);
   document.getElementById('d-metas').innerHTML=metas.map(([k,v])=>
