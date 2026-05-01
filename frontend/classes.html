@@ -498,7 +498,7 @@ fetch('https://pottery-shop.onrender.com/').catch(()=>{});
         <input type="text" id="r-date" placeholder="點擊選擇日期" readonly
           style="box-sizing:border-box;width:100%;min-height:44px;padding:10px 12px;border:1px solid var(--b);border-radius:8px;font-size:14px;font-family:var(--sans);background:var(--w);color:var(--t);outline:none;cursor:pointer">
         <div style="font-size:11px;color:var(--m);margin-top:4px">可上課日：週二、週四、週六</div>
-        <div id="r-time-wrap" style="display:none;margin-top:10px">
+        <div id="r-time-wrap" style="display:block;margin-top:10px">
           <label class="lbl">上課時段 *</label>
           <select id="r-time" style="margin-top:4px;padding:10px 12px;border:1px solid var(--b);border-radius:8px;font-size:14px;font-family:var(--sans);background:var(--w);color:var(--t);outline:none;width:100%;box-sizing:border-box">
             <option value="09:00–12:00">上午時段　09:00 – 12:00</option>
@@ -506,7 +506,6 @@ fetch('https://pottery-shop.onrender.com/').catch(()=>{});
           </select>
         </div>
       </div>
-        <div style="font-size:11px;color:var(--m);margin-top:4px;letter-spacing:.2px">課程時間固定為 13:30 – 16:30，確認後我們將與您聯繫</div>
       </div>
 
       <!-- Workshop: date picker -->
@@ -828,8 +827,7 @@ function openReg(){
   if(dw) dw.style.display=isWS?'block':'none';
   // Reset date picker
   if(fpInstance) fpInstance.clear();
-  const tw=document.getElementById('r-time-wrap');
-  if(tw) tw.style.display='none';
+
   if(isWS) calInit();
   selBk('personal');updSum();
   document.getElementById('reg-ov').classList.add('open');
@@ -972,7 +970,6 @@ function initFlatpickr(){
     dateFormat:'Y-m-d',
     disableMobile:false,
     onChange:function(selectedDates,dateStr){
-      document.getElementById('r-time-wrap').style.display=dateStr?'block':'none';
       updSum();
     }
   });
