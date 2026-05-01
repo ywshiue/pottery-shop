@@ -112,6 +112,62 @@ async def confirm_reg_payment(reg_id: int, body: PaymentConfirmReg):
     await send_payment_notify_reg(reg_id, regs[0], body.last5_digits)
     return {"message": "已收到匯款確認"}
 
+# ── 公開：已預約日期與時段狀態 ───────────────────────────
+@router.get("/booked-dates/{class_id}")
+async def get_booked_dates(class_id: int):
+    """
+    回傳日期可用狀態：
+    - fully_booked: 整天不能選（包場 or 上下午都滿）
+    - morning_full: 上午滿（09:00–12:00）
+    - afternoon_full: 下午滿（13:30–16:30）
+    每個時段上限 4 人（members 加總）
+    """
+    MAX_PER_SLOT = 4
+    regs = await sb_fetch(
+        f"/registrations?class_id=eq.{class_id}&status=neq.cancelled&select=preferred_date,members,course_type",
+        use_secret=False
+    )
+
+    from collections import defaultdict
+    # date → { "morning": total_members, "afternoon": total_members, "group": bool }
+    slots = defaultdict(lambda: {"morning": 0, "afternoon": 0, "group": False})
+
+    for r in regs:
+        pd = r.get("preferred_date", "") or ""
+        if not pd:
+            continue
+        parts = pd.split(" ")
+        date_part = parts[0]
+        time_part = parts[1] if len(parts) > 1 else ""
+        members = r.get("members") or 1
+        course_type = r.get("course_type", "") or ""
+
+        # 包場
+        if course_type == "group" or members >= 4:
+            slots[date_part]["group"] = True
+            continue
+
+        if "09:00" in time_part:
+            slots[date_part]["morning"] += members
+        elif "13:30" in time_part:
+            slots[date_part]["afternoon"] += members
+
+    result = {}
+    for date, s in slots.items():
+        if s["group"]:
+            result[date] = "fully_booked"
+        else:
+            morning_full = s["morning"] >= MAX_PER_SLOT
+            afternoon_full = s["afternoon"] >= MAX_PER_SLOT
+            if morning_full and afternoon_full:
+                result[date] = "fully_booked"
+            elif morning_full:
+                result[date] = "morning_full"
+            elif afternoon_full:
+                result[date] = "afternoon_full"
+
+    return result
+
 # ── 公開：學員取消報名 ────────────────────────────────────
 @router.post("/register/{reg_id}/cancel")
 async def cancel_registration(reg_id: int):
