@@ -202,6 +202,19 @@ footer{background:var(--t);color:rgba(255,255,255,.7);padding:48px 32px 32px;mar
   .mo-handle{display:none}
   #toast{bottom:24px}
 }
+
+@media(max-width:760px){
+  .layout{grid-template-columns:1fr}
+  .cbox{display:none}
+  .m-cart-btn{display:block}
+  .grid{grid-template-columns:repeat(2,1fr);gap:12px}
+  .wrap{padding:20px 16px 100px}
+  .f2{grid-template-columns:1fr}
+  .mo{border-radius:20px 20px 0 0;max-width:100%;padding-bottom:74px}
+  footer{padding:36px 20px 24px}
+  .footer-inner{grid-template-columns:1fr 1fr;gap:20px}
+  .drawer{width:100vw}
+}
 @media(max-width:600px){.footer-inner{grid-template-columns:1fr 1fr!important;gap:16px}footer{padding:36px 16px 24px}}
 </style>
 </head>
