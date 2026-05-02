@@ -652,9 +652,18 @@ function calOpen(){
 }
 
 function calNav(dir){
+  const today=new Date();
+  const minY=today.getFullYear(), minM=today.getMonth();
+  const maxY=today.getMonth()===11?today.getFullYear()+1:today.getFullYear();
+  const maxM=today.getMonth()===11?0:today.getMonth()+1;
+  
   calMonth+=dir;
   if(calMonth>11){calMonth=0;calYear++;}
   if(calMonth<0){calMonth=11;calYear--;}
+  
+  // Clamp to allowed range
+  if(calYear<minY||(calYear===minY&&calMonth<minM)){calYear=minY;calMonth=minM;}
+  if(calYear>maxY||(calYear===maxY&&calMonth>maxM)){calYear=maxY;calMonth=maxM;}
   calRender();
 }
 
@@ -678,6 +687,8 @@ function calRender(){
 
   const today=new Date();today.setHours(0,0,0,0);
   const tmr=new Date(today);tmr.setDate(tmr.getDate()+1);
+  // Max: end of next month
+  const maxDate=new Date(today.getFullYear(),today.getMonth()+2,0); // last day of next month
   const firstDay=new Date(calYear,calMonth,1).getDay();
   const daysInMonth=new Date(calYear,calMonth+1,0).getDate();
   const selectedVal=document.getElementById('r-date')?.value||'';
@@ -690,12 +701,13 @@ function calRender(){
     const dow=date.getDay();
     const ds=calYear+'-'+String(calMonth+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');
     const isPast=date<tmr;
+    const isTooFar=date>maxDate;
     const isDayBlocked=BLOCKED_DAYS.includes(dow);
     const slot=bookedSlots[ds]||{};
     const status=(typeof slot==='object'?slot.status:slot)||'';
     const isFullyBooked=status==='fully_booked';
     const isGroupBlocked=bkType==='group'&&typeof status==='string'&&status!=='';
-    const isDisabled=isPast||isDayBlocked||isFullyBooked||isGroupBlocked;
+    const isDisabled=isPast||isTooFar||isDayBlocked||isFullyBooked||isGroupBlocked;
     const isSelected=ds===selectedVal;
 
     let bg='transparent', color=isDisabled?'#C8C4BE':'var(--t)', fw='400', cursor=isDisabled?'default':'pointer';
