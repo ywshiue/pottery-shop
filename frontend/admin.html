@@ -306,7 +306,7 @@ const API = 'https://pottery-shop.onrender.com';
             <select id="cls-type" onchange="onClsTypeChange(this.value)"><option value="單次體驗">單次體驗</option><option value="專業課程">專業課程</option></select>
           </div>
           <div class="fg" style="margin:0"><label class="lbl">報名狀態</label>
-            <select id="cls-active"><option value="true">開放報名</option><option value="false">暫停報名</option></select>
+            <select id="cls-active"><option value="true">開放報名</option><option value="false">暫停報名</option><option value="hidden">不開課（隱藏）</option></select>
           </div>
         </div>
         <div class="fg"><label class="lbl">課程名稱 *</label><input type="text" id="cls-name" placeholder="例：2026 六月手作陶體驗"></div>
@@ -910,7 +910,7 @@ async function saveClass(){
       date_desc:document.getElementById('cls-date').value,duration:document.getElementById('cls-duration').value,
       location:document.getElementById('cls-location').value,price_note:document.getElementById('cls-price-note').value,
       description:document.getElementById('cls-description').value,notes:document.getElementById('cls-notes').value,
-      is_active:document.getElementById('cls-active').value==='true',image_url:allUrls[0]||'',image_urls:allUrls,
+      is_active:document.getElementById('cls-active').value==='true',is_hidden:document.getElementById('cls-active').value==='hidden',image_url:allUrls[0]||'',image_urls:allUrls,
       instructor_name:document.getElementById('cls-instructor-name').value||'',
       instructor_bio:document.getElementById('cls-instructor-bio').value||'',
       instructor_photo:document.getElementById('cls-instructor-photo-url').value||'',
