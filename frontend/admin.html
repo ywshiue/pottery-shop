@@ -859,7 +859,7 @@ function resetClass(){
 function editClass(cls){
   document.getElementById('cls-id').value=cls.id;
   document.getElementById('cls-type').value=cls.type||'手作陶體驗';
-  document.getElementById('cls-active').value=String(cls.is_active);
+  document.getElementById('cls-active').value=cls.is_hidden?'hidden':(cls.is_active?'true':'false');
   [{k:'name',f:'name'},{k:'price',f:'price'},{k:'capacity',f:'capacity'},{k:'duration',f:'duration'},{k:'location',f:'location'},{k:'price_note',f:'price-note'},{k:'description',f:'description'},{k:'notes',f:'notes'},{k:'instructor_name',f:'instructor-name'},{k:'instructor_bio',f:'instructor-bio'},{k:'age_limit',f:'age-limit'}].forEach(({k,f})=>{const el=document.getElementById('cls-'+f);if(el)el.value=cls[k]||'';});
   const ipu=document.getElementById('cls-instructor-photo-url');if(ipu)ipu.value=cls.instructor_photo||'';
   const ipp=document.getElementById('cls-instructor-photo-preview');
