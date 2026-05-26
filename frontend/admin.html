@@ -137,9 +137,7 @@ textarea{resize:vertical;min-height:68px}
 </head>
 <body>
 
-<script>
-const API = 'https://pottery-shop.onrender.com';
-</script>
+
 
 <!-- ══ 登入 ═══════════════════════════════════════════════ -->
 <div class="login-wrap" id="login-screen">
@@ -468,6 +466,7 @@ const API = 'https://pottery-shop.onrender.com';
 
 <div id="toast"></div>
 <script>
+const API='https://pottery-shop.onrender.com';
 let TOKEN=sessionStorage.getItem('admin_token')||'';
 let allOrders=[];
 let currentFilter='all';
