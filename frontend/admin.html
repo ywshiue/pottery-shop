@@ -474,7 +474,7 @@ let imgFiles=[],pendingUrls=[];
 
 function toast(msg,ok=true){const t=document.getElementById('toast');t.textContent=msg;t.style.background=ok?'#1C2B3A':'#8B6F47';t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2600);}
 
-async async function api(path,opts={}){
+async function api(path,opts={}){
   const res=await fetch(`${API}${path}`,{...opts,headers:{'Content-Type':'application/json','Authorization':`Bearer ${TOKEN}`,...(opts.headers||{})}});
   const data=await res.json().catch(()=>({}));
   if(!res.ok)throw new Error(data.detail||`HTTP ${res.status}`);
