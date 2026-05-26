@@ -487,7 +487,7 @@ async function api(path,opts={}){
   if(TOKEN){
     document.getElementById('login-screen').style.display='none';
     document.getElementById('admin-screen').style.display='block';
-    loadAll();
+    loadProducts();loadOrders();loadClassesAdmin();loadSeriesOptions();
   }
 })();
 
@@ -952,8 +952,8 @@ function renderClasses(){
   list.innerHTML=filtered.map(cls=>{
     const imgs=cls.image_urls?.length?cls.image_urls:cls.image_url?[cls.image_url]:[];
     const full=cls.registered>=cls.capacity;
-    const sc=!cls.is_active?'ba':full?'br2':'bg2';
-    const sl=!cls.is_active?'暫停':full?'已滿':cls.registered+'/'+cls.capacity;
+    const sc=cls.is_hidden?'br2':!cls.is_active?'ba':full?'br2':'bg2';
+    const sl=cls.is_hidden?'不開課':!cls.is_active?'暫停':full?'已滿':cls.registered+'/'+cls.capacity;
     return`<div class="p-card">
       ${imgs.length?`<img class="p-card-img" src="${imgs[0]}">`:`<div class="p-card-img" style="display:flex;align-items:center;justify-content:center;color:var(--b)">◻</div>`}
       <div class="p-card-info">
