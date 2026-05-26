@@ -468,7 +468,7 @@ const API = 'https://pottery-shop.onrender.com';
 
 <div id="toast"></div>
 <script>
-let TOKEN='';
+let TOKEN=sessionStorage.getItem('admin_token')||'';
 let allOrders=[];
 let currentFilter='all';
 let imgFiles=[],pendingUrls=[];
@@ -483,6 +483,15 @@ async function api(path,opts={}){
 }
 
 // ── Auth ──────────────────────────────────────────────────
+// Auto-restore session on page load
+(function(){
+  if(TOKEN){
+    document.getElementById('login-screen').style.display='none';
+    document.getElementById('admin-screen').style.display='block';
+    loadAll();
+  }
+})();
+
 async function doLogin(){
   const email=document.getElementById('l-email').value.trim();
   const pwd=document.getElementById('l-pwd').value;
@@ -491,7 +500,7 @@ async function doLogin(){
   const errEl=document.getElementById('l-err');errEl.style.display='none';
   try{
     const data=await api('/auth/login',{method:'POST',body:JSON.stringify({email,password:pwd})});
-    TOKEN=data.access_token;
+    TOKEN=data.access_token;sessionStorage.setItem('admin_token',TOKEN);
     document.getElementById('login-screen').style.display='none';
     document.getElementById('admin-screen').style.display='block';
     document.getElementById('user-email').textContent=data.email;
@@ -500,7 +509,7 @@ async function doLogin(){
   }catch(e){errEl.textContent=e.message;errEl.style.display='block';}
   finally{btn.disabled=false;btn.textContent='登入';}
 }
-function doLogout(){TOKEN='';document.getElementById('admin-screen').style.display='none';document.getElementById('login-screen').style.display='flex';document.getElementById('l-pwd').value='';}
+function doLogout(){TOKEN='';sessionStorage.removeItem('admin_token');document.getElementById('admin-screen').style.display='none';document.getElementById('login-screen').style.display='flex';document.getElementById('l-pwd').value='';}
 
 // ── Tab ───────────────────────────────────────────────────
 function tab(name){
