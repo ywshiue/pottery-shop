@@ -477,8 +477,15 @@ function toast(msg,ok=true){const t=document.getElementById('toast');t.textConte
 async function api(path,opts={}){
   const res=await fetch(`${API}${path}`,{...opts,headers:{'Content-Type':'application/json','Authorization':`Bearer ${TOKEN}`,...(opts.headers||{})}});
   const data=await res.json().catch(()=>({}));
+  if(res.status===401||(res.status===500&&data.detail==='Invalid token')){
+    TOKEN='';sessionStorage.removeItem('admin_token');
+    document.getElementById('admin-screen').style.display='none';
+    document.getElementById('login-screen').style.display='flex';
+    toast('登入已過期，請重新登入',false);
+    throw new Error('登入已過期');
+  }
   if(!res.ok)throw new Error(data.detail||`HTTP ${res.status}`);
-  return data; data;
+  return data;
 }
 
 // ── Auth ──────────────────────────────────────────────────
