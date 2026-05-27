@@ -253,6 +253,8 @@ async def update_class(class_id: int, cls: ClassIn, authorization: str = Header(
     await verify_admin_token(token)
     body = cls.model_dump()
     if not body.get('image_urls'): body['image_urls'] = []
+    import logging
+    logging.warning(f"PATCH classes/{class_id} is_hidden={body.get('is_hidden')} is_active={body.get('is_active')}")
     await sb_fetch(f"/classes?id=eq.{class_id}", method="PATCH", body=body)
     return {"message": "已更新"}
 
