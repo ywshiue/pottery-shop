@@ -19,6 +19,7 @@ class ClassIn(BaseModel):
     description: Optional[str] = ""
     notes:       Optional[str] = ""
     is_active:   Optional[bool] = True
+    is_hidden:   Optional[bool] = False
     image_url:        Optional[str] = ""
     image_urls:       Optional[list] = []
     subtitle:         Optional[str] = ""
@@ -47,9 +48,9 @@ class RegStatusUpdate(BaseModel):
 @router.get("/")
 async def list_classes(type: Optional[str] = None):
     # Return ALL classes (active and inactive) so frontend can show "暫停報名"
-    q = "/classes?order=created_at.asc"
+    q = "/classes?is_hidden=eq.false&order=created_at.asc"
     if type:
-        q = f"/classes?type=eq.{type}&order=created_at.asc"
+        q = f"/classes?type=eq.{type}&is_hidden=eq.false&order=created_at.asc"
     return await sb_fetch(q, use_secret=False)
 
 # ── 公開：報名 ────────────────────────────────────────────
@@ -252,6 +253,8 @@ async def update_class(class_id: int, cls: ClassIn, authorization: str = Header(
     await verify_admin_token(token)
     body = cls.model_dump()
     if not body.get('image_urls'): body['image_urls'] = []
+    import logging
+    logging.warning(f"PATCH classes/{class_id} is_hidden={body.get('is_hidden')} is_active={body.get('is_active')}")
     await sb_fetch(f"/classes?id=eq.{class_id}", method="PATCH", body=body)
     return {"message": "已更新"}
 
